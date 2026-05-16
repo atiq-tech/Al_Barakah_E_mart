@@ -1,0 +1,74 @@
+class AddToCartModel {
+  int? id;
+  String? productName;
+  String? brandName;
+  int? quantity;
+  String? image;
+  String? slug;
+  double? discountPrice;
+
+  AddToCartModel({
+    required this.id,
+    required this.productName,
+    required this.brandName,
+    required this.image,
+    required this.quantity,
+    required this.slug,
+    required this.discountPrice,
+  });
+
+  // ==== fromJson factory ====
+  factory AddToCartModel.fromJson(Map<String, dynamic> json) {
+    return AddToCartModel(
+      id: json['id'],
+      productName: json['productName'],
+      brandName: json['brand_name'],
+      image: json['image'],
+      quantity: json['quantity'] ?? 1,
+      slug: json['slug'],
+      discountPrice: (json['discountPrice'] as num).toDouble(),
+    );
+  }
+
+  // ==== toJson method ====
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'productName': productName,
+      'brand_name':brandName,
+      'image': image,
+      'quantity': quantity,
+      'slug': slug,
+      'discountPrice': discountPrice,
+    };
+  }
+}
+
+
+
+
+
+
+// class AddToCartModel {
+//   int? id;
+//   String? productName;
+//   //double? salePrice;
+//   int? quantity;
+//   String? image;
+//   String? slug;
+//   double? discountPrice;
+
+//   AddToCartModel(
+//       {
+//         required this.id,
+//         required this.productName,
+//         required this.image,
+//         required this.quantity,
+//         //required this.salePrice,
+//         required this.slug,
+//         required this.discountPrice,
+//       }
+// );
+// }
+
+
