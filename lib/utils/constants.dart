@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 const String kIconPath = 'assets/icons/';
 const String baseUrl="https://bigbuy.com.bd";
 //const String BaseUrl="https://tltelecom.com/api/";//main
-const String BaseUrl="https://demo-web.tltelecom.com/api/"; //demo
+const String BaseUrl="http://website.albarakahemart.com/api/"; //demo
 const String imageUrl="https://soft.tltelecom.com/";
 
 const Color scaffoldColor =  Color(0xffF8F8F8);
-Color appBarColor =  const Color.fromARGB(255, 0, 51, 47);
-Color appbuttonColor = Color(0xffF7A42F);
+Color appBarColor = Color(0xff0D442F);
+Color applineColor = Color(0xffD66781);
 
 const genderList = [
   'Male',

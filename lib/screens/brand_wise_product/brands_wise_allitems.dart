@@ -81,7 +81,7 @@ class _BrandsWiseAllItemsScreenState extends State<BrandsWiseAllItemsScreen> {
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: appbuttonColor, width: 1.5),
+                side: BorderSide(color: applineColor, width: 1.5),
               ),
               child: Container(
                   width: 120.0,

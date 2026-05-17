@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -100,8 +101,8 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
       padding: EdgeInsets.all(8.r),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 240, 242, 255),
-          //border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10.r),
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(0.r),
        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,11 +189,11 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${widget.discountPrice}৳",
+                      "${widget.discountPrice}",
                       style: GoogleFonts.roboto(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 224, 117, 16),
+                        color: Colors.black54,
                       ),
                     ),
                     SizedBox(width: 5.w),
@@ -200,10 +201,10 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                     (widget.sellingPrice == "" || widget.sellingPrice == 0)
                     ? const SizedBox()
                     : Text(
-                        '${widget.sellingPrice}৳',
+                        '${widget.sellingPrice}',
                         style: GoogleFonts.roboto(
                           fontSize: 11.sp,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w300,
                           color: Colors.black,
                           decoration: TextDecoration.lineThrough,
                         ),
@@ -251,9 +252,9 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                       },
                       child: Container(
                         height: 25.h,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: Color(0xffF7A42F)),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: appBarColor),
                         alignment: Alignment.center,
-                        child: Text("Buy Now", style: GoogleFonts.roboto(color: Colors.white,fontSize: 12.sp,fontWeight: FontWeight.bold),
+                        child: Text("Details", style: GoogleFonts.roboto(color: Colors.white,fontSize: 10.sp,fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -281,11 +282,12 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                         height: 25.h,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
+                          //color: appBarColor,
                           borderRadius: BorderRadius.circular(4.r),
-                          border: Border.all(color: Color(0xffF7A42F),width: 1.w)
+                          border: Border.all(color: appBarColor,width: 1.w)
                         ),
                         child: Text("Add to Cart",
-                          style: GoogleFonts.roboto(color: Color(0xffF7A42F),fontSize: 12.sp,fontWeight: FontWeight.bold),
+                          style: GoogleFonts.roboto(color: appBarColor,fontSize: 10.sp,fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

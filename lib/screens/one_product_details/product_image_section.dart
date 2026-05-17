@@ -127,7 +127,7 @@ class _ProductImageSectionState extends State<ProductImageSection> {
                             borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(
                               color: selectedImage == img
-                                  ? appbuttonColor
+                                  ? applineColor
                                   : Colors.grey.shade300,
                               width: 2,
                             ),

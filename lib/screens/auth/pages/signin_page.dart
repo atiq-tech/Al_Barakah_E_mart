@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:al_barakah_e_mart/screens/auth/pages/forgot_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,17 +33,24 @@ class _SignInPageState extends State<SignInPage> {
   bool isRegisterObscure = true;
   bool isRegisterCObscure = true;
   bool isError = false;
+  String? customerType = 'regular';
 
   final phoneLogInCtrl = TextEditingController();
   final passLogInCtrl = TextEditingController();
   final nameRegCtrl = TextEditingController();
-  final lastNameRegCtrl = TextEditingController();
+  final buildingRegCtrl = TextEditingController();
   final phoneRegCtrl = TextEditingController();
-  final emailRegCtrl = TextEditingController();
+  final districtRegCtrl = TextEditingController();
+  final thanaRegCtrl = TextEditingController();
+  final areaRegCtrl = TextEditingController();
   final countryRegCtrl = TextEditingController();
   final passRegCtrl = TextEditingController();
-  final passCRegCtrl = TextEditingController();
-  final LogInFormKey = GlobalKey<FormState>();
+  final streetAddressRegCtrl = TextEditingController();
+  final factoryRegCtrl = TextEditingController();
+  final departmentRegCtrl = TextEditingController();
+  final employeeIdRegCtrl = TextEditingController();
+  final nidRegCtrl = TextEditingController();
+  final logInFormKey = GlobalKey<FormState>();
   final signUpFormKey = GlobalKey<FormState>();
 
   @override
@@ -50,7 +58,7 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       backgroundColor:  Colors.white,
       appBar: AppBar(
-        backgroundColor: appBarColor,
+        backgroundColor: applineColor,
         title: Text(isLogInSelected==true?"CUSTOMER'S LOGIN":"CUSTOMER'S REGISTRATION",style: AllTextStyle.appbarTextStyle),
         centerTitle: true,
         leading: GestureDetector(
@@ -69,8 +77,9 @@ class _SignInPageState extends State<SignInPage> {
                   color: appBarColor,
                   borderRadius: BorderRadius.circular(10.r)
                 ),
-                child: Image.asset("images/lbg.jpg",width: 180.w,height: 110.h,fit: BoxFit.fill)
+                child: isLogInSelected==true? Image.asset("images/lbg.jpg",width: 180.w,height: 110.h,fit: BoxFit.fill):Image.asset("images/rbgr.png",width: 180.w,height: 110.h,fit: BoxFit.fill)
               ),
+              
               SizedBox(height: 15.h),
               Row(
                 children: [
@@ -85,9 +94,9 @@ class _SignInPageState extends State<SignInPage> {
                       children: [
                         Text("Login",style: TextStyle(
                           fontSize: 20.sp,fontWeight: FontWeight.bold,
-                          color: isLogInSelected ? appbuttonColor : Colors.black
+                          color: isLogInSelected ? applineColor : Colors.black
                         ),textAlign: TextAlign.center,),
-                        isLogInSelected ? Divider(color: appbuttonColor,thickness: 2): const Divider(color: Color(0xffD4EAFF),thickness: 2)
+                        isLogInSelected ? Divider(color: applineColor,thickness: 2): Divider(color: appBarColor,thickness: 2)
                       ],
                     ),
                   )),
@@ -102,9 +111,9 @@ class _SignInPageState extends State<SignInPage> {
                       children: [
                         Text("Registration",style: TextStyle(
                           fontSize: 20.sp,fontWeight: FontWeight.bold,
-                            color: isRegisterSelected ? appbuttonColor : Colors.black
+                            color: isRegisterSelected ? applineColor : Colors.black
                         ),textAlign: TextAlign.center,),
-                        isRegisterSelected ? Divider(color: appbuttonColor,thickness: 2): const Divider(color: Color(0xffD4EAFF),thickness: 2)
+                        isRegisterSelected ? Divider(color: applineColor,thickness: 2): Divider(color: appBarColor,thickness: 2)
                       ],
                     ),
                   ))
@@ -114,7 +123,7 @@ class _SignInPageState extends State<SignInPage> {
               LayoutBuilder(builder: (context, constraints) {
                 if(isLogInSelected){
                   return Form(
-                    key: LogInFormKey,
+                    key: logInFormKey,
                     child: Container(
                       padding: EdgeInsets.all(10.r),
                       decoration: BoxDecoration(
@@ -124,7 +133,7 @@ class _SignInPageState extends State<SignInPage> {
                         children: [
                           ///Phone
                           SizedBox(height: 5.h),
-                          Align(alignment: Alignment.centerLeft, child: Text("Email Or Mobile",style:AllTextStyle.LoginHeadTitle)),
+                          Align(alignment: Alignment.centerLeft, child: Text("Phone",style:AllTextStyle.LoginHeadTitle)),
                           SizedBox(height: 6.h),
                           Visibility(
                             child: SizedBox(
@@ -133,7 +142,7 @@ class _SignInPageState extends State<SignInPage> {
                                 controller: phoneLogInCtrl,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
-                                  hintText: "Email Or Mobile",
+                                  hintText: "Enter phone number",
                                   hintStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp),
                                   fillColor: Colors.white,
                                   filled: true,
@@ -148,7 +157,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                                 validator: (value) {
                                   if(value==''){
-                                    return "Please Email Or Mobile Number";
+                                    return "Please Phone Number";
                                   }
                                   else{
                                     phoneLogInCtrl.text = value.toString().trim();
@@ -208,7 +217,7 @@ class _SignInPageState extends State<SignInPage> {
                               alignment: Alignment.topLeft,
                               child: Column(
                                 children: [
-                                  Text("Invalid Email, Mobile or Password",style: TextStyle(color: Colors.red,fontSize: 16.sp)),
+                                  Text("Invalid Phone Number or Password",style: TextStyle(color: Colors.red,fontSize: 16.sp)),
                                   SizedBox(height: 20.h),
                                 ],
                               ),
@@ -218,7 +227,7 @@ class _SignInPageState extends State<SignInPage> {
                             height: 40.h,
                             width: double.infinity,
                             child: ElevatedButton(onPressed: () {
-                              if(LogInFormKey.currentState!.validate()){
+                              if(logInFormKey.currentState!.validate()){
                                 setState(() {
                                   isSignInBtnLoading = true;
                                 });
@@ -227,14 +236,28 @@ class _SignInPageState extends State<SignInPage> {
                               }
                             },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:appBarColor,
+                                backgroundColor: appBarColor,
                                 foregroundColor: Colors.red.shade700,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(100.r)
                                 ),
                                 elevation: 5,
                               ), child: isSignInBtnLoading ? const CircularProgressIndicator(color: Colors.white) :
-                                   Text("LOG IN",style: AllTextStyle.tableHeadTextStyle),
+                                   Text("Login",style: AllTextStyle.tableHeadTextStyle),
+                            ),
+                          ),
+                          SizedBox(height: 5.h),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: GestureDetector(
+                              onTap: () {
+                               Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPassword()));
+                              },
+                              child: Text("  Forgot Password?",style: TextStyle(
+                                color: applineColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13.sp
+                              )),
                             ),
                           ),
                           SizedBox(height: 8.h),
@@ -242,7 +265,7 @@ class _SignInPageState extends State<SignInPage> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "By creating an account, you agree to the TLTelecom.com ",
+                                  text: "By creating an account, you agree to the AL Barakah E-mart ",
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 10.sp,
                                     color: Colors.grey.shade600,
@@ -253,7 +276,7 @@ class _SignInPageState extends State<SignInPage> {
                                   style: GoogleFonts.aBeeZee(
                                   fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: appBarColor,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -277,7 +300,7 @@ class _SignInPageState extends State<SignInPage> {
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: appBarColor,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -294,19 +317,6 @@ class _SignInPageState extends State<SignInPage> {
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 5.h),
-                          // Align(
-                          //   alignment: Alignment.topLeft,
-                          //   child: GestureDetector(
-                          //     onTap: () {
-                          //       Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPassword()));
-                          //     },
-                          //     child: Text("  Forgot Password?",style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontWeight: FontWeight.bold,
-                          //       fontSize: 13.sp
-                          //     )),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -322,228 +332,402 @@ class _SignInPageState extends State<SignInPage> {
                           border: Border.all(color: Colors.blueGrey)),
                       child: Column(
                         children: [
-                          ///Name
-                          SizedBox(height: 5.h),
-                          Align(alignment: Alignment.centerLeft, child: Text( "Name",style:AllTextStyle.LoginHeadTitle)),
-                          SizedBox(height: 6.h),
-                          SizedBox(
-                            child: TextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: nameRegCtrl,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                hintText: "Enter name",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp),
-                                fillColor: Colors.white,
-                                filled: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 0.h),
-                                  border: TextFieldInputBorder.focusEnabledBorder,
-                                  focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                  enabledBorder: TextFieldInputBorder.focusEnabledBorder
-                              ),
-                              validator: (value) {
-                                if(value==''){
-                                  return "Please Enter Your Name";
-                                }
-                                else{
-                                  nameRegCtrl.text = value.toString().trim();
-                                }
-                                return null;
-                              },
+                           Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("Customer Type :", style: AllTextStyle.LoginHeadTitle),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      customerType = "regular";
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Radio(
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                            fillColor: MaterialStateColor.resolveWith((states) => Colors.teal.shade900),
+                                            value: "regular",
+                                            groupValue: customerType,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                customerType = value.toString();
+                                              });
+                                            }),
+                                      ),
+                                      Text("Regular",style: AllTextStyle.LoginHeadTitle),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10.w),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                       customerType = "member";
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Radio(
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                            fillColor: MaterialStateColor.resolveWith((states) => Colors.teal.shade900),
+                                            value: "member",
+                                            groupValue: customerType,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                customerType = value.toString();
+                                              });
+                                            }),
+                                      ),
+                                      Text("Member",style: AllTextStyle.LoginHeadTitle),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
+                            SizedBox(height: 5.h),
+                            Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Name",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: nameRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Enter name",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 15.h),
-                          Align(alignment: Alignment.centerLeft, child: Text( "Last Name",style:AllTextStyle.LoginHeadTitle)),
-                          SizedBox(height: 6.h),
-                          SizedBox(
-                            child: TextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: lastNameRegCtrl,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                hintText: "Enter Last Name",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp),
-                                fillColor: Colors.white,
-                                filled: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 0.h),
-                                  border: TextFieldInputBorder.focusEnabledBorder,
-                                  focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                  enabledBorder: TextFieldInputBorder.focusEnabledBorder
+                          customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
+                          customerType=="member" ? Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Factory",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: factoryRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Select factory",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
                               ),
-                              validator: (value) {
-                                if(value==''){
-                                  return "Please Enter Your Last Name";
-                                }
-                                else{
-                                  lastNameRegCtrl.text = value.toString().trim();
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          ///Email
-                          SizedBox(height: 16.h),
-                          Align(alignment: Alignment.centerLeft, child: Text( "Email",style:AllTextStyle.LoginHeadTitle)),
-                          SizedBox(height: 6.h),
-                          SizedBox(
-                            child: TextFormField(
-                              keyboardType: TextInputType.emailAddress,
-                              controller: emailRegCtrl,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                hintText: "Enter email",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp),
-                                fillColor: Colors.white,
-                                filled: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 0.h),
-                                  border: TextFieldInputBorder.focusEnabledBorder,
-                                  focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                  enabledBorder: TextFieldInputBorder.focusEnabledBorder
+                            ],
+                          ):SizedBox(height: 0.h),
+                          customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
+                          customerType=="member" ? Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Department",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: departmentRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Select department",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
                               ),
-                              validator: (value) {
-                                if(value==''){
-                                  return "Please Enter Email Address";
-                                }
-                                else{
-                                  emailRegCtrl.text = value.toString().trim();
-                                }
-                                return null;
-                              },
-                            ),
+                            ],
+                          ):SizedBox(height: 0.h),
+                          customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
+                          customerType=="member" ? Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Building",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: buildingRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Building name",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ):SizedBox(height: 0.h),
+                          SizedBox(height: 3.h),
+                          Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Phone",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: phoneRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Enter phone number",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           ///phone
-                          SizedBox(height: 16.h),
-                          Align(alignment: Alignment.centerLeft,child: Text("Phone",style:AllTextStyle.LoginHeadTitle)),
-                          SizedBox(height: 6.h),
-                          SizedBox(
-                            child: TextFormField(
-                              keyboardType: TextInputType.phone,
-                              controller: phoneRegCtrl,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                  hintText: "Enter phone",
-                                  hintStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 0.h),
-                                  border: TextFieldInputBorder.focusEnabledBorder,
-                                  focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                  enabledBorder: TextFieldInputBorder.focusEnabledBorder
+                          SizedBox(height: 3.h),
+                          Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Password",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: passRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Enter password",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
                               ),
-                              validator: (value) {
-                                if(value==''){
-                                  return "Please Enter Phone Number";
-                                }
-                                else{
-                                  phoneRegCtrl.text = value.toString().trim();
-                                }
-                                return null;
-                              },
-                            ),
+                            ],
                           ),
-                          ///Password
-                          /// Password
-                            SizedBox(height: 16.h),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text("Password", style: AllTextStyle.LoginHeadTitle),
-                            ),
-                            SizedBox(height: 6.h),
-                            SizedBox(
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                controller: passRegCtrl,
-                                textInputAction: TextInputAction.next,
-                                obscureText: isRegisterObscure,
-                                decoration: InputDecoration(
-                                  hintText: "Enter password",
-                                  hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isRegisterObscure = !isRegisterObscure;
-                                      });
-                                    },
-                                    child: Icon(
-                                        isRegisterObscure ? Icons.visibility_off : Icons.visibility),
+                          customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
+                          customerType=="member" ? Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Employee ID",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: employeeIdRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Employee ID",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
                                   ),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
-                                  border: TextFieldInputBorder.focusEnabledBorder,
-                                  focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                  enabledBorder: TextFieldInputBorder.focusEnabledBorder,
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please Enter Your Password";
-                                  }
-                                  return null;
-                                },
                               ),
-                            ),
-
-                            /// Confirm Password
-                            SizedBox(height: 16.h),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text("Confirm Password", style: AllTextStyle.LoginHeadTitle),
-                            ),
-                            SizedBox(height: 6.h),
-                            SizedBox(
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                controller: passCRegCtrl,
-                                textInputAction: TextInputAction.done,
-                                obscureText: isRegisterCObscure,
-                                decoration: InputDecoration(
-                                  hintText: "Enter confirm password",
-                                  hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isRegisterCObscure = !isRegisterCObscure;
-                                      });
-                                    },
-                                    child: Icon(
-                                        isRegisterCObscure ? Icons.visibility_off : Icons.visibility),
+                            ],
+                          ):SizedBox(height: 0.h),
+                          customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
+                          customerType=="member" ? Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("National ID No",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: nidRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "National ID No",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
                                   ),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
-                                  border: TextFieldInputBorder.focusEnabledBorder,
-                                  focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                  enabledBorder: TextFieldInputBorder.focusEnabledBorder,
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please Enter Confirm Password";
-                                  }
-                                  if (value != passRegCtrl.text) {
-                                    return "The password confirmation does not match.";
-                                  }
-                                  return null;
-                                },
                               ),
-                            ),
-
+                            ],
+                          ):SizedBox(height: 0.h),
+                          SizedBox(height: 3.h),
+                           Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("District",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: districtRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Select district",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 3.h),
+                           Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Thana",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: thanaRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Select thana",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 3.h),
+                          Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Area",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: areaRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Select area",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ///phone
+                          SizedBox(height: 3.h),
+                          Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Address",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 40.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: streetAddressRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Street address",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ), 
                           SizedBox(height: 20.h),
                           SizedBox(
                             height: 40.h,
                             width: double.infinity,
                             child: ElevatedButton(onPressed: () {
                               if(signUpFormKey.currentState!.validate()){
-                                if(passRegCtrl.text == passCRegCtrl.text){
                                   setState(() {
                                     isSignUpBtnLoading = true;
                                   });
                                   Utils.closeKeyBoard(context);
                                   fetchRegistration();
-                                }else{
-                                  Utils.errorSnackBar(context, "The password confirmation does not match.");
-                                }
                               }
                             },
                               style: ElevatedButton.styleFrom(
@@ -554,7 +738,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                                 elevation: 5,
                               ), child: isSignUpBtnLoading ? const CircularProgressIndicator() :
-                                 Text("CREATE AN ACCOUNT",style: AllTextStyle.tableHeadTextStyle),
+                                 Text("Sign Up",style: AllTextStyle.tableHeadTextStyle),
 
                             ),
                           ),
@@ -563,7 +747,7 @@ class _SignInPageState extends State<SignInPage> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "By creating an account, you agree to the TLTelecom.com ",
+                                  text: "By creating an account, you agree to the AL Barakah E-mart ",
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 10.sp,
                                     color: Colors.grey.shade600,
@@ -574,7 +758,7 @@ class _SignInPageState extends State<SignInPage> {
                                   style: GoogleFonts.aBeeZee(
                                   fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: appBarColor,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -598,7 +782,7 @@ class _SignInPageState extends State<SignInPage> {
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: appBarColor,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -698,11 +882,11 @@ class _SignInPageState extends State<SignInPage> {
     try {
       final formData = FormData.fromMap({
         "name": nameRegCtrl.text.trim(),
-        "last_name": lastNameRegCtrl.text.trim(),
-        "email": emailRegCtrl.text.trim(),
+        //"last_name": lastNameRegCtrl.text.trim(),
+        //"email": emailRegCtrl.text.trim(),
         "phone": phoneRegCtrl.text.trim(),
         "password": passRegCtrl.text.trim(),
-        "password_confirmation": passCRegCtrl.text.trim(),
+        //"password_confirmation": passCRegCtrl.text.trim(),
       });
     print('--- Sending Data to Server ---');
     for (var element in formData.fields) {
@@ -732,12 +916,17 @@ class _SignInPageState extends State<SignInPage> {
 
   emptyMethod(){
     nameRegCtrl.text = "";
-    lastNameRegCtrl.text = "";
-    emailRegCtrl.text = "";
-    countryRegCtrl.text = "";
+    areaRegCtrl.text = "";
+    districtRegCtrl.text = "";
+    employeeIdRegCtrl.text = "";
     phoneRegCtrl.text = "";
     passRegCtrl.text = "";
-    passCRegCtrl.text = "";
+    departmentRegCtrl.text = "";
+    thanaRegCtrl.text = "";
+    nidRegCtrl.text = "";
+    buildingRegCtrl.text = "";
+    streetAddressRegCtrl.text = "";
+    factoryRegCtrl.text = "";
   }
 
   ///....... Google Login .......

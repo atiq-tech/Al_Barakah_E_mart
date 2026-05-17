@@ -83,7 +83,7 @@ class TextFieldInputBorder{
   ///focus
   static OutlineInputBorder focusEnabledBorder = OutlineInputBorder(
     borderSide: const BorderSide(color: Colors.blueGrey),
-  borderRadius: BorderRadius.circular(100.r),
+  borderRadius: BorderRadius.circular(5.r),
   );
 }
 

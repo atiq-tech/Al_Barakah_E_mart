@@ -199,7 +199,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             style: ElevatedButton.styleFrom(
                               fixedSize: Size(double.infinity, 30.h),
                               padding: EdgeInsets.all(5.r),
-                              backgroundColor: appbuttonColor,
+                              backgroundColor: applineColor,
                             ),
                             onPressed: () async {
                               if (nameController.text.isEmpty) {

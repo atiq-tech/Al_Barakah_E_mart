@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/screens/auth/pages/signin_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:al_barakah_e_mart/utils/all_textstyle.dart';
@@ -21,9 +22,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffD4EAFF),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        backgroundColor: applineColor,
+        title: Text("Forgot Password",style: AllTextStyle.appbarTextStyle),
+        centerTitle: true,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignInPage()));
+          },
+          child: const Icon(Icons.arrow_back,color: Colors.white)),
+      ),
       body: Container(
-        padding: const EdgeInsets.only(left: 10,right: 10,top: 50),
+        padding: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -34,7 +45,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   color: appBarColor,
                   borderRadius: BorderRadius.circular(10.r)
                 ),
-                child: Image.asset("images/tmlogo.png",width: 160.w,height: 80.h,fit: BoxFit.fill)
+                child: Image.asset("images/lbg.jpg",width: 200.w,height: 140.h,fit: BoxFit.fill)
               ),
               SizedBox(height: 15.h),
                 Row(
@@ -42,9 +53,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   children: [
                     Column(
                       children: [
-                        Text("Forgot Password",style: GoogleFonts.adamina(
-                            fontSize: 20,fontWeight: FontWeight.bold,
-                            color: Colors.black
+                        Text("Customer Login",style: GoogleFonts.adamina(
+                            fontSize: 20.sp,fontWeight: FontWeight.bold,
+                            color: appBarColor
                         ),textAlign: TextAlign.center,),
                       ],
                     )
@@ -52,7 +63,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
                 const Divider(color: Colors.black),
                  Padding(
-                   padding: EdgeInsets.all(18.r),
+                   padding: EdgeInsets.all(5.r),
                    child: Text(
                     "You can recover your password by submitting your registered phone number.",
                     style: GoogleFonts.adamina(),
@@ -62,79 +73,83 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 Form(
                   key: formKey,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 18.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ///Phone
-                        const SizedBox(height: 5),
-                        Align(alignment: Alignment.centerLeft,
-                            child: Text("Mobile Number",style:AllTextStyle.LoginHeadTitle)),
-                        const SizedBox(height: 6,),
-                        SizedBox(
-                          // height: 48,
-                          child: TextFormField(
-                            keyboardType: TextInputType.phone,
-                            controller: phoneCtrl,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              hintText: "Enter Mobile Number",
-                              fillColor: Colors.white,
-                              filled: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(color: Colors.blue),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(color: Colors.blue),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(color: Colors.blue),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(color: Colors.red),
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: Card(
+                      elevation: 9,
+                      color: const Color.fromARGB(255, 255, 210, 231),
+                      child: Padding(
+                        padding: EdgeInsets.all(15.r),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(alignment: Alignment.centerLeft, child: Text("Phone Number",style:AllTextStyle.LoginHeadTitle)),
+                            SizedBox(height: 6.h),
+                            SizedBox(
+                              //height: 35.h,
+                              child: TextFormField(
+                                keyboardType: TextInputType.phone,
+                                controller: phoneCtrl,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  hintText: "Enter phone number",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 0.h),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    borderSide: const BorderSide(color: Colors.blue),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    borderSide: const BorderSide(color: Colors.blue),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    borderSide: const BorderSide(color: Colors.blue),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.r),
+                                    borderSide: const BorderSide(color: Colors.red),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if(value==''){
+                                    return "Please Enter Phone";
+                                  }
+                                  else{
+                                    phoneCtrl.text = value.toString().trim();
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
-                            validator: (value) {
-                              if(value==''){
-                                return "Please Enter Mobile";
-                              }
-                              else{
-                                phoneCtrl.text = value.toString().trim();
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 45,
-                          width: double.infinity,
-                          child: ElevatedButton(onPressed: () {
-                            if(formKey.currentState!.validate()){
-                              setState(() {
-                                isGetOtpBtnLoading = true;
-                              });
-                              Utils.closeKeyBoard(context);
-                              //forgotPassword();
-                            }
-                          },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: appbuttonColor,
-                              foregroundColor: Colors.red.shade700,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)
+                            SizedBox(height: 16.h),
+                            SizedBox(
+                              height: 40.h,
+                              width: double.infinity,
+                              child: ElevatedButton(onPressed: () {
+                                if(formKey.currentState!.validate()){
+                                  setState(() {
+                                    isGetOtpBtnLoading = true;
+                                  });
+                                  Utils.closeKeyBoard(context);
+                                  //forgotPassword();
+                                }
+                              },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appBarColor,
+                                  foregroundColor: Colors.red.shade700,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.r)
+                                  ),
+                                  elevation: 0,
+                                ), child: isGetOtpBtnLoading ? const CircularProgressIndicator() : Text("Recover",style: AllTextStyle.tableHeadTextStyle),
                               ),
-                              elevation: 0,
-                            ), child: isGetOtpBtnLoading ? const CircularProgressIndicator() : Text("SUBMIT",style: AllTextStyle.tableHeadTextStyle),
-                          ),
+                            ),
+                        
+                          ],
                         ),
-                    
-                      ],
+                      ),
                     ),
                   ),
                 )

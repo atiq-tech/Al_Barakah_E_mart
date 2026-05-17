@@ -24,34 +24,28 @@ class MyBottomNavigationBar extends StatelessWidget {
           elevation: 0,
           showSelectedLabels: true,
           unselectedItemColor: Colors.white,
-          selectedItemColor: appbuttonColor,
+          selectedItemColor: applineColor,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: const Icon(Icons.home, color: Colors.white),
-              activeIcon: Icon(Icons.home,color: appbuttonColor),
+              activeIcon: Icon(Icons.home,color: applineColor),
               label: "Home",
             ),
 
             BottomNavigationBarItem(
-              activeIcon: Icon(Icons.dashboard,color: appbuttonColor),
+              activeIcon: Icon(Icons.dashboard,color: applineColor),
               icon: const Icon(Icons.dashboard, color: Colors.white),
               label: "Dashboard",
             ),
 
             BottomNavigationBarItem(
-              activeIcon: Icon(Icons.shopping_cart,color: appbuttonColor),
+              activeIcon: Icon(Icons.shopping_cart,color: applineColor),
               icon: Icon(Icons.shopping_cart, color: Colors.white),
               label: "Cart",
             ),
 
             BottomNavigationBarItem(
-              activeIcon: Icon(Icons.point_of_sale_sharp,color: appbuttonColor),
-              icon: Icon(Icons.point_of_sale_sharp, color: Colors.white),
-              label: "Reseller",
-            ),
-
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.person_outline_outlined, color: appbuttonColor),
+              activeIcon: Icon(Icons.person_outline_outlined, color: applineColor),
               icon: Icon(Icons.person_outline_outlined, color: Colors.white),
               label: "Profile",
             ),

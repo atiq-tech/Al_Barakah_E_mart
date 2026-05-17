@@ -86,7 +86,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final category = categoryList[index];
-                      final hasSubCategory = category.children != null && category.children!.isNotEmpty;
+                      final hasSubCategory = category.subCategory != null && category.subCategory!.isNotEmpty;
                       return Card(
                         color: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
@@ -128,7 +128,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               ),
                             ),
 
-                            children: category.children!.map<Widget>((subCategory) {
+                            children: category.subCategory!.map<Widget>((subCategory) {
                               return Padding(
                                 padding:EdgeInsets.only(left: 5.w, right: 5.w),
                                 child: Card(
@@ -138,7 +138,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                     visualDensity: const VisualDensity(vertical: -4),
                                     dense: true,
                                     title: Text(
-                                      subCategory.productCategoryName ??"",
+                                      subCategory.name ??"",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 11.sp,
@@ -149,8 +149,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                       Navigator.push(context,
                                         MaterialPageRoute(
                                           builder: (context) =>SubCategoryIndividualProducts(
-                                            categoryName: subCategory.productCategoryName,
-                                            categoryId:"${subCategory.productCategorySlNo}",
+                                            categoryName: subCategory.name,
+                                            categoryId:"${subCategory.categoryId}",
                                           ),
                                         ),
                                       );

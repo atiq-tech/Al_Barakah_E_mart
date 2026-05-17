@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,96 +26,116 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.w),
-            child: Text("SUPPORT",
+            child: Text("Al Barakah E-mart",
               style: GoogleFonts.poppins(
               textStyle: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
-                color: Colors.orange,
+                color: Colors.white,
               ))),
           ),
-          GestureDetector(
-            onTap: () => _launchPhone("+8801711514200"),
-            child: Container(
-              height: 35.h,
-              width: 220.w,
-              padding: EdgeInsets.only(left: 15.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100.r),
-                border: Border.all(color: Colors.white)
-              ),
-              child: Row(children: [
-                Icon(Icons.call,size: 18.sp,color: Colors.white),
-                SizedBox(width: 10.w),
-                Container(
-                  height: 20.h,
-                  width: 1.w,
-                  color: Colors.white
-                ),
-                SizedBox(width: 10.w),
-                GestureDetector(
-                  onTap: () => _launchPhone("+8801711514200"),
-                  child: Text(
-                    "+8801711514200",
-                    style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontSize: 14.sp ,
-                      color: tcolor,
-                    ),
-                  ),
-                  ),
-                ),
-              ],),
-            ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Text("152/2k Green Road, Dhanmondi, Dhaka-1205 Mobile : 01717202623",
+            textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ))),
           ),
+          // GestureDetector(
+          //   onTap: () => _launchPhone("+8801711514200"),
+          //   child: Container(
+          //     height: 35.h,
+          //     width: 220.w,
+          //     padding: EdgeInsets.only(left: 15.w),
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(100.r),
+          //       border: Border.all(color: Colors.white)
+          //     ),
+          //     child: Row(children: [
+          //       Icon(Icons.call,size: 18.sp,color: Colors.white),
+          //       SizedBox(width: 10.w),
+          //       Container(
+          //         height: 20.h,
+          //         width: 1.w,
+          //         color: Colors.white
+          //       ),
+          //       SizedBox(width: 10.w),
+          //       GestureDetector(
+          //         onTap: () => _launchPhone("+8801711514200"),
+          //         child: Text(
+          //           "+8801711514200",
+          //           style: GoogleFonts.poppins(
+          //           textStyle: TextStyle(
+          //             fontSize: 14.sp ,
+          //             color: tcolor,
+          //           ),
+          //         ),
+          //         ),
+          //       ),
+          //     ],),
+          //   ),
+          // ),
+          // SizedBox(height: 10.w),
+          // GestureDetector(
+          //   onTap: () {
+          //     launchWebUrl(url: "https://tltelecom.com/find-our-store");
+          //   },
+          //   child: Container(
+          //     width: 220.w,
+          //     padding: EdgeInsets.only(left: 15.w),
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(100.r),
+          //       border: Border.all(color: Colors.white)
+          //     ),
+          //     child: Row(children: [
+          //       Icon(Icons.location_pin,size: 18.sp,color: Colors.white),
+          //       SizedBox(width: 10.w),
+          //       Container(
+          //         height: 20.h,
+          //         width: 1.w,
+          //         color: Colors.white
+          //       ),
+          //       SizedBox(width: 10.w),
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Text(
+          //             "Store Locator",
+          //             style: GoogleFonts.poppins(
+          //             textStyle: TextStyle(
+          //               fontSize: 10.sp ,
+          //               color: tcolor,
+          //             ),
+          //           ),
+          //           ),
+          //           Text(
+          //             "Find Our Stores",
+          //             style: GoogleFonts.poppins(
+          //             textStyle: TextStyle(
+          //               fontSize: 12.sp ,
+          //               color: tcolor,
+          //             ),
+          //           ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],),
+          //   ),
+          // ),
           SizedBox(height: 10.w),
-          GestureDetector(
-            onTap: () {
-              launchWebUrl(url: "https://tltelecom.com/find-our-store");
-            },
-            child: Container(
-              width: 220.w,
-              padding: EdgeInsets.only(left: 15.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100.r),
-                border: Border.all(color: Colors.white)
-              ),
-              child: Row(children: [
-                Icon(Icons.location_pin,size: 18.sp,color: Colors.white),
-                SizedBox(width: 10.w),
-                Container(
-                  height: 20.h,
-                  width: 1.w,
-                  color: Colors.white
-                ),
-                SizedBox(width: 10.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Store Locator",
-                      style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontSize: 10.sp ,
-                        color: tcolor,
-                      ),
-                    ),
-                    ),
-                    Text(
-                      "Find Our Stores",
-                      style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontSize: 12.sp ,
-                        color: tcolor,
-                      ),
-                    ),
-                    ),
-                  ],
-                ),
-              ],),
-            ),
-          ),
-          SizedBox(height: 10.w),
+          Text("Social Link",
+          textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ))),
+          SizedBox(height: 0.w),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -143,57 +164,8 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 20.w),
-            child: Column(
-              children: [
-                Text("Stay Connected",
-                  style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.orange,
-                  ),
-                ),),
-                SizedBox(height: 10.h),
-                footerTextLink(
-                    title: 'TL TELECOM Ltd Wholesale Dealer',
-                    url: 'https://tltelecom.com/find-our-store',
-                    fontSize: screenWidthh,
-                    color: tcolor,
-                    height: height,
-                  ),
-                Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Email: tltelecom@gmail.com",
-                    style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontSize: screenWidthh ,
-                      color: tcolor,
-                    ),
-                  ),),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     launchUrl(Uri(
-                  //       scheme: "tel",
-                  //       path: "+8801728677276"
-                  //       ));
-                  //   },
-                  //   child: Text("+8801728677276",
-                  //     style: GoogleFonts.poppins(
-                  //     textStyle: TextStyle(
-                  //       fontSize: screenWidthh ,
-                  //       color: tcolor,
-                  //     ),
-                  //   ),),
-                  // ),
-                ],
-               )
-              ],
-            ),
-          ),
           Container(
+            padding: EdgeInsets.only(top: 20.h),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -207,33 +179,18 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'About Us',
+                          'Information Link',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
                               fontSize: screenWidth / 30,
-                              fontWeight: FontWeight.w400,
-                               color: Colors.orange,
+                              fontWeight: FontWeight.w500,
+                               color: Colors.white,
                             ),
                           ),
                         ),
                         footerTextLink(
                           title: 'About Us',
-                          url: 'https://tltelecom.com/about',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-
-                        footerTextLink(
-                          title: 'Corporate',
-                          url: 'https://tltelecom.com/corporate',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-                        footerTextLink(
-                          title: 'Complain/Advice',
-                          url: 'https://tltelecom.com/feedback',
+                          url: 'https://www.albarakahemart.com/about-us',
                           fontSize: screenWidthh,
                           color: tcolor,
                           height: height,
@@ -241,15 +198,22 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
 
                         footerTextLink(
                           title: 'Contact Us',
-                          url: 'https://tltelecom.com/contact-us',
+                          url: 'https://www.albarakahemart.com/contact',
+                          fontSize: screenWidthh,
+                          color: tcolor,
+                          height: height,
+                        ),
+                        footerTextLink(
+                          title: 'Our Management',
+                          url: 'https://www.albarakahemart.com/about-us#management',
                           fontSize: screenWidthh,
                           color: tcolor,
                           height: height,
                         ),
 
                         footerTextLink(
-                          title: 'Shop Address',
-                          url: 'https://tltelecom.com/find-our-store',
+                          title: 'Our Mission & Vision',
+                          url: 'https://www.albarakahemart.com/about-us#mission',
                           fontSize: screenWidthh,
                           color: tcolor,
                           height: height,
@@ -264,53 +228,59 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Policy',
+                          'Contact Us',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
                               fontSize: screenWidth / 30,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.orange,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                        footerTextLink(
-                          title: 'Pre-Order Policy',
-                          url: 'https://tltelecom.com/pre-order-policy',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
+                        Text(
+                          'Phone: 017#########',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: screenWidthh,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-
-                        footerTextLink(
-                          title: 'Refund Policy',
-                          url: 'https://tltelecom.com/refund-policy',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
+                        SizedBox(height: 5.h),
+                        Text(
+                          'Email: @gmail.com',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: screenWidthh,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        footerTextLink(
-                          title: 'Return Policy',
-                          url: 'https://tltelecom.com/return-policy',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-
-                        footerTextLink(
-                          title: 'Dealer Policy',
-                          url: 'https://tltelecom.com/dealer-policy',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-
-                        footerTextLink(
-                          title: 'Career Opurtunity',
-                          url: 'https://tltelecom.com/career',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
+                        SizedBox(height: 5.h),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     color: appBarColor,
+                        //     borderRadius: BorderRadius.circular(5.r),
+                        //     border: Border.all(color: Colors.white)
+                        //   ),
+                        //   child: Padding(
+                        //     padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+                        //     child: Text(
+                        //      "Deliveryman Login",
+                        //       style: GoogleFonts.poppins(
+                        //         textStyle: TextStyle(
+                        //           fontSize: screenWidthh,
+                        //           color: tcolor,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        Text(""),
+                        SizedBox(height: 5.h),
+                        Text("")
                       ],
                     ),
                   ),
@@ -320,17 +290,16 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
             ),
           ),
           Container(
+            color: Color(0xffBDBDBD),
             child: Column(
               children: [
-                const Divider(
-                  color: Colors.white,
-                ),
+                SizedBox(height: 5.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Design & Developed By ',
-                      style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: screenWidth / 40,color: Colors.white),
+                      style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: screenWidth / 40,color: appBarColor),
                       ),
                     ),
                     InkWell(
@@ -340,19 +309,19 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
                       child: Text(
                         'Link-Up Technology Ltd',
                         style: GoogleFonts.poppins(
-                          textStyle: TextStyle(decoration: TextDecoration.underline,fontSize: screenWidth / 40,color: Colors.green.shade400),
+                          textStyle: TextStyle(decoration: TextDecoration.underline,fontSize: screenWidth / 40,color: Colors.blue.shade700),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height:3),
+                SizedBox(height:3.h),
                 Text(
-                  '© 2026 Thanks From TL TELECOM Ltd Wholesale Dealer. | All rights reserved.',
+                  'All Rights Researved ©2026 Al Barakah E-mart. All rights reserved.',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 10.sp,color: Colors.white)),
+                  style: GoogleFonts.poppins(textStyle: TextStyle(fontSize:screenWidth / 40,color: appBarColor)),
                 ),
-                SizedBox(height: 60.h)
+                SizedBox(height: 55.h)
               ],
             ),
           )

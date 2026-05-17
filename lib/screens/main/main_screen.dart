@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:al_barakah_e_mart/screens/allProduct/all_product.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/custom/custom_drtawer/all_drawer_section/update_profile_page.dart';
 import 'package:al_barakah_e_mart/custom/custom_drtawer/cart_screen.dart';
@@ -6,7 +7,6 @@ import 'package:al_barakah_e_mart/custom/custom_drtawer/custom_drawer.dart';
 import 'package:al_barakah_e_mart/main.dart';
 import 'package:al_barakah_e_mart/provider/add_to_cart_provider.dart';
 import 'package:al_barakah_e_mart/screens/auth/pages/dashboard_page.dart';
-import 'package:al_barakah_e_mart/screens/auth/pages/reseller_signin_page.dart';
 import 'package:al_barakah_e_mart/screens/home/home_screen.dart';
 import 'package:al_barakah_e_mart/screens/main/component/bottom_navbar.dart';
 import 'package:al_barakah_e_mart/screens/main/component/main_controller.dart';
@@ -44,12 +44,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> pageList = [
     const HomeScreen(),
     DashBoardPage(),
-    // const All_CateGory_Page(),
-    // const MyCoupon(),
-    // const BrandsWiseAllItemsScreen(),
     const CartScreen(),
-    const ResellerSigninPage(),
-    //const MyProfile(),
     const UpdateProfile(),
   ];
 

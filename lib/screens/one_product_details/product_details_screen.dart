@@ -417,7 +417,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                     height: 100.h,
                                    decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                                      border: Border.all(color: appbuttonColor)
+                                      border: Border.all(color: applineColor)
                                     ), 
                                     child: Icon(Icons.remove),
                                   ),
@@ -430,7 +430,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                  height: 100.h,
                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                                    border: Border.all(color: appbuttonColor)
+                                    border: Border.all(color: applineColor)
                                   ), 
                                   child: Center(child: Text("$count")),
                                 ),
@@ -448,7 +448,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                     height: 100.h,
                                    decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                                      border: Border.all(color: appbuttonColor)
+                                      border: Border.all(color: applineColor)
                                     ),
                                     child: Icon(Icons.add), 
                                   ),
@@ -506,7 +506,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                               child: Container(
                                 height: 35.h,
                                 decoration: BoxDecoration(
-                                  color: appbuttonColor,
+                                  color: applineColor,
                                   borderRadius: BorderRadius.all(Radius.circular(5.r)),
                                 ),
                                 alignment: Alignment.center,
@@ -523,7 +523,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                               height: 35.h,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                                  border: Border.all(color: appbuttonColor)
+                                  border: Border.all(color: applineColor)
                             ),
                             alignment: Alignment.center,
                             child: InkWell(
@@ -549,7 +549,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                               child: Text("Add to Cart",style: GoogleFonts.abyssinicaSil(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
-                                color: appbuttonColor,
+                                color: applineColor,
                               )),
                             ),
                           )),
@@ -621,7 +621,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                       child: Card(
                         elevation: 9,
                         shape: BeveledRectangleBorder(
-                          side: BorderSide(color: appbuttonColor),
+                          side: BorderSide(color: applineColor),
                           borderRadius: BorderRadius.circular(10.r)
                         ),
                         child: Padding(

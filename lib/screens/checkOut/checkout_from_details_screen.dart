@@ -747,7 +747,7 @@ Future<void> placeOrder(BuildContext context) async {
                               padding: EdgeInsets.only(top:5.h,bottom: 10.h),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: appbuttonColor,
+                                  backgroundColor: applineColor,
                                   minimumSize: Size.fromHeight(35.h),
                                 ),
                                 onPressed: () {

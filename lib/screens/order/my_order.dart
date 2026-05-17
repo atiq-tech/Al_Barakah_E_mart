@@ -91,7 +91,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       elevation: 5,
       margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
       color: isSelected
-          ? appbuttonColor
+          ? applineColor
           : const Color.fromARGB(255, 21, 203, 235),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6.r),
@@ -151,7 +151,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                           ? "Pending"
                           : "Confirmed",
                       style: TextStyle(
-                          color: appbuttonColor,
+                          color: applineColor,
                           fontWeight: FontWeight.w600),
                     ),
                   ],
@@ -207,14 +207,14 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                   "Total: ${order.saleMasterTotalSaleAmount}৳",
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: appbuttonColor,
+                    color: applineColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
                 Card(
                   elevation: 3,
-                  color: appbuttonColor,
+                  color: applineColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.r),
                   ),

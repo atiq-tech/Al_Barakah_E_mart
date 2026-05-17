@@ -18,19 +18,22 @@ class AllApiService{
   ///==================Get Category Api=======================
   static fetchGetCategories() async {
     try {
-      String url = "${BaseUrl}get_category";
-      Response response = await Dio().post(url,
-       data: {
-            "menuItem": "1"
-        });
+      String url = "${BaseUrl}get_categories";
+      Response response = await Dio().get(url,
+      //  data: {
+      //       "menuItem": "1"
+      //   }
+       );
       var data = response.data;
       print("Get categories Data===> $data");
-      return List.from(data).map((e) => GetCategoriesModel.fromMap(e)).toList();
+      return List.from(data["data"]).map((e) => GetCategoriesModel.fromMap(e)).toList();
     } catch (e) {
       print(e);
     }
     return null;
   }
+
+  // ONEK BORO FA.................................................
 
   //////=====fetchCategoriesFeature
    static fetchCategoriesFeature() async {
