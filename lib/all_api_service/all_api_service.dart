@@ -70,14 +70,14 @@ class AllApiService{
     return null;
   }
 
-  ///==================get_sliders Api=======================
-  static fetchGetSliders() async {
+  ///==================get_slider Api=======================
+  static fetchSlider() async {
     try {
-      String url = "${BaseUrl}get_sliders";
+      String url = "${BaseUrl}get_slider";
       Response response = await Dio().get(url);
       var data = response.data;
       print("Get Sliders Data===> $data");
-      return List.from(data).map((e) => GetSlidersModel.fromMap(e)).toList();
+      return List.from(data).map((e) => SliderModel.fromMap(e)).toList();
     } catch (e) {
       print(e);
     }
@@ -209,7 +209,7 @@ class AllApiService{
   ///==================Get ResentProduct Api=======================
   static fetchResentProduct() async {
     try {
-      String url = "${BaseUrl}api/get_products";
+      String url = "${BaseUrl}get_product";
       Response response = await Dio().post(url,
           data: {
             "filter": "recent"
@@ -226,7 +226,7 @@ class AllApiService{
   ///==================Get PopularProducts Api=======================
   static fetchPopularProducts() async {
     try {
-      String url = "${BaseUrl}api/get_products";
+      String url = "${BaseUrl}get_product";
       Response response = await Dio().post(url,
           data: {
             "filter": "popular"
@@ -240,6 +240,22 @@ class AllApiService{
     return null;
   }
 
+///==================Get New Arrival Products Api=======================
+  static fetchNewArrivalProducts() async {
+    try {
+      String url = "${BaseUrl}get_product";
+      Response response = await Dio().post(url,
+          data: {
+            "filter": "new"
+          });
+      var data = response.data;
+      print("Get New ArrivalProducts Data===> $data");
+      return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 
   ///==================Get FeatureProducts Api=======================
   static fetchFeatureProducts() async {
@@ -317,23 +333,6 @@ class AllApiService{
         });
       var data = response.data;
       print("Get DeviceOffer Products Data===> $data");
-      return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
-  ///==================Get SpecialProducts Api=======================
-  static fetchSpecialProducts() async {
-    try {
-      String url = "${BaseUrl}api/get_products";
-      Response response = await Dio().post(url,
-          data: {
-            "filter": "special"
-          });
-      var data = response.data;
-      print("Get SpecialProducts Data===> $data");
       return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
     } catch (e) {
       print(e);
@@ -492,7 +491,7 @@ static Future<ProductDetailsModel?> fetchProductsDetails(String slug) async {
   // }
 
   static Future<ChildCategoriesModel?> fetchChildCategories(String? categoryId) async {
-  String link = "${BaseUrl}get_category";
+  String link = "${BaseUrl}get_categories";
 
   try {
     final formData = FormData.fromMap({

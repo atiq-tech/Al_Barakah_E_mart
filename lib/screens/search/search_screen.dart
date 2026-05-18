@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     SizedBox(
                                       height: 35.h,
                                       width: 35.w,
-                                      child: CustomImage(path: "$imageUrl${suggestion.mainImage}"),
+                                      child: CustomImage(path: "$imageUrl${suggestion.productImage}"),
                                     ),
                                     SizedBox(width: 10.w),
                                     Expanded(

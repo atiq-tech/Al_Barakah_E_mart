@@ -21,7 +21,6 @@ class MyCustomCardScreen extends StatefulWidget {
     this.categoryId,
     this.brandId,
     required this.name,
-    required this.brandName,
     required this.slug,
     required this.productCode,
     this.keyFeature,
@@ -43,7 +42,6 @@ class MyCustomCardScreen extends StatefulWidget {
   final String? categoryId;
   final String? brandId;
   final String? name;
-  final String? brandName;
   final String? slug;
   final String? productCode;
   final String? keyFeature;
@@ -98,68 +96,29 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
     final addToCartProviderList = Provider.of<AddToCartProvider>(context, listen: true).cart;
 
     return Container(
-      padding: EdgeInsets.all(8.r),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 240, 242, 255),
           border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(0.r),
+          borderRadius: BorderRadius.circular(2.r),
        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 4,
+            flex: 5,
             child: Stack(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height / 5.5,
+                  height: MediaQuery.of(context).size.height / 2,
                   width: 200.w,
                   child: CustomImage(
                     path: "${widget.image}",
                     fit: BoxFit.fill,
                   ),
                 ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w,vertical: 2.h),
-                    decoration: BoxDecoration(
-                      color: widget.discount != null && widget.discount != "0" && widget.discount != "" ? Color(0xffF7A42F):Colors.transparent,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(4.r),topRight: Radius.circular(4.r),bottomRight: Radius.circular(4.r)),
-                    ),
-                    child: widget.discount != null && widget.discount != "0" && widget.discount != "" ? Text(
-                      "${widget.discount}% OFF",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ):SizedBox(),
-                  ),
-                ),
-                Positioned(
-                top: 55.h,
-                right: 30.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: widget.stock == 0 ? Colors.black.withOpacity(0.7) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(widget.stock == 0 ? "Out of Stock" : "",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
               ],
             ),
           ),
-
           SizedBox(height: 5.h),
           Expanded(
             flex: 2,
@@ -176,124 +135,75 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                     fontSize: 10.sp,
                   ),
                 ),
-               authType == "reseller" ? Center(
+                Center(
                  child: Text(
-                    "${widget.discountPrice}৳",
+                    "${widget.discountPrice}",
                     style: GoogleFonts.roboto(
-                      fontSize: 14.sp,
+                      fontSize: 11.sp,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 224, 117, 16),
+                      color: Colors.grey.shade800
                     ),
                   ),
-               ) : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${widget.discountPrice}",
-                      style: GoogleFonts.roboto(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    // ignore: unrelated_type_equality_checks
-                    (widget.sellingPrice == "" || widget.sellingPrice == 0)
-                    ? const SizedBox()
-                    : Text(
-                        '${widget.sellingPrice}',
-                        style: GoogleFonts.roboto(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.black,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                  ],
-                ),
+               )
               ],
             ),
           ),
           Expanded(
             child: SizedBox(
               width: double.infinity,
-              child: widget.stock != 0 ? Row(
-                children: [
-                    Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          addToCart.addProduct(
-                              AddToCartModel(
-                                id: int.parse("${widget.id}"),
-                                productName: widget.name,
-                                brandName: widget.brandName,
-                                image: widget.image,
-                                quantity: int.parse("${widget.quantity}"),
-                                slug: widget.slug,
-                                discountPrice: double.parse("${widget.discountPrice}"),
-                              )
-                          );
-                          CustomSnackBar.showTopSnackBar(context, "Successfully Added to Cart");
-                        });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                CheckoutScreen(
-                                  addToCart: addToCartProviderList,
-                                  from: 'cart',
-                                  quantity: 1,
-                                  token: userToken,
-                                  total: "${Provider.of<AddToCartProvider>(context, listen: true).totalCartValue}",
-                                ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 5.w,right: 5.w,bottom: 5.h),
+                child: Row(
+                  children: [
+                      Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          
+                        },
+                        child: Container(
+                          height: 25.h,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: appBarColor),
+                          alignment: Alignment.center,
+                          child: Text("Details", style: GoogleFonts.roboto(color: Colors.white,fontSize: 10.sp,fontWeight: FontWeight.bold),
                           ),
-                        );
-                      },
-                      child: Container(
-                        height: 25.h,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: appBarColor),
-                        alignment: Alignment.center,
-                        child: Text("Details", style: GoogleFonts.roboto(color: Colors.white,fontSize: 10.sp,fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 5.w),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          addToCart.addProduct(
+                    SizedBox(width: 5.w),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            addToCart.addProduct(
                               AddToCartModel(
                                 id: int.parse("${widget.id}"),
                                 productName: widget.name,
-                                brandName: widget.brandName,
                                 image: widget.image,
                                 quantity: int.parse("${widget.quantity}"),
                                 slug: widget.slug,
                                 discountPrice: double.parse("${widget.discountPrice}"),
                               )
-                          );
-                          CustomSnackBar.showTopSnackBar(context, "Successfully Added to Cart");
-                        });
-                      },
-                      child: Container(
-                        height: 25.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          //color: appBarColor,
-                          borderRadius: BorderRadius.circular(4.r),
-                          border: Border.all(color: appBarColor,width: 1.w)
-                        ),
-                        child: Text("Add to Cart",
-                          style: GoogleFonts.roboto(color: appBarColor,fontSize: 10.sp,fontWeight: FontWeight.bold),
+                            );
+                            CustomSnackBar.showTopSnackBar(context, "Successfully Added to Cart");
+                          });
+                        },
+                        child: Container(
+                          height: 25.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            //color: appBarColor,
+                            borderRadius: BorderRadius.circular(4.r),
+                            border: Border.all(color: appBarColor,width: 1.w)
+                          ),
+                          child: Text("Add to Cart",
+                            style: GoogleFonts.roboto(color: appBarColor,fontSize: 10.sp,fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ):SizedBox(),
+                  ],
+                ),
+              )
             ),
           )
         ],

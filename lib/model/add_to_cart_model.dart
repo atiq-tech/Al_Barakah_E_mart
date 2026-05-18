@@ -1,7 +1,6 @@
 class AddToCartModel {
   int? id;
   String? productName;
-  String? brandName;
   int? quantity;
   String? image;
   String? slug;
@@ -10,7 +9,6 @@ class AddToCartModel {
   AddToCartModel({
     required this.id,
     required this.productName,
-    required this.brandName,
     required this.image,
     required this.quantity,
     required this.slug,
@@ -22,7 +20,6 @@ class AddToCartModel {
     return AddToCartModel(
       id: json['id'],
       productName: json['productName'],
-      brandName: json['brand_name'],
       image: json['image'],
       quantity: json['quantity'] ?? 1,
       slug: json['slug'],
@@ -35,7 +32,6 @@ class AddToCartModel {
     return {
       'id': id,
       'productName': productName,
-      'brand_name':brandName,
       'image': image,
       'quantity': quantity,
       'slug': slug,

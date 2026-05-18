@@ -109,7 +109,7 @@ class _NewAllProductPageState extends State<NewAllProductPage> {
                           : _visibleCount,
                       (context, index) {
                         final product = allProductListData[index];
-                        bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
+                        //bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
 
                         return GestureDetector(
                           onTap: () {
@@ -123,24 +123,24 @@ class _NewAllProductPageState extends State<NewAllProductPage> {
                               )),
                             );
                           },
-                          child: MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: hasDiscount
-                                ? product.onlineAfterDiscountAmount.toString()
-                                : product.productOnlineRate.toString(),
-                            sellingPrice: hasDiscount
-                                ? product.productOnlineRate.toString()
-                                : "",
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: hasDiscount ? product.onlineDiscount.toString(): "",
-                          ),
+                          // child: MyCustomCardScreen(
+                          //   quantity: "1",
+                          //   image: "$imageUrl${product.mainImage}",
+                          //   name: product.productName,
+                          //   brandName: product.relationbrand?.brandName,
+                          //   description: product.longDescription,
+                          //   discountPrice: hasDiscount
+                          //       ? product.onlineAfterDiscountAmount.toString()
+                          //       : product.productOnlineRate.toString(),
+                          //   sellingPrice: hasDiscount
+                          //       ? product.productOnlineRate.toString()
+                          //       : "",
+                          //   productCode: product.productCode,
+                          //   id: int.tryParse(product.productSlNo.toString()),
+                          //   slug: product.slug,
+                          //   stock: product.getCurrentStock(),
+                          //   discount: hasDiscount ? product.onlineDiscount.toString(): "",
+                          // ),
                         );
                       },
                     ),

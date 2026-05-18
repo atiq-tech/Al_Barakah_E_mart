@@ -94,7 +94,7 @@ class _AllProductPageState extends State<AllProductPage> {
                                   height: 150,
                                   width: 200,
                                   child: CustomImage(
-                                    path: "$baseUrl/uploads/products/small_image/${widget.productDataModel[index].mainImage}",
+                                    path: "$baseUrl/uploads/products/small_image/${widget.productDataModel[index].productName}",
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -145,7 +145,7 @@ class _AllProductPageState extends State<AllProductPage> {
                                 ),
                                 const SizedBox(height: 3),
                                 Text(
-                                  'MRP: ${widget.productDataModel[index].onlineDiscount}',
+                                  'MRP: ${widget.productDataModel[index].productSellingPrice}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w300,
@@ -173,28 +173,24 @@ class _AllProductPageState extends State<AllProductPage> {
                                           onTap: (){
                                             setState(() {
                                               addToCart.addProduct(
-                                                AddToCartModel(
+                                                 AddToCartModel(
                                                     id: int.parse("${widget.productDataModel[index].productSlNo}"),
                                                     productName: widget.productDataModel[index].productName,
-                                                    brandName:  widget.productDataModel[index].relationbrand?.brandName,
-                                                    image: widget.productDataModel[index].mainImage,
-                                                    quantity: int.parse("${widget.productDataModel[index].brand}"),
-                                                    slug: widget.productDataModel[index].slug,
-                                                    discountPrice: double.parse(widget.productDataModel[index].onlineDiscount)
+                                                    image: "",
+                                                    quantity:  1,
+                                                    slug:  "",
+                                                    discountPrice:  1,
                                                 )
                                                 // AddToCartModel(
-                                                //   id: int.parse(widget.productDataModel[index].productSlNo).toInt(),
-                                                //   productName: widget.productDataModel[index].productName,
-                                                //   image: widget.productDataModel[index].mainImage,
-                                                //   mainPrice: double.parse(widget.productDataModel[index].mainPrice).toDouble(),
-                                                //   salePrice: double.parse(widget.productDataModel[index].salePrice).toDouble(),
-                                                //   purchaseRate: widget.productDataModel[index].purchaseRate,
-                                                //   cashBackAmount: widget.productDataModel[index].cashbackAmount,
-                                                //   cashBackPercent: widget.productDataModel[index].cashbackPercent,
-                                                //   quantity: int.parse(widget.productDataModel[index].qty),
-                                                //   slug: "${widget.productDataModel[index].slug}", discountPrice: '',
-                                                //
-                                                // ),
+                                                //     id: int.parse("${widget.productDataModel[index].productSlNo}"),
+                                                //     productName: widget.productDataModel[index].productName,
+                                                //     brandName:  widget.productDataModel[index].relationbrand?.brandName,
+                                                //     image: widget.productDataModel[index].mainImage,
+                                                //     quantity: int.parse("${widget.productDataModel[index].brand}"),
+                                                //     slug: widget.productDataModel[index].slug,
+                                                //     discountPrice: double.parse(widget.productDataModel[index].onlineDiscount)
+                                                // )
+                                                
                                               );
                                               Utils.showSnackBar(context, "Product added to Cart");
                                             });

@@ -168,7 +168,6 @@ class _MyWishListScreenState extends State<MyWishListScreen> {
                                               AddToCartModel(
                                                 id: int.parse("${allWishListData[index].id}"),
                                                 productName: allWishListData[index].product.name,
-                                                brandName: "",
                                                 image: "$BaseUrl${allWishListData[index].product.image}",
                                                 quantity: 1,
                                                 slug: allWishListData[index].product.slug,

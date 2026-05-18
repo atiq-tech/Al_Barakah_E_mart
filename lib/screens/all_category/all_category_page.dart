@@ -50,6 +50,7 @@ class _All_CateGory_PageState extends State<All_CateGory_Page> {
                           builder: (context) => SubCategoryProduct(
                             categoryName: allGetCategorieslist[index].productCategoryName,
                             categoryId: "${allGetCategorieslist[index].productCategorySlNo}",
+                            subCategoryList: allGetCategorieslist[index].subCategory ?? [],
                           ),
                         ),
                       );

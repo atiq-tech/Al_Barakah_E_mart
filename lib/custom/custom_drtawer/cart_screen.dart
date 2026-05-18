@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,7 +51,7 @@ class _CartScreenState extends State<CartScreen> {
                       },
                       child: Card(
                         elevation: 5,
-                        color: Colors.orange.shade700,
+                        color: appBarColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
@@ -65,7 +66,7 @@ class _CartScreenState extends State<CartScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("MY CART", style: GoogleFonts.robotoSlab(fontWeight: FontWeight.w800)),
+                      Text("Shopping Cart", style: GoogleFonts.robotoSlab(fontWeight: FontWeight.w800)),
                       TextButton(
                         onPressed: () {
                           Utils.showCustomDialog(
@@ -116,202 +117,426 @@ class _CartScreenState extends State<CartScreen> {
                         },
                         child: const Text("Remove All", style: TextStyle(color: Colors.red)),
                       ),
+                   
                     ],
                   ),
-                  /// ===== SCROLLABLE CONTENT =====
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          /// ===== CART TABLE =====
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(6.r),
-                              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-                            ),
-                            child: Column(
-                              children: [
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5.r),
-                                    child: DataTable(
-                                      headingRowHeight: 20.h,
-                                      dataRowHeight: 40.h,
-                                      headingRowColor: MaterialStateProperty.all(Colors.orange.shade300),
-                                      border: TableBorder.all(color: Colors.grey.shade400, width: 1.w),
-                                      columns: [
-                                        DataColumn(label: Center(child: Text("Image", style: AllTextStyle.tableHeadTextStyle))),
-                                        DataColumn(label: Center(child: Text("Product Name", style: AllTextStyle.tableHeadTextStyle))),
-                                        DataColumn(label: Center(child: Text("Model", style: AllTextStyle.tableHeadTextStyle))),
-                                        DataColumn(label: Center(child: Text("Quantity", style: AllTextStyle.tableHeadTextStyle))),
-                                        DataColumn(label: Center(child: Text("Unit Price", style: AllTextStyle.tableHeadTextStyle))),
-                                        DataColumn(label: Center(child: Text("Total", style: AllTextStyle.tableHeadTextStyle))),
-                                        DataColumn(label: Center(child: Text("Action", style: AllTextStyle.tableHeadTextStyle))),
-                                      ],
-                                      rows: List.generate(
-                                        cartList.length,
-                                        (index) {
-                                          final item = cartList[index];
-                                          return DataRow(
-                                            cells: [
-                                              DataCell(
-                                                Center(
-                                                  child: SizedBox(
-                                                    height: 50.h,
-                                                    width: 50.w,
-                                                    child: CustomImage(path: item.image, fit: BoxFit.contain),
-                                                  ),
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Text(
+                  child: Column(
+                    children: [
+                      /// CART LIST
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5.r),
+                          ),
+                          child: ListView.separated(
+                            itemCount: cartList.length,
+                            separatorBuilder: (_, __) => Divider(height: 1,color: Colors.grey.shade300),
+                            itemBuilder: (context, index) {
+                              final item = cartList[index];
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    /// IMAGE
+                                    Container(
+                                      height: 50.h,
+                                      width: 50.w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5.r),
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5.r),
+                                        child: CustomImage(
+                                          path: item.image,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    /// DETAILS
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          /// NAME + DELETE
+                                          Row(
+                                            crossAxisAlignment:  CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
                                                   item.productName ?? "",
                                                   maxLines: 2,
                                                   overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(fontSize: 12.sp),
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Brand:",
-                                                        style: TextStyle(fontSize: 12.sp)),
-                                                    Text("${item.brandName}", style: TextStyle(color: Colors.orange, fontSize: 12.sp)),
-                                                  ],
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    _qtyBtn(Icons.remove, () {
-                                                      if (item.quantity! > 1) {
-                                                        cartProvider.updateProduct(item, item.quantity! - 1);
-                                                      }
-                                                    }),
-                                                    Padding(
-                                                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                                      child: Text("${item.quantity}",
-                                                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                    ),
-                                                    _qtyBtn(Icons.add, () {
-                                                      cartProvider.updateProduct(item, item.quantity! + 1);
-                                                    }),
-                                                  ],
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Center(
-                                                  child: Text("${item.discountPrice}",
-                                                      style: TextStyle(fontSize: 12.sp)),
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Text("${item.discountPrice! * item.quantity!}",
-                                                    style: TextStyle(fontSize: 12.sp)),
-                                              ),
-                                              DataCell(
-                                                GestureDetector(
-                                                  onTap: () => cartProvider.removeProduct(item),
-                                                  child: Center(
-                                                    child: Icon(Icons.delete, size: 18.sp, color: Colors.orange),
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 12.sp,
+                                                    fontWeight:FontWeight.w600,
                                                   ),
                                                 ),
                                               ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  cartProvider.removeProduct(item);
+                                                },
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.black,
+                                                  size: 20.sp,
+                                                ),
+                                              ),
                                             ],
-                                          );
-                                        },
+                                          ),
+                                          SizedBox(height: 1.h),
+                                          /// QTY + PRICE
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              /// QUANTITY BUTTON
+                                              Container(
+                                                height: 25.h,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:BorderRadius.circular(5.r),
+                                                  border: Border.all(
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        if (item.quantity! > 1) {
+                                                          cartProvider.updateProduct(
+                                                            item,
+                                                            item.quantity! - 1,
+                                                          );
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        width: 30.w,
+                                                        alignment: Alignment.center,
+                                                        child: Icon(
+                                                          Icons.remove,
+                                                          size: 18.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 40.w,
+                                                      alignment:Alignment.center,
+                                                      color: Colors.grey.shade100,
+
+                                                      child: Text("${item.quantity}",
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 14.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        cartProvider.updateProduct(
+                                                          item,
+                                                          item.quantity! + 1,
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        width: 30.w,
+                                                        alignment:Alignment.center,
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          size: 18.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              /// PRICE
+                                              Text("৳${item.discountPrice} × ${item.quantity} = ৳${item.discountPrice! * item.quantity!}",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 11.sp,
+                                                  fontWeight:FontWeight.w600,
+                                                  color: Colors.teal.shade900,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      /// BOTTOM TOTAL
+                      Container(
+                        padding: EdgeInsets.all(15.r),
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Subtotal",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                /// TOTAL
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      _totalRow("Sub-Total :", "$total"),
-                                      _totalRow("Delivery Charge :", "(will be added)"),
-                                      _totalRow("Total Discount :", "0"),
-                                      Divider(height: 1),
-                                      _totalRow("Total :", "$total", isBold: true),
-                                    ],
+                                Text(
+                                  "৳$total",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () {
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));  
-                                    },
-                                  child: Card(
-                                    elevation: 5,
-                                    color: Colors.orange,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(100.r)),
-                                    child: Container(
-                                      height: 35.h,
-                                      decoration: BoxDecoration(
-                                          color: Colors.orange,
-                                          borderRadius: BorderRadius.circular(100.r)),
-                                      child: Center(
-                                          child: Text("Continue Shopping", style: AllTextStyle.tableHeadTextStyle)),
-                                    ),
+                            SizedBox(height: 15.h),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 40.h,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appBarColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(8.r),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 20.h),
-                              Expanded(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => CheckoutScreen(
-                                          addToCart: cartList,
-                                          from: 'cart',
-                                          quantity: 1,
-                                          token: userToken,
-                                          total: "$total",
-                                        ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CheckoutScreen(
+                                        addToCart: cartList,
+                                        from: 'cart',
+                                        quantity: 1,
+                                        token: userToken,
+                                        total: "$total",
                                       ),
-                                    );
-                                  },
-                                  child: Card(
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.r)),
-                                    color: Colors.indigo,
-                                    child: Container(
-                                      height: 35.h,
-                                      decoration: BoxDecoration(
-                                          color: Colors.indigo,
-                                          borderRadius: BorderRadius.circular(100.r)),
-                                      child: Center(child: Text("Check Out", style: AllTextStyle.tableHeadTextStyle)),
                                     ),
+                                  );
+                                },
+                                child: Text(
+                                  "Proceed To Checkout",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 40.h)
+                    ],
                   ),
+                ),
+                  /// ===== SCROLLABLE CONTENT =====
+                  // Expanded(
+                  //   child: SingleChildScrollView(
+                  //     child: Column(
+                  //       children: [
+                  //         /// ===== CART TABLE =====
+                  //         Container(
+                  //           decoration: BoxDecoration(
+                  //             color: Colors.white,
+                  //             borderRadius: BorderRadius.circular(6.r),
+                  //             boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                  //           ),
+                  //           child: Column(
+                  //             children: [
+                  //               SingleChildScrollView(
+                  //                 scrollDirection: Axis.horizontal,
+                  //                 child: Padding(
+                  //                   padding: EdgeInsets.all(5.r),
+                  //                   child: DataTable(
+                  //                     headingRowHeight: 20.h,
+                  //                     dataRowHeight: 40.h,
+                  //                     headingRowColor: MaterialStateProperty.all(Colors.orange.shade300),
+                  //                     border: TableBorder.all(color: Colors.grey.shade400, width: 1.w),
+                  //                     columns: [
+                  //                       DataColumn(label: Center(child: Text("Image", style: AllTextStyle.tableHeadTextStyle))),
+                  //                       DataColumn(label: Center(child: Text("Product Name", style: AllTextStyle.tableHeadTextStyle))),
+                  //                       DataColumn(label: Center(child: Text("Model", style: AllTextStyle.tableHeadTextStyle))),
+                  //                       DataColumn(label: Center(child: Text("Quantity", style: AllTextStyle.tableHeadTextStyle))),
+                  //                       DataColumn(label: Center(child: Text("Unit Price", style: AllTextStyle.tableHeadTextStyle))),
+                  //                       DataColumn(label: Center(child: Text("Total", style: AllTextStyle.tableHeadTextStyle))),
+                  //                       DataColumn(label: Center(child: Text("Action", style: AllTextStyle.tableHeadTextStyle))),
+                  //                     ],
+                  //                     rows: List.generate(
+                  //                       cartList.length,
+                  //                       (index) {
+                  //                         final item = cartList[index];
+                  //                         return DataRow(
+                  //                           cells: [
+                  //                             DataCell(
+                  //                               Center(
+                  //                                 child: SizedBox(
+                  //                                   height: 50.h,
+                  //                                   width: 50.w,
+                  //                                   child: CustomImage(path: item.image, fit: BoxFit.contain),
+                  //                                 ),
+                  //                               ),
+                  //                             ),
+                  //                             DataCell(
+                  //                               Text(
+                  //                                 item.productName ?? "",
+                  //                                 maxLines: 2,
+                  //                                 overflow: TextOverflow.ellipsis,
+                  //                                 style: TextStyle(fontSize: 12.sp),
+                  //                               ),
+                  //                             ),
+                  //                             DataCell(
+                  //                               Column(
+                  //                                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                                 crossAxisAlignment: CrossAxisAlignment.start,
+                  //                                 children: [
+                  //                                   Text("Brand:",
+                  //                                       style: TextStyle(fontSize: 12.sp)),
+                  //                                   Text("", style: TextStyle(color: Colors.orange, fontSize: 12.sp)),
+                  //                                 ],
+                  //                               ),
+                  //                             ),
+                  //                             DataCell(
+                  //                               Row(
+                  //                                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                                 children: [
+                  //                                   _qtyBtn(Icons.remove, () {
+                  //                                     if (item.quantity! > 1) {
+                  //                                       cartProvider.updateProduct(item, item.quantity! - 1);
+                  //                                     }
+                  //                                   }),
+                  //                                   Padding(
+                  //                                     padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  //                                     child: Text("${item.quantity}",
+                  //                                         style: const TextStyle(fontWeight: FontWeight.bold)),
+                  //                                   ),
+                  //                                   _qtyBtn(Icons.add, () {
+                  //                                     cartProvider.updateProduct(item, item.quantity! + 1);
+                  //                                   }),
+                  //                                 ],
+                  //                               ),
+                  //                             ),
+                  //                             DataCell(
+                  //                               Center(
+                  //                                 child: Text("${item.discountPrice}",
+                  //                                     style: TextStyle(fontSize: 12.sp)),
+                  //                               ),
+                  //                             ),
+                  //                             DataCell(
+                  //                               Text("${item.discountPrice! * item.quantity!}",
+                  //                                   style: TextStyle(fontSize: 12.sp)),
+                  //                             ),
+                  //                             DataCell(
+                  //                               GestureDetector(
+                  //                                 onTap: () => cartProvider.removeProduct(item),
+                  //                                 child: Center(
+                  //                                   child: Icon(Icons.delete, size: 18.sp, color: Colors.orange),
+                  //                                 ),
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         );
+                  //                       },
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               /// TOTAL
+                  //               Container(
+                  //                 alignment: Alignment.centerRight,
+                  //                 padding: const EdgeInsets.all(12),
+                  //                 child: Column(
+                  //                   crossAxisAlignment: CrossAxisAlignment.end,
+                  //                   children: [
+                  //                     _totalRow("Sub-Total :", "$total"),
+                  //                     _totalRow("Delivery Charge :", "(will be added)"),
+                  //                     _totalRow("Total Discount :", "0"),
+                  //                     Divider(height: 1),
+                  //                     _totalRow("Total :", "$total", isBold: true),
+                  //                   ],
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //         SizedBox(height: 20.h),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.center,
+                  //           children: [
+                  //             Expanded(
+                  //               flex: 1,
+                  //               child: GestureDetector(
+                  //                 onTap: () {
+                  //                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));  
+                  //                   },
+                  //                 child: Card(
+                  //                   elevation: 5,
+                  //                   color: Colors.orange,
+                  //                   shape: RoundedRectangleBorder(
+                  //                       borderRadius: BorderRadius.circular(100.r)),
+                  //                   child: Container(
+                  //                     height: 35.h,
+                  //                     decoration: BoxDecoration(
+                  //                         color: Colors.orange,
+                  //                         borderRadius: BorderRadius.circular(100.r)),
+                  //                     child: Center(
+                  //                         child: Text("Continue Shopping", style: AllTextStyle.tableHeadTextStyle)),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //             SizedBox(width: 20.h),
+                  //             Expanded(
+                  //               flex: 1,
+                  //               child: GestureDetector(
+                  //                 onTap: () {
+                  //                   Navigator.push(
+                  //                     context,
+                  //                     MaterialPageRoute(
+                  //                       builder: (_) => CheckoutScreen(
+                  //                         addToCart: cartList,
+                  //                         from: 'cart',
+                  //                         quantity: 1,
+                  //                         token: userToken,
+                  //                         total: "$total",
+                  //                       ),
+                  //                     ),
+                  //                   );
+                  //                 },
+                  //                 child: Card(
+                  //                   elevation: 5,
+                  //                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.r)),
+                  //                   color: Colors.indigo,
+                  //                   child: Container(
+                  //                     height: 35.h,
+                  //                     decoration: BoxDecoration(
+                  //                         color: Colors.indigo,
+                  //                         borderRadius: BorderRadius.circular(100.r)),
+                  //                     child: Center(child: Text("Check Out", style: AllTextStyle.tableHeadTextStyle)),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         SizedBox(height: 20.h),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
       ),

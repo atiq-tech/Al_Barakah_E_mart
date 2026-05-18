@@ -93,7 +93,7 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final product = allParentCateProductData[index];
-                        bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
+                        //bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
                     return InkWell(
                       onTap: () {
                         Navigator.push(context,MaterialPageRoute(
@@ -103,37 +103,37 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                                 ),
                         ));
                       },
-                        child: authType == "reseller" ? MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: product.productWholesaleRate.toString(),
-                            sellingPrice: product.productWholesaleRate.toString(),
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: "",
-                          ): MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: hasDiscount
-                                ? product.onlineAfterDiscountAmount.toString()
-                                : product.productOnlineRate.toString(),
-                            sellingPrice: hasDiscount
-                                ? product.productOnlineRate.toString()
-                                : "",
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: hasDiscount ? product.onlineDiscount.toString(): "",
-                          ),
+                        // child: authType == "reseller" ? MyCustomCardScreen(
+                        //     quantity: "1",
+                        //     image: "$imageUrl${product.mainImage}",
+                        //     name: product.productName,
+                        //     brandName: product.relationbrand?.brandName,
+                        //     description: product.longDescription,
+                        //     discountPrice: product.productWholesaleRate.toString(),
+                        //     sellingPrice: product.productWholesaleRate.toString(),
+                        //     productCode: product.productCode,
+                        //     id: int.tryParse(product.productSlNo.toString()),
+                        //     slug: product.slug,
+                        //     stock: product.getCurrentStock(),
+                        //     discount: "",
+                        //   ): MyCustomCardScreen(
+                        //     quantity: "1",
+                        //     image: "$imageUrl${product.mainImage}",
+                        //     name: product.productName,
+                        //     brandName: product.relationbrand?.brandName,
+                        //     description: product.longDescription,
+                        //     discountPrice: hasDiscount
+                        //         ? product.onlineAfterDiscountAmount.toString()
+                        //         : product.productOnlineRate.toString(),
+                        //     sellingPrice: hasDiscount
+                        //         ? product.productOnlineRate.toString()
+                        //         : "",
+                        //     productCode: product.productCode,
+                        //     id: int.tryParse(product.productSlNo.toString()),
+                        //     slug: product.slug,
+                        //     stock: product.getCurrentStock(),
+                        //     discount: hasDiscount ? product.onlineDiscount.toString(): "",
+                        //   ),
                     );
                   }, childCount: allParentCateProductData.length),
                 ),

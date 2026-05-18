@@ -480,7 +480,6 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                     AddToCartModel(
                                       id: int.parse("${product.productSlNo}"),
                                       productName: product.productName,
-                                      brandName: product.relationbrand?.brandName,
                                       image: "$imageUrl${product.mainImage}",
                                       quantity: count,
                                       slug: product.slug,
@@ -537,7 +536,6 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                     id: product.productSlNo is int? product.productSlNo
                                         : int.parse(product.productSlNo.toString()),
                                     productName: product.productName ?? "",
-                                    brandName: product.brand?.toString() ?? "",
                                     image: "$imageUrl${product.mainImage}",
                                     quantity: count,
                                     slug: product.slug ?? "",
@@ -682,7 +680,6 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                   quantity: "1",
                                   image: "$imageUrl${product.mainImage}",
                                   name: product.productName,
-                                  brandName: product.relationbrand?.brandName,
                                   description: product.longDescription,
                                   discountPrice: product.productWholesaleRate.toString(),
                                   sellingPrice: product.productWholesaleRate.toString(),
@@ -695,7 +692,6 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                   quantity: "1",
                                   image: "$imageUrl${product.mainImage}",
                                   name: product.productName,
-                                  brandName: product.relationbrand?.brandName,
                                   description: product.longDescription,
                                   discountPrice: hasDiscount
                                       ? product.onlineAfterDiscountAmount.toString()

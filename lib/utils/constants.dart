@@ -5,7 +5,7 @@ const String kIconPath = 'assets/icons/';
 const String baseUrl="https://bigbuy.com.bd";
 //const String BaseUrl="https://tltelecom.com/api/";//main
 const String BaseUrl="http://website.albarakahemart.com/api/"; //demo
-const String imageUrl="https://soft.tltelecom.com/";
+const String imageUrl="https://soft.albarakahemart.com/";
 
 const Color scaffoldColor =  Color(0xffF8F8F8);
 Color appBarColor = Color(0xff0D442F);

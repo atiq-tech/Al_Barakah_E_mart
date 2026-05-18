@@ -2,26 +2,26 @@ import 'package:al_barakah_e_mart/all_api_model/get_slide_model.dart';
 import 'package:al_barakah_e_mart/all_api_service/all_api_service.dart';
 import 'package:flutter/material.dart';
 
-class GetSlidersProvider extends ChangeNotifier {
+class SliderProvider extends ChangeNotifier {
 
-  static bool isGetSlidersLoading= false;
+  static bool isSliderLoading= false;
 
-  List<GetSlidersModel> getSliderslist= [];
-  getGetSliders() async {
-    getSliderslist = await AllApiService.fetchGetSliders();
+  List<SliderModel> sliderlist= [];
+  getSlider() async {
+    sliderlist = await AllApiService.fetchSlider();
     off();
     notifyListeners();
   }
   off(){
     Future.delayed(const Duration(seconds: 1),() {
       print('offff');
-      isGetSlidersLoading = false;
+      isSliderLoading = false;
       notifyListeners();
     },);
   }
   on(){
     print('onnn');
-    isGetSlidersLoading = true;
+    isSliderLoading = true;
     notifyListeners();
   }
 }

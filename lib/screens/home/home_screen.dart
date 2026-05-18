@@ -1,31 +1,19 @@
 
+import 'package:al_barakah_e_mart/all_api_provider/get_category_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/special_products_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:al_barakah_e_mart/all_api_provider/All_Top_Brand_product_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/all_searching_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/best_dealer_f_product_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/best_seller_f_product_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/brand_wise_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/categories_feature_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/device_offer_product_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/feature_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/gadget_offer_product_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/get_brands_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/get_slide_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/popular_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/products_details_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/resent_product_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/searching_wise_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/special_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/top_brands_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/top_rated_products_provider.dart';
 import 'package:al_barakah_e_mart/custom/custom_card/my_custom_card_screen.dart';
-import 'package:al_barakah_e_mart/custom/custom_section/custom_section_part.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
 import 'package:al_barakah_e_mart/main.dart';
 import 'package:al_barakah_e_mart/screens/One_Product_Details/product_details_screen.dart';
 import 'package:al_barakah_e_mart/screens/all_category/subCategoryProduct/sub_category_product.dart';
-import 'package:al_barakah_e_mart/screens/brand_wise_product/brands_wise_allitems.dart';
-import 'package:al_barakah_e_mart/screens/brand_wise_product/sub_brands_product.dart';
 import 'package:al_barakah_e_mart/screens/main/component/main_controller.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:al_barakah_e_mart/utils/custom_image.dart';
@@ -86,24 +74,15 @@ class _HomeScreenState extends State<HomeScreen> {
     SearchingWiseProductsProvider.isSearchingWiseProductsloading = true;
     Provider.of<SearchingWiseProductsProvider>(context,listen: false).getSearchingWiseProducts("");
     ///===new===
-    Provider.of<GetSlidersProvider>(context, listen: false).getGetSliders();
-    
-    Provider.of<TopRatedProductsProvider>(context,listen: false).getTopRatedProducts();
+    Provider.of<SliderProvider>(context, listen: false).getSlider();
     Provider.of<ResentProductProvider>(context,listen: false).getResentProduct();
     Provider.of<PopularProductsProvider>(context,listen: false).getPopularProducts();
-    Provider.of<FeatureProductsProvider>(context,listen: false).getFeatureProducts();
-    Provider.of<SpecialProductsProvider>(context,listen: false).getSpecialProducts();
-    Provider.of<GetBrandsProvider>(context,listen: false).getGetBrands();
-    Provider.of<TopBrandsProvider>(context,listen: false).getTopBrands();
-    Provider.of<BrandWiseProductsProvider>(context,listen: false).getBrandWiseProducts("");
+    Provider.of<NewArrivalProductsProvider>(context,listen: false).getNewArrivalProducts();
 
     // TODO: implement initState
     super.initState();
     Future.microtask(() {
-    Provider.of<BestDealerFeatureProductsProvider>(context, listen: false).getBestDealerFeatureProducts();
-    Provider.of<GadgetOfferProductProvider>(context, listen: false).getGadgetOfferProducts();
-    Provider.of<AllTopBrandProductProvider>(context, listen: false).getAllTopBrandProducts();
-    Provider.of<CategoriesFeatureProvider>(context,listen: false).getCategoriesFeature();
+    Provider.of<GetCategoriesProvider>(context,listen: false).getGetCategories();
   });
   }
   void callbackFunction(int index, CarouselPageChangedReason reason) {
@@ -115,16 +94,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final allBrandsData = Provider.of<GetBrandsProvider>(context,listen: false).getBrandslist;
-    final sliderImages = Provider.of<GetSlidersProvider>(context).getSliderslist;
-    final allCategoriesFeaturelist = Provider.of<CategoriesFeatureProvider>(context).categoriesFeatureList;
-    final allProductListData = Provider.of<SearchingWiseProductsProvider>(context).searchingWiseProductslist;
-    final allTopBrandlist = Provider.of<TopBrandsProvider>(context).topBrandslist;
-    print("allProductListData========      ${allProductListData.length}");
+    final sliderImages = Provider.of<SliderProvider>(context).sliderlist;
     print("sliderImages========      ${sliderImages.length}");
-    print("allCategoriesFeaturelist========      ${allCategoriesFeaturelist.length}");
-    print("allBrandsData========      ${allBrandsData.length}");
-    print("allTopBrandlist========      ${allTopBrandlist.length}");
+    final allCategorieslist = Provider.of<GetCategoriesProvider>(context).getCategorieslist;
+    print("allCategorieslist========      ${allCategorieslist.length}");
+    final allResentProductlist = Provider.of<ResentProductProvider>(context).resentProductlist;
+    print("allResentProductlist========      ${allResentProductlist.length}");
+    final allPopularProductlist = Provider.of<PopularProductsProvider>(context).popularProductslist;
+    print("allPopularProductlist========      ${allPopularProductlist.length}");
+    final allNewArrivalProductlist = Provider.of<NewArrivalProductsProvider>(context).newArrivalProductslist;
+    print("allNewArrivalProductlist========      ${allNewArrivalProductlist.length}");
+
 
     const padding = EdgeInsets.only(top: 5,left: 10,right: 10,bottom: 0);
     return RefreshIndicator(
@@ -144,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return SizedBox(
                           width: double.infinity,
                           child: CustomImage(
-                            path: "${imageUrl}uploads/sliders/${sliderImages[index].image}",
+                            path: "$imageUrl${sliderImages[index].image}",
                             fit: BoxFit.fill,
                           ),
                         );
@@ -195,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         GridView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: allCategoriesFeaturelist.length,
+                          itemCount: allCategorieslist.length,
                           scrollDirection: Axis.vertical,
                           gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -208,8 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             return GestureDetector(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => SubCategoryProduct(
-                                    categoryName: allCategoriesFeaturelist[index].productCategoryName,
-                                    categoryId: "${allCategoriesFeaturelist[index].productCategorySlNo}",
+                                    categoryName: allCategorieslist[index].productCategoryName,
+                                    categoryId: "${allCategorieslist[index].productCategorySlNo}",
+                                    subCategoryList: allCategorieslist[index].subCategory ?? [],
                                   ),));
                                 },
                                child: Card(
@@ -226,8 +207,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: SizedBox(
                                         height: 125.h,
                                         width: double.infinity,
-                                        child: Image.network("https://soft.albarakahemart.com/uploads/category/fruit-69f8437482afe_69f8437482beb.jpg",
-                                          //"$imageUrl${allCategoriesFeaturelist[index].image}",
+                                        child: Image.network(
+                                          "$imageUrl${allCategorieslist[index].image}",
                                           fit: BoxFit.fill,
                                           loadingBuilder: (context, child, loadingProgress) {
                                             if (loadingProgress == null) return child;
@@ -261,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     child: Center(
                                      child: Text(
-                                      allCategoriesFeaturelist[index].productCategoryName,
+                                      allCategorieslist[index].productCategoryName,
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         fontSize: 10.sp,
@@ -286,542 +267,191 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }, childCount: 1),
             ),
-          ),
-          // ///===============TOP RATED============
-          // const SliverToBoxAdapter(
-          //   child: Column(
-          //     children: [
-          //       Divider(height: 2.0,thickness: 2.0,color: Colors.black,endIndent: 130.0,indent: 130.0),
-          //       SizedBox(height: 10.0),
-          //       CustomSectionPart(firstPart: "Ready for Order"),
-          //       SizedBox(height: 10.0),
-          //       Divider(height: 2.0,thickness: 2.0,color: Colors.black,endIndent: 130.0,indent: 130.0),
-          //       SizedBox(height: 15.0),
-          //     ],
-          //   ),
-          // ),
-          // SliverToBoxAdapter(
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-          //     child: CarouselSlider(
-          //       items: List.generate(allProductListData.length, (index) {
-          //         final product = allProductListData[index];
-          //         bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
-          //         return Padding(
-          //           padding: const EdgeInsets.all(5.0),
-          //           child: GestureDetector(
-          //             onTap: () {
-          //                Provider.of<ProductsDetailsProvider>(context, listen: false).getProductsDetails(allProductListData[index].slug);
-          //             Navigator.push(
-          //               context,
-          //               MaterialPageRoute(
-          //                 builder: (context) => One_Product_Details(
-          //                   slug: allProductListData[index].slug,
-          //                   productId: allProductListData[index].productSlNo.toString(),
-          //                 ),
-          //               ),
-          //             );
-          //             },
-          //            child: authType == "reseller" ? MyCustomCardScreen(
-          //             quantity: "1",
-          //             // image: "$imageUrl${product.mainImage}",
-          //             image: "https://soft.albarakahemart.com/uploads/product/china-litchi-69fc1e6665235_69fc1e666524e.jfif",
-          //             name: product.productName,
-          //             brandName: product.relationbrand?.brandName,
-          //             description: product.longDescription,
-          //             discountPrice: product.productWholesaleRate.toString(),
-          //             sellingPrice: product.productWholesaleRate.toString(),
-          //             productCode: product.productCode,
-          //             id: int.tryParse(product.productSlNo.toString()),
-          //             slug: product.slug,
-          //             stock: product.getCurrentStock(),
-          //             discount: "",
-          //           ) : MyCustomCardScreen(
-          //             quantity: "1",
-          //            //image: "$imageUrl${product.mainImage}",
-          //            image: "https://soft.albarakahemart.com/uploads/product/china-litchi-69fc1e6665235_69fc1e666524e.jfif",
-          //             name: product.productName,
-          //             brandName: product.relationbrand?.brandName,
-          //             description: product.longDescription,
-          //             discountPrice: hasDiscount
-          //                 ? product.onlineAfterDiscountAmount.toString()
-          //                 : product.productOnlineRate.toString(),
-          //             sellingPrice: hasDiscount ? product.productOnlineRate.toString() : "",
-          //             productCode: product.productCode,
-          //             id: int.tryParse(product.productSlNo.toString()),
-          //             slug: product.slug,
-          //             stock: product.getCurrentStock(),
-          //             discount: hasDiscount ? product.onlineDiscount.toString() : "",
-          //           ),
-          //           ),
-          //         );
-          //       }),
-          //       options: CarouselOptions(
-          //         aspectRatio: 4/3,
-          //         autoPlay: true,
-          //         autoPlayInterval: const Duration(seconds: 5),
-          //         autoPlayAnimationDuration: const Duration(milliseconds: 1000),
-          //         autoPlayCurve: Curves.fastOutSlowIn,
-          //         //enlargeCenterPage: true,
-          //         viewportFraction: 0.55,
-          //         initialPage: 1,
-          //         onPageChanged: callbackFunction,
-          //         scrollDirection: Axis.horizontal,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          
+          ), 
           ///===============RESENT PRODRCT============
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                  const SizedBox(height: 5.0),
-                  Divider(height: 1.0,thickness: 1.5,color: appBarColor),
-                  const SizedBox(height: 2.0),
-                  Column(
-                    children: [
-                      Text("Recent Product",style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 14.sp,fontWeight: FontWeight.w700,color: appBarColor),
-                      )),
-                  ],),
-                  const SizedBox(height: 5.0),
-                  Divider(height: 1.0,thickness: 1.5,color: appBarColor),
-                  const SizedBox(height: 12.0),
-
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     ElevatedButton(
-                //       onPressed: () {
-                //         setState(() {
-                //           isDealer = true;
-                //           isSeller = false;
-                //         });
-
-                //         Provider.of<BestDealerFeatureProductsProvider>(context, listen: false)
-                //             .getBestDealerFeatureProducts();
-                //       },
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: isDealer ? appBarColor : Colors.grey,
-                //       ),
-                //       child: const Text("Best Dealers", style: TextStyle(color: Colors.white)),
-                //     ),
-                //     const SizedBox(width: 20),
-                //     ElevatedButton(
-                //       onPressed: () {
-                //         setState(() {
-                //           isSeller = true;
-                //           isDealer = false;
-                //         });
-
-                //         Provider.of<BestSellerFeatureProductsProvider>(context, listen: false)
-                //             .getBestSellerFeatureProducts();
-                //       },
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: isSeller ? appBarColor : Colors.grey,
-                //       ),
-                //       child: const Text("Best Sellers", style: TextStyle(color: Colors.white)),
-                //     ),
-                //   ],
-                // ),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [
+                    const SizedBox(height: 5.0),
+                    Divider(height: 1.0,thickness: 1.5,color: appBarColor),
+                    const SizedBox(height: 2.0),
+                    Column(
+                      children: [
+                        Text("Recent Product",style: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 14.sp,fontWeight: FontWeight.w700,color: appBarColor),
+                        )),
+                    ],),
+                    const SizedBox(height: 5.0),
+                    Divider(height: 1.0,thickness: 1.5,color: appBarColor),
+                    const SizedBox(height: 12.0),
+                    GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: allResentProductlist.length,
+                    scrollDirection: Axis.vertical,
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      mainAxisExtent: 280
+                    ),
+                    itemBuilder: ((context, index) {
+                     final product = allResentProductlist[index];
+                      return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (_) =>One_Product_Details(
+                                slug: product.slug,
+                                productId: product.productSlNo.toString()),
+                              ),
+                            );
+                          },
+                          child: MyCustomCardScreen(
+                            quantity: "1",
+                            image: "$imageUrl${product.thumImage}",
+                            name: product.productName,
+                            description: product.productDescription,
+                            discountPrice: product.productWholesaleRate.toString(),
+                            sellingPrice: product.productWholesaleRate.toString(),
+                            productCode: product.productCode,
+                            id: int.tryParse(product.productSlNo.toString()),
+                            slug: product.slug,
+                            stock: product.stock,
+                            discount: "",
+                          )
+                        );
+                    }),
+                  )
+                ],
+              ),
             ),
           ),
-         isDealer
-          ? Consumer<BestDealerFeatureProductsProvider>(
-              builder: (context, dealerProvider, _) {
-                if (dealerProvider.isLoading) {
-                  return const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  );
-                }
-
-                final list = dealerProvider.bestDealerFeatureProductsList;
-
-                if (list.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: Text("No Dealer Products")),
-                  );
-                }
-
-                return SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                  sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      mainAxisExtent: 270,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final product = list[index];
-                        bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
-
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    One_Product_Details(slug: product.slug,
-                                        productId: product.productSlNo.toString()),
-                              ),
-                            );
-                          },
-                          child: authType == "reseller" ? MyCustomCardScreen(
-                            quantity: "1",
-                            //image: "$imageUrl${product.mainImage}",
-                            image: "https://soft.albarakahemart.com/uploads/product/china-litchi-69fc1e6665235_69fc1e666524e.jfif",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: product.productWholesaleRate.toString(),
-                            sellingPrice: product.productWholesaleRate.toString(),
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: "",
-                          ): MyCustomCardScreen(
-                            quantity: "1",
-                            //image: "$imageUrl${product.mainImage}",
-                            image: "https://soft.albarakahemart.com/uploads/product/china-litchi-69fc1e6665235_69fc1e666524e.jfif",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: hasDiscount
-                                ? product.onlineAfterDiscountAmount.toString()
-                                : product.productOnlineRate.toString(),
-                            sellingPrice: hasDiscount
-                                ? product.productOnlineRate.toString()
-                                : "",
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: hasDiscount
-                                ? product.onlineDiscount.toString()
-                                : "",
-                          ),
-                        );
-                      },
-                      childCount: list.length > 12 ? 12 : list.length,
-                    ),
-                  ),
-                );
-              },
-            )
-          : Consumer<BestSellerFeatureProductsProvider>(
-              builder: (context, sellerProvider, _) {
-                if (sellerProvider.isLoading) {
-                  return const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  );
-                }
-
-                final list = sellerProvider.bestSellerFeatureProductsList;
-
-                if (list.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: Text("No Seller Products")),
-                  );
-                }
-
-                return SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                  sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      mainAxisExtent: 270,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final product = list[index];
-                        bool hasDiscount =
-                            checkHasDiscount(product.startDate, product.endDate);
-
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    One_Product_Details(slug: product.slug,
-                                        productId: product.productSlNo.toString()),
-                              ),
-                            );
-                          },
-                          child: authType == "reseller" ? MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: product.productWholesaleRate.toString(),
-                            sellingPrice: product.productWholesaleRate.toString(),
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: "",
-                          ): MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: hasDiscount
-                                ? product.onlineAfterDiscountAmount.toString()
-                                : product.productOnlineRate.toString(),
-                            sellingPrice: hasDiscount
-                                ? product.productOnlineRate.toString()
-                                : "",
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: hasDiscount
-                                ? product.onlineDiscount.toString()
-                                : "",
-                          ),
-                        );
-                      },
-                      childCount: list.length > 12 ? 12 : list.length,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ///===============RESENT PRODRCT============
+          ///===============POPULAR PRODRCT============
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const Divider(height: 2, thickness: 2, color: Colors.green, endIndent: 100, indent: 100),
-                const SizedBox(height: 10),
-                const CustomSectionPart(firstPart: "Offer Products"),
-                const SizedBox(height: 10),
-                const Divider(height: 2, thickness: 2, color: Colors.green, endIndent: 100, indent: 100),
-                const SizedBox(height: 15),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          isGadget = true;
-                          isDevice = false;
-                        });
-                        Provider.of<GadgetOfferProductProvider>(context, listen: false).getGadgetOfferProducts();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isGadget ? appBarColor : Colors.grey,
-                      ),
-                      child: const Text("Gadgets", style: TextStyle(color: Colors.white)),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [
+                    const SizedBox(height: 5.0),
+                    Divider(height: 1.0,thickness: 1.5,color: appBarColor),
+                    const SizedBox(height: 2.0),
+                    Column(
+                      children: [
+                        Text("Popular Product",style: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 14.sp,fontWeight: FontWeight.w700,color: appBarColor),
+                        )),
+                    ],),
+                    const SizedBox(height: 5.0),
+                    Divider(height: 1.0,thickness: 1.5,color: appBarColor),
+                    const SizedBox(height: 12.0),
+                    GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: allPopularProductlist.length,
+                    scrollDirection: Axis.vertical,
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      mainAxisExtent: 250
                     ),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          isDevice = true;
-                          isGadget = false;
-                        });
-                        Provider.of<DeviceOfferProductProvider>(context, listen: false).getDeviceOfferProducts();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDevice ? appBarColor : Colors.grey,
-                      ),
-                      child: const Text("Devices", style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ],
+                    itemBuilder: ((context, index) {
+                     final product = allPopularProductlist[index];
+                      return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (_) =>One_Product_Details(
+                                slug: product.slug,
+                                productId: product.productSlNo.toString()),
+                              ),
+                            );
+                          },
+                          child: MyCustomCardScreen(
+                            quantity: "1",
+                            image: "$imageUrl${product.thumImage}",
+                            name: product.productName,
+                            description: product.productDescription,
+                            discountPrice: product.productWholesaleRate.toString(),
+                            sellingPrice: product.productWholesaleRate.toString(),
+                            productCode: product.productCode,
+                            id: int.tryParse(product.productSlNo.toString()),
+                            slug: product.slug,
+                            stock: product.stock,
+                            discount: "",
+                          )
+                        );
+                    }),
+                  )
+                ],
+              ),
             ),
           ),
-         isGadget
-          ? Consumer<GadgetOfferProductProvider>(
-              builder: (context, gadgetProvider, _) {
-                if (gadgetProvider.isLoading) {
-                  return const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Center(child: CircularProgressIndicator()),
+          ///===============NEW ARRIVAL PRODRCT============
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [
+                    const SizedBox(height: 5.0),
+                    Divider(height: 1.0,thickness: 1.5,color: appBarColor),
+                    const SizedBox(height: 2.0),
+                    Column(
+                      children: [
+                        Text("New Arrival",style: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 14.sp,fontWeight: FontWeight.w700,color: appBarColor),
+                        )),
+                    ],),
+                    const SizedBox(height: 5.0),
+                    Divider(height: 1.0,thickness: 1.5,color: appBarColor),
+                    const SizedBox(height: 12.0),
+                    GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: allNewArrivalProductlist.length,
+                    scrollDirection: Axis.vertical,
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      mainAxisExtent: 250
                     ),
-                  );
-                }
-
-                final list = gadgetProvider.gadgetOfferProductsList;
-
-                if (list.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: Text("No Gadget Products")),
-                  );
-                }
-
-                return SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                  sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      mainAxisExtent: 270,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final product = list[index];
-                        bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
-
-                        return GestureDetector(
+                    itemBuilder: ((context, index) {
+                     final product = allNewArrivalProductlist[index];
+                      return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    One_Product_Details(slug: product.slug,
-                                        productId: product.productSlNo.toString()),
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (_) =>One_Product_Details(
+                                slug: product.slug,
+                                productId: product.productSlNo.toString()),
                               ),
                             );
                           },
-                          child: authType == "reseller" ? MyCustomCardScreen(
+                          child: MyCustomCardScreen(
                             quantity: "1",
-                            //image: "$imageUrl${product.mainImage}",
-                            image: "https://soft.albarakahemart.com/uploads/product/harivagga-mango-69fc1b5db80f0_69fc1b5db80fe.jfif",          
+                            image: "$imageUrl${product.thumImage}",
                             name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
+                            description: product.productDescription,
                             discountPrice: product.productWholesaleRate.toString(),
                             sellingPrice: product.productWholesaleRate.toString(),
                             productCode: product.productCode,
                             id: int.tryParse(product.productSlNo.toString()),
                             slug: product.slug,
-                            stock: product.getCurrentStock(),
+                            stock: product.stock,
                             discount: "",
-                          ): MyCustomCardScreen(
-                            quantity: "1",
-                            //image: "$imageUrl${product.mainImage}",
-                            image: "https://soft.albarakahemart.com/uploads/product/harivagga-mango-69fc1b5db80f0_69fc1b5db80fe.jfif",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: hasDiscount
-                                ? product.onlineAfterDiscountAmount.toString()
-                                : product.productOnlineRate.toString(),
-                            sellingPrice: hasDiscount
-                                ? product.productOnlineRate.toString()
-                                : "",
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: hasDiscount
-                                ? product.onlineDiscount.toString()
-                                : "",
-                          ),
+                          )
                         );
-                      },
-                      childCount: list.length > 12 ? 12 : list.length,
-                    ),
-                  ),
-                );
-              },
-            )
-          : Consumer<DeviceOfferProductProvider>(
-              builder: (context, deviceProvider, _) {
-                if (deviceProvider.isLoading) {
-                  return const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  );
-                }
-
-                final list = deviceProvider.deviceOfferProductsList;
-
-                if (list.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: Text("No Device Products")),
-                  );
-                }
-
-                return SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 30, left: 10, right: 10),
-                  sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      mainAxisExtent: 270,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final product = list[index];
-                        bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
-
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    One_Product_Details(slug: product.slug,
-                                        productId: product.productSlNo.toString()),
-                              ),
-                            );
-                          },
-                          child: authType == "reseller" ? MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: product.productWholesaleRate.toString(),
-                            sellingPrice: product.productWholesaleRate.toString(),
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: "",
-                          ): MyCustomCardScreen(
-                            quantity: "1",
-                            image: "$imageUrl${product.mainImage}",
-                            name: product.productName,
-                            brandName: product.relationbrand?.brandName,
-                            description: product.longDescription,
-                            discountPrice: hasDiscount
-                                ? product.onlineAfterDiscountAmount.toString()
-                                : product.productOnlineRate.toString(),
-                            sellingPrice: hasDiscount
-                                ? product.productOnlineRate.toString()
-                                : "",
-                            productCode: product.productCode,
-                            id: int.tryParse(product.productSlNo.toString()),
-                            slug: product.slug,
-                            stock: product.getCurrentStock(),
-                            discount: hasDiscount
-                                ? product.onlineDiscount.toString()
-                                : "",
-                          ),
-                        );
-                      },
-                      childCount: list.length > 12 ? 12 : list.length,
-                    ),
-                  ),
-                );
-              },
+                    }),
+                  )
+                ],
+              ),
             ),
-          ///==========Footer Area=========
+          ),
+         ///==========Footer Area=========
           const SliverToBoxAdapter(
             child: BigBuyFooter(),
           ),

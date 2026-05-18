@@ -89,7 +89,7 @@ class AlBarakahEmartApp extends StatelessWidget {
           ChangeNotifierProvider<RemoveCartProvider>(create: (context) => RemoveCartProvider()),
           ChangeNotifierProvider<WishListProvider>(create: (context) => WishListProvider()),
 
-          ChangeNotifierProvider<GetSlidersProvider>(create: (context) => GetSlidersProvider()),
+          ChangeNotifierProvider<SliderProvider>(create: (context) => SliderProvider()),
           ChangeNotifierProvider<GetCategoriesProvider>(create: (context) => GetCategoriesProvider()),
           ChangeNotifierProvider<ParentCategoriesProvider>(create: (context) => ParentCategoriesProvider()),
           ChangeNotifierProvider<ChildCategoriesProvider>(create: (context) => ChildCategoriesProvider()),
@@ -98,7 +98,7 @@ class AlBarakahEmartApp extends StatelessWidget {
           ChangeNotifierProvider<ResentProductProvider>(create: (context) => ResentProductProvider()),
           ChangeNotifierProvider<PopularProductsProvider>(create: (context) => PopularProductsProvider()),
           ChangeNotifierProvider<FeatureProductsProvider>(create: (context) => FeatureProductsProvider()),
-          ChangeNotifierProvider<SpecialProductsProvider>(create: (context) => SpecialProductsProvider()),
+          ChangeNotifierProvider<NewArrivalProductsProvider>(create: (context) => NewArrivalProductsProvider()),
           ChangeNotifierProvider<GetBrandsProvider>(create: (context) => GetBrandsProvider()),
           ChangeNotifierProvider<ProductsDetailsProvider>(create: (context) => ProductsDetailsProvider()),
           ChangeNotifierProvider<BrandWiseProductsProvider>(create: (context) => BrandWiseProductsProvider()),

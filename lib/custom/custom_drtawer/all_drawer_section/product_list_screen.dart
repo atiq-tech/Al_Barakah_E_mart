@@ -59,22 +59,22 @@ class _ProductListScreenState extends State<ProductListScreen> {
 }
 
   /// 🔍 Search
-  void filterProducts(String query) {
-    final provider = Provider.of<AllProductsProvider>(context, listen: false);
-    final allProducts = provider.allProductslist;
+  // void filterProducts(String query) {
+  //   final provider = Provider.of<AllProductsProvider>(context, listen: false);
+  //   final allProducts = provider.allProductslist;
 
-    filteredList = allProducts.where((product) {
-      final name = product.productName?.toLowerCase() ?? "";
-      final brand = product.relationbrand?.brandName?.toLowerCase() ?? "";
-      final category = product.category?.productCategoryName?.toLowerCase() ?? "";
+  //   filteredList = allProducts.where((product) {
+  //     final name = product.productName?.toLowerCase() ?? "";
+  //     final brand = product.relationbrand?.brandName?.toLowerCase() ?? "";
+  //     final category = product.category?.productCategoryName?.toLowerCase() ?? "";
 
-      return name.contains(query.toLowerCase()) ||
-          brand.contains(query.toLowerCase()) ||
-          category.contains(query.toLowerCase());
-    }).toList();
+  //     return name.contains(query.toLowerCase()) ||
+  //         brand.contains(query.toLowerCase()) ||
+  //         category.contains(query.toLowerCase());
+  //   }).toList();
 
-    loadInitialData();
-  }
+  //   loadInitialData();
+  // }
 
   Color getColor(Set<WidgetState> states) => Colors.grey.shade100;
   Color getColors(Set<WidgetState> states) => Colors.white;
@@ -112,7 +112,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  filterProducts(value);
+                  //filterProducts(value);
                 },
                 decoration: InputDecoration(
                   hintText: "Search product...",
@@ -123,7 +123,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     icon: Icon(Icons.close,size: 16.r,color: Colors.red),
                     onPressed: () {
                       searchController.clear();
-                      filterProducts("");
+                     // filterProducts("");
                     },
                   )
                       : null,

@@ -69,12 +69,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Container(
                   height: 110.h,
                   width: double.infinity,
-                  color: appBarColor,
+                  color: Colors.white,
                   alignment: Alignment.center,
                   child: CustomImage(
-                    path: "images/tmlogo.png",
-                    height: 90.h,
-                    width: 90.w,
+                    path: "images/ablogo.png",
+                    height: 120.h,
+                    width: 120.w,
                   ),
                 ),
 
@@ -118,13 +118,43 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   ),
                                 );
                               },
-                              child: Text(
-                                category.productCategoryName ?? "",
-                                style: GoogleFonts.adamina(
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                ),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    height: 20.h,
+                                    width: 20.w,
+                                    child: Image.network(
+                                      "$imageUrl${category.image}",
+                                      fit: BoxFit.fill,
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return Center(
+                                          child: SizedBox(
+                                            height: 25,
+                                            width: 25,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Center(
+                                          child: Icon(Icons.broken_image, size: 20, color: Colors.grey),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  Text(
+                                    category.productCategoryName ?? "",
+                                    style: GoogleFonts.adamina(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
 
@@ -132,17 +162,47 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               return Padding(
                                 padding:EdgeInsets.only(left: 5.w, right: 5.w),
                                 child: Card(
-                                  color: appBarColor,
+                                  color: const Color.fromARGB(255, 220, 248, 242),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                                   child: ListTile(
                                     visualDensity: const VisualDensity(vertical: -4),
                                     dense: true,
-                                    title: Text(
-                                      subCategory.name ??"",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11.sp,
-                                      ),
+                                    title: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                          width: 20.w,
+                                          child: Image.network(
+                                            "$imageUrl${subCategory.image}",
+                                            fit: BoxFit.fill,
+                                            loadingBuilder: (context, child, loadingProgress) {
+                                              if (loadingProgress == null) return child;
+                                              return Center(
+                                                child: SizedBox(
+                                                  height: 25,
+                                                  width: 25,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return const Center(
+                                                child: Icon(Icons.broken_image, size: 20, color: Colors.grey),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        Text(
+                                          subCategory.name ??"",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 11.sp,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     onTap: () {
                                       Navigator.pop(context);
@@ -162,13 +222,43 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           )
                           : ListTile(
                             visualDensity: const VisualDensity(vertical: -4),
-                              title: Text(
-                                category.productCategoryName ?? "",
-                                style: GoogleFonts.adamina(
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                ),
+                              title: Row(
+                                children: [
+                                  SizedBox(
+                                    height: 20.h,
+                                    width: 20.w,
+                                    child: Image.network(
+                                      "$imageUrl${category.image}",
+                                      fit: BoxFit.fill,
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return Center(
+                                          child: SizedBox(
+                                            height: 25,
+                                            width: 25,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Center(
+                                          child: Icon(Icons.broken_image, size: 20, color: Colors.grey),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  Text(
+                                    category.productCategoryName ?? "",
+                                    style: GoogleFonts.adamina(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                               onTap: () {
                                 Navigator.pop(context);
