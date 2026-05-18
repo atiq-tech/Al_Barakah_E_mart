@@ -1,5 +1,4 @@
 import 'package:al_barakah_e_mart/all_api_provider/brand_wise_products_provider.dart';
-import 'package:al_barakah_e_mart/custom/custom_card/my_custom_card_screen.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
 import 'package:al_barakah_e_mart/main.dart';
 import 'package:al_barakah_e_mart/screens/One_Product_Details/product_details_screen.dart';

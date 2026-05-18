@@ -9,7 +9,6 @@ import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../custom/custom_card/my_custom_card_screen.dart';
 
 class MenuCategoryProducts extends StatefulWidget {
   const MenuCategoryProducts({Key? key, required this.slug, this.categoryName}) : super(key: key);
@@ -94,7 +93,7 @@ class _MenuCategoryProductsState extends State<MenuCategoryProducts> {
                     mainAxisExtent: 275,
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final product = allMenuCategoryProductData[index];
+                    //final product = allMenuCategoryProductData[index];
                        // bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
                     return InkWell(
                       onTap: () {

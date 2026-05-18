@@ -9,8 +9,6 @@ import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../custom/custom_card/my_custom_card_screen.dart';
-
 class SubCategoryIndividualProducts extends StatefulWidget {
   const SubCategoryIndividualProducts({Key? key, required this.categoryId, this.categoryName}) : super(key: key);
   final String? categoryId;
@@ -92,7 +90,7 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                     mainAxisExtent: 275,
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final product = allParentCateProductData[index];
+                   // final product = allParentCateProductData[index];
                         //bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
                     return InkWell(
                       onTap: () {

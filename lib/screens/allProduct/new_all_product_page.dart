@@ -5,7 +5,6 @@ import 'package:al_barakah_e_mart/screens/search/search_screen.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../custom/custom_card/my_custom_card_screen.dart';
 import '../One_Product_Details/product_details_screen.dart';
 
 class NewAllProductPage extends StatefulWidget {

@@ -12,7 +12,6 @@ import '../../provider/add_to_cart_provider.dart';
 import '../../provider/company_profile_provider.dart';
 import '../../provider/token_provider/token_provider.dart';
 import '../../provider/user_profile_provider.dart';
-import '../../screens/checkOut/checkout_from_details_screen.dart';
 import '../../utils/custom_image.dart';
 
 class MyCustomCardScreen extends StatefulWidget {
@@ -92,8 +91,8 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
   Widget build(BuildContext context) {
     final addToCart = Provider.of<AddToCartProvider>(context, listen: true);
     ///====new====
-    final userToken =  Provider.of<TokenProvider>(context).tokenData;
-    final addToCartProviderList = Provider.of<AddToCartProvider>(context, listen: true).cart;
+    //final userToken =  Provider.of<TokenProvider>(context).tokenData;
+    //final addToCartProviderList = Provider.of<AddToCartProvider>(context, listen: true).cart;
 
     return Container(
       decoration: BoxDecoration(
