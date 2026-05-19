@@ -4,11 +4,15 @@ import 'package:al_barakah_e_mart/all_api_model/all_products_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/area_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/child_categories_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/customer_orders_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/department_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/district_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/factory_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/get_brands_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/get_category_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/get_slide_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/get_wish_list_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/products_details_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/thana_model.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -159,8 +163,8 @@ class AllApiService{
   ///==================Get ALl Searching Api=======================
   static fetchAllSearchingProducts() async {
     try {
-      String url = "${BaseUrl}get_products";
-      Response response = await Dio().get(url);
+      String url = "${BaseUrl}get_product";
+      Response response = await Dio().post(url);
           // data: {
           //   "filter": "top"
           // });
@@ -273,72 +277,6 @@ class AllApiService{
     }
     return null;
   }
-//==========BestSellers===========
-   static fetchBestDealerFProducts() async {
-    try {
-      String url = "${BaseUrl}get_products";
-      Response response = await Dio().post(url,
-        data: {
-          "isBestDeal":"1"
-        });
-      var data = response.data;
-      print("Get BestDealer Products Data===> $data");
-      return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-  //==========BestSellers===========
-   static fetchBestSellersFProducts() async {
-    try {
-      String url = "${BaseUrl}get_products";
-      Response response = await Dio().post(url,
-        data: {
-          "isBestSeller":"1"
-        });
-      var data = response.data;
-      print("Get BestSellers Products Data===> $data");
-      return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
-  //==========isOfferGadget===========
-   static fetchGadgetOfferProducts() async {
-    try {
-      String url = "${BaseUrl}get_products";
-      Response response = await Dio().post(url,
-        data: {
-          "isOfferGadget":"true"
-        });
-      var data = response.data;
-      print("Get GadgetOffer Products Data===> $data");
-      return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
- 
-  //==========isOfferDevice===========
-   static fetchDeviceOfferProducts() async {
-    try {
-      String url = "${BaseUrl}get_products";
-      Response response = await Dio().post(url,
-        data: {
-          "isOfferDevice":"true"
-        });
-      var data = response.data;
-      print("Get DeviceOffer Products Data===> $data");
-      return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
 
   ///==================get_brands Api=======================
   static fetchGetBrands() async {
@@ -438,28 +376,26 @@ class AllApiService{
   //   }
   // }
 static Future<ProductDetailsModel?> fetchProductsDetails(String slug) async {
-  String link = "${BaseUrl}get_products";
+  String link = "${BaseUrl}get_product";
 
   try {
-    final formData = FormData.fromMap({
-      "slug": slug.trim(),
-    });
-
-    final response = await Dio().post(link, data: formData);
-
+    final response = await Dio().post(link, 
+      data: {
+        "slug": slug.trim(),
+      });
     if (response.statusCode == 200 && response.data != null) {
       final data = response.data;
       print("produt details=====$data");
 
       final List productsList = data["products"] ?? [];
-      final List relatedList = data["related_products"] ?? [];
+      final List relatedList = data["relatedProducts"] ?? [];
 
       if (productsList.isEmpty) return null;
 
       /// ✅ reshape to model structure
       final Map<String, dynamic> modelMap = {
-        "product": productsList.first,      // main product
-        "related_products": relatedList     // related from API
+        "products": productsList.first,     
+        "relatedProducts": relatedList   
       };
 
       return ProductDetailsModel.fromMap(modelMap);
@@ -539,20 +475,6 @@ static Future<ProductDetailsModel?> fetchProductsDetails(String slug) async {
     return null;
   }
 
-  ///==================Get area Api=======================
-  static fetchGetArea() async {
-    try {
-      String url = "${BaseUrl}api/get_area";
-      Response response = await Dio().get(url);
-      var data = response.data;
-      print("GetArea Data===> $data");
-      return List.from(data["areas"]).map((e) => AreaModel.fromMap(e)).toList();
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
   ///==================Menu Category Api=======================
   static fetchMenuCategory(String? slug) async {
     try {
@@ -564,6 +486,76 @@ static Future<ProductDetailsModel?> fetchProductsDetails(String slug) async {
       var data = response.data;
       print("menu_category Data===> $data");
       return List.from(data["products"]).map((e) => AllProductModel.fromMap(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+  
+  ///==================Get area Api=======================
+  static fetchGetArea() async {
+    try {
+      String url = "${BaseUrl}get_area";
+      Response response = await Dio().get(url);
+      var data = response.data;
+      print("GetArea Data===> $data");
+      return List.from(data).map((e) => AreaModel.fromMap(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+   ///==================get_factory Api=======================
+  static fetchFactory() async {
+    try {
+      String url = "${BaseUrl}get_factory";
+      Response response = await Dio().post(url);
+      var data = response.data;
+      print("get_factory Data===> $data");
+      return List.from(data).map((e) => FactoryModel.fromMap(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+   ///==================get_department Api=======================
+  static fetchDepartment() async {
+    try {
+      String url = "${BaseUrl}get_department";
+      Response response = await Dio().post(url);
+      var data = response.data;
+      print("get_department Data===> $data");
+      return List.from(data).map((e) => DepartmentModel.fromMap(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  ///==================get_district Api=======================
+  static fetchDistrict() async {
+    try {
+      String url = "${BaseUrl}get_district";
+      Response response = await Dio().post(url);
+      var data = response.data;
+      print("District Data===> $data");
+      return List.from(data).map((e) => DistrictModel.fromMap(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  ///==================get_thana Api=======================
+  static fetchThana() async {
+    try {
+      String url = "${BaseUrl}get_thana";
+      Response response = await Dio().post(url);
+      var data = response.data;
+      print("get_thana Data===> $data");
+      return List.from(data["data"]).map((e) => ThanaModel.fromMap(e)).toList();
     } catch (e) {
       print(e);
     }

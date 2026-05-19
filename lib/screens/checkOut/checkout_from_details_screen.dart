@@ -32,6 +32,7 @@ class CheckoutScreen extends StatefulWidget {
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
+
 class _CheckoutScreenState extends State<CheckoutScreen> {
   int currentStep = 0;
   String userName = "";
@@ -51,17 +52,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final deliveryNoteController = TextEditingController();
 
   SharedPreferences? sharedPreferences;
+
   Future<void> _initializeData() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    userName ="${sharedPreferences?.getString('name')}";
-    userEmail ="${sharedPreferences?.getString('email')}";
-    userPhone = "${sharedPreferences?.getString('phone')}";
-    userAddress = "${sharedPreferences?.getString('address')}";
-    _shipperNameController.text = userName;
-    _shipperPhoneController.text = userPhone;
-    _emailController.text = userEmail;
-    billingController.text = userAddress;
-    shippingController.text = userAddress;
+    setState(() {
+      userName = sharedPreferences?.getString('name') ?? "";
+      userEmail = sharedPreferences?.getString('email') ?? "";
+      userPhone = sharedPreferences?.getString('phone') ?? "";
+      userAddress = sharedPreferences?.getString('address') ?? "";
+      
+      _shipperNameController.text = userName;
+      _shipperPhoneController.text = userPhone;
+      _emailController.text = userEmail;
+      billingController.text = userAddress;
+      shippingController.text = userAddress;
+    });
   }
 
   @override
@@ -74,69 +79,84 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<AddToCartProvider>(context);
     final cartList = cartProvider.cart;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
-        title: Text("Checkout Page",style: AllTextStyle.getTitleTextStyle()),
+        centerTitle: true,
+        title: Column(
+          children: [
+            Text("Checkout", style: TextStyle(color: Colors.teal.shade900, fontWeight: FontWeight.bold)),
+            Text("Guest Checkout", style: TextStyle(fontSize: 14.sp, color: Colors.teal)),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(10.r),
+          padding: EdgeInsets.all(15.r),
           child: Column(
             children: [
               /// STEP INDICATOR
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _stepCircle(0,"Account Information"),
-                  Expanded(child: Divider(thickness: 2,color: Colors.grey.shade300)),
-                  _stepCircle(1,"Delivery       Date"),
-                  Expanded(child: Divider( thickness: 2,color:Colors.grey.shade300)),
-                  _stepCircle(2,"Order Summary"),
+                  _stepCircle(0, "Account"),
+                  _stepDivider(0),
+                  _stepCircle(1, "Delivery Date"),
+                  _stepDivider(1),
+                  _stepCircle(2, "Order Summary"),
                 ],
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 30.h),
+
               /// STEP BODY
-              if (currentStep == 0)
-                _accountStep(),
-              if (currentStep == 1)
-                _deliveryStep(),
-              if (currentStep == 2)
-                _summaryStep(cartList),
-              SizedBox(height: 10.h),
-              /// BUTTONS
+              if (currentStep == 0) _accountStep(),
+              if (currentStep == 1) _deliveryStep(),
+              if (currentStep == 2) _summaryStep(cartList),
+
+              SizedBox(height: 30.h),
+
+              /// ACTION BUTTONS
               Row(
-                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (currentStep != 0)
-                    ElevatedButton(
+                  // Previous Button
+                  if (currentStep > 0)
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 10.w),
+                        child: ElevatedButton(
+                          onPressed: () => setState(() => currentStep--),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF063321), // Dark Green
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                          ),
+                          child: const Text("Previous", style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ),
+
+                  // Next / Place Order Button
+                  Expanded(
+                    child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          currentStep--;
-                        });
+                        if (currentStep < 2) {
+                          setState(() => currentStep++);
+                        } else {
+                          // TODO: Implement Place Order Logic
+                        }
                       },
-                      style:ElevatedButton.styleFrom(backgroundColor: appBarColor),
-                      child: const Text("Previous", style: TextStyle(color: Colors.white)),
-                    ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (currentStep < 2) {
-                        setState(() {
-                          currentStep++;
-                        });
-                      } else {
-                        // Utils.toastMessage(message:"Order Placed Successfully");
-                      }
-                    },
-                    style:ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade900,
-                    ),
-                    child: Text(
-                      currentStep == 2 ? "Place Order" : "Next",
-                      style: const TextStyle(  color: Colors.white),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF063321),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                      ),
+                      child: Text(
+                        currentStep == 2 ? "Place Order" : "Next",
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -148,195 +168,478 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  /// STEP CIRCLE
-  Widget _stepCircle(int step,String title) {
+  Widget _stepDivider(int step) {
+    return Expanded(
+      child: Container(
+        height: 2,
+        color: currentStep > step ? Colors.green : Colors.grey.shade300,
+      ),
+    );
+  }
+
+  Widget _stepCircle(int step, String title) {
+    bool isCompleted = currentStep > step;
     bool isActive = currentStep == step;
+
     return Column(
       children: [
         CircleAvatar(
-          radius: 14.r,
-          backgroundColor: isActive? Colors.blue : Colors.grey.shade300,
-          child: Text("${step + 1}",
-            style: TextStyle(color: isActive ? Colors.white : Colors.black),
-          ),
+          radius: 15.r,
+          backgroundColor: isCompleted ? Colors.green : (isActive ? Colors.blue.shade800 : Colors.grey.shade300),
+          child: isCompleted 
+              ? Icon(Icons.check, size: 16.r, color: Colors.white)
+              : Text("${step + 1}", style: TextStyle(color: isActive ? Colors.white : Colors.black54)),
         ),
-        SizedBox(
-          width: 80.w,
-          child: Text(title,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 11.sp,fontWeight: FontWeight.bold),
-          ),
-        ),
+        SizedBox(height: 4.h),
+        Text(title, style: TextStyle(fontSize: 10.sp, color: Colors.black87)),
       ],
     );
   }
-  /// ACCOUNT STEP
+
   Widget _accountStep() {
     return Column(
       children: [
-        _inputField(
-          "Enter Name *","Name",
-          _shipperNameController,
-        ),
-        _inputField(
-          "Enter Phone Number *","Phone",
-          _shipperPhoneController,
-        ),
-        _inputField(
-          "Enter Email","Email",
-          _emailController,
-        ),
-        _inputField(
-          "District","District",
-          districtController,
-        ),
-        _inputField(
-          "Thana *","Thana",
-          thanaController,
-        ),
-        _inputField(
-          "Area *","Area",
-          areaController,
-        ),
-        _inputField(
-          "Billing Address *","Billing Address *",
-          billingController,
-        ),
-        _inputField(
-          "Shipping Address *","Shipping Address *",
-          shippingController,
-        ),
+        _inputField("Enter Name *", "Name", _shipperNameController),
+        _inputField("Enter Phone Number *", "Phone", _shipperPhoneController),
+        _inputField("Enter Email", "Email", _emailController),
+        _inputField("Select District", "District", districtController),
+        _inputField("Thana *", "Thana", thanaController),
+        _inputField("Area *", "Area", areaController),
+        _inputField("Billing address *", "Billing Address*", billingController),
+        _inputField("Shipping address *", "Shipping Address*", shippingController),
       ],
     );
   }
 
-  /// DELIVERY STEP
   Widget _deliveryStep() {
     return Column(
       children: [
-        _inputField(
-          "Delivery Date","Delivery Date*",
-          deliveryDateController,
-        ),
-        TextFormField(
-          controller:deliveryNoteController,
-          maxLines: 4,
-          decoration: InputDecoration(
-            hintText: "Delivery Note",
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.r),
+        _inputField("17-05-2026 /Sunday", "Delivery Date*", deliveryDateController),
+        _inputField("9AM-10PM", "Select Time*", deliveryNoteController),
+      ],
+    );
+  }
+
+  Widget _summaryStep(List<AddToCartModel> cartList) {
+    return Column(
+      children: [
+        Text("Order Summery", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10.h),
+        Table(
+          border: TableBorder.all(color: Colors.grey.shade300),
+          columnWidths: const {
+            0: FlexColumnWidth(3),
+            1: FlexColumnWidth(1),
+            2: FlexColumnWidth(1),
+          },
+          children: [
+            const TableRow(
+              decoration: BoxDecoration(color: Colors.white),
+              children: [
+                Padding(padding: EdgeInsets.all(8), child: Text("Products", style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(8), child: Text("Quantity", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(8), child: Text("Total", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+              ],
             ),
-          ),
+            ...cartList.map((item) => TableRow(
+              children: [
+                Padding(padding: EdgeInsets.all(8), child: Text(item.productName ?? "")),
+                Padding(padding: EdgeInsets.all(8), child: Text("${item.quantity}", textAlign: TextAlign.center)),
+                Padding(padding: EdgeInsets.all(8), child: Text("${item.discountPrice}", textAlign: TextAlign.center)),
+              ],
+            )).toList(),
+            TableRow(
+              children: [
+                const Padding(padding: EdgeInsets.all(8), child: Text("Shipping Charge", style: TextStyle(fontWeight: FontWeight.bold))),
+                const SizedBox(),
+                Padding(padding: EdgeInsets.all(8), child: Text("0", textAlign: TextAlign.center)),
+              ],
+            ),
+            TableRow(
+              children: [
+                const Padding(padding: EdgeInsets.all(8), child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold))),
+                const SizedBox(),
+                Padding(padding: EdgeInsets.all(8), child: Text("${widget.total} +", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+              ],
+            ),
+          ],
         ),
       ],
     );
   }
 
-  /// SUMMARY STEP
-  Widget _summaryStep(List<AddToCartModel> cartList) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(15.r),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: Column(
-            children: [
-              _summaryRow(
-                "Subtotal",
-                "৳ ${widget.total}",
-              ),
-              Divider(),
-              _summaryRow(
-                "Delivery Charge",
-                "(will be added)",
-              ),
-              Divider(),
-              _summaryRow(
-                "Total Discount",
-                "৳ 0",
-              ),
-              Divider(),
-              _summaryRow(
-                "Total Amount",
-                "৳ ${widget.total}",
-                isBold: true,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 20.h),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: cartList.length,
-          itemBuilder: (context, index) {
-            final item =  cartList[index];
-            return Card(
-              elevation: 2,
-              child: ListTile(
-                leading: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CustomImage(
-                    path: item.image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                title: Text(
-                  item.productName ?? "",
-                  maxLines: 2,
-                ),
-                subtitle: Text(
-                  "Qty: ${item.quantity}",
-                ),
-                trailing: Text(
-                  "৳${item.discountPrice}",
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-  /// INPUT FIELD
-  Widget _inputField(String hint,String label,
-    TextEditingController controller,
-  ) {
+  Widget _inputField(String hint, String label, TextEditingController controller) {
     return Padding(
-      padding:EdgeInsets.only(left: 15.w,right: 15.w, bottom: 10.h),
-      child: SizedBox(
-        height: 30.h,
-        child: TextFormField(
-          controller: controller,
-          style: TextStyle(fontSize: 11.sp),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(fontSize: 11.sp),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.r)),
-            labelText: label,
-            labelStyle: TextStyle(fontSize: 12.sp),
-          ),
+      padding: EdgeInsets.only(bottom: 15.h),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
         ),
       ),
     );
   }
-  /// SUMMARY ROW
-  Widget _summaryRow(String title,String value, {
-    bool isBold = false,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title,style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.w500)),
-        Text(value,style: TextStyle(fontWeight:isBold ? FontWeight.bold : FontWeight.w500,color: Colors.green.shade900)),
-      ],
-    );
-  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:al_barakah_e_mart/utils/constants.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:provider/provider.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// import 'package:al_barakah_e_mart/model/add_to_cart_model.dart';
+// import 'package:al_barakah_e_mart/provider/add_to_cart_provider.dart';
+// import 'package:al_barakah_e_mart/utils/all_textstyle.dart';
+// import 'package:al_barakah_e_mart/utils/custom_image.dart';
+
+// class CheckoutScreen extends StatefulWidget {
+//   const CheckoutScreen({
+//     super.key,
+//     required this.quantity,
+//     this.sizeId,
+//     this.colorId,
+//     required this.from,
+//     this.addToCart,
+//     this.total,
+//     required this.token,
+//   });
+
+//   final int quantity;
+//   final String? sizeId;
+//   final String? colorId;
+//   final String from;
+//   final String token;
+//   final String? total;
+//   final List<AddToCartModel>? addToCart;
+
+//   @override
+//   State<CheckoutScreen> createState() => _CheckoutScreenState();
+// }
+// class _CheckoutScreenState extends State<CheckoutScreen> {
+//   int currentStep = 0;
+//   String userName = "";
+//   String userEmail = "";
+//   String userPhone = "";
+//   String userAddress = "";
+
+//   final _shipperNameController = TextEditingController();
+//   final _shipperPhoneController = TextEditingController();
+//   final _emailController = TextEditingController();
+//   final districtController = TextEditingController();
+//   final thanaController = TextEditingController();
+//   final areaController = TextEditingController();
+//   final billingController = TextEditingController();
+//   final shippingController = TextEditingController();
+//   final deliveryDateController = TextEditingController();
+//   final deliveryNoteController = TextEditingController();
+
+//   SharedPreferences? sharedPreferences;
+//   Future<void> _initializeData() async {
+//     sharedPreferences = await SharedPreferences.getInstance();
+//     userName ="${sharedPreferences?.getString('name')}";
+//     userEmail ="${sharedPreferences?.getString('email')}";
+//     userPhone = "${sharedPreferences?.getString('phone')}";
+//     userAddress = "${sharedPreferences?.getString('address')}";
+//     _shipperNameController.text = userName;
+//     _shipperPhoneController.text = userPhone;
+//     _emailController.text = userEmail;
+//     billingController.text = userAddress;
+//     shippingController.text = userAddress;
+//   }
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _initializeData();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final cartProvider = Provider.of<AddToCartProvider>(context);
+//     final cartList = cartProvider.cart;
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         foregroundColor: Colors.black,
+//         elevation: 0,
+//         title: Text("Checkout Page",style: AllTextStyle.getTitleTextStyle()),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: EdgeInsets.all(10.r),
+//           child: Column(
+//             children: [
+//               /// STEP INDICATOR
+//               Row(
+//                 children: [
+//                   _stepCircle(0,"Account Information"),
+//                   Expanded(child: Divider(thickness: 2,color: Colors.grey.shade300)),
+//                   _stepCircle(1,"Delivery       Date"),
+//                   Expanded(child: Divider( thickness: 2,color:Colors.grey.shade300)),
+//                   _stepCircle(2,"Order Summary"),
+//                 ],
+//               ),
+//               SizedBox(height: 10.h),
+//               /// STEP BODY
+//               if (currentStep == 0)
+//                 _accountStep(),
+//               if (currentStep == 1)
+//                 _deliveryStep(),
+//               if (currentStep == 2)
+//                 _summaryStep(cartList),
+//               SizedBox(height: 10.h),
+//               /// BUTTONS
+//               Row(
+//                 mainAxisAlignment:MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   if (currentStep != 0)
+//                     ElevatedButton(
+//                       onPressed: () {
+//                         setState(() {
+//                           currentStep--;
+//                         });
+//                       },
+//                       style:ElevatedButton.styleFrom(backgroundColor: appBarColor),
+//                       child: const Text("Previous", style: TextStyle(color: Colors.white)),
+//                     ),
+//                   const Spacer(),
+//                   ElevatedButton(
+//                     onPressed: () {
+//                       if (currentStep < 2) {
+//                         setState(() {
+//                           currentStep++;
+//                         });
+//                       } else {
+//                         // Utils.toastMessage(message:"Order Placed Successfully");
+//                       }
+//                     },
+//                     style:ElevatedButton.styleFrom(
+//                       backgroundColor: Colors.green.shade900,
+//                     ),
+//                     child: Text(
+//                       currentStep == 2 ? "Place Order" : "Next",
+//                       style: const TextStyle(  color: Colors.white),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   /// STEP CIRCLE
+//   Widget _stepCircle(int step,String title) {
+//     bool isActive = currentStep == step;
+//     return Column(
+//       children: [
+//         CircleAvatar(
+//           radius: 14.r,
+//           backgroundColor: isActive? Colors.blue : Colors.grey.shade300,
+//           child: Text("${step + 1}",
+//             style: TextStyle(color: isActive ? Colors.white : Colors.black),
+//           ),
+//         ),
+//         SizedBox(
+//           width: 80.w,
+//           child: Text(title,
+//             textAlign: TextAlign.center,
+//             style: TextStyle(fontSize: 11.sp,fontWeight: FontWeight.bold),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+//   /// ACCOUNT STEP
+//   Widget _accountStep() {
+//     return Column(
+//       children: [
+//         _inputField(
+//           "Enter Name *","Name",
+//           _shipperNameController,
+//         ),
+//         _inputField(
+//           "Enter Phone Number *","Phone",
+//           _shipperPhoneController,
+//         ),
+//         _inputField(
+//           "Enter Email","Email",
+//           _emailController,
+//         ),
+//         _inputField(
+//           "District","District",
+//           districtController,
+//         ),
+//         _inputField(
+//           "Thana *","Thana",
+//           thanaController,
+//         ),
+//         _inputField(
+//           "Area *","Area",
+//           areaController,
+//         ),
+//         _inputField(
+//           "Billing Address *","Billing Address *",
+//           billingController,
+//         ),
+//         _inputField(
+//           "Shipping Address *","Shipping Address *",
+//           shippingController,
+//         ),
+//       ],
+//     );
+//   }
+
+//   /// DELIVERY STEP
+//   Widget _deliveryStep() {
+//     return Column(
+//       children: [
+//         _inputField(
+//           "Delivery Date","Delivery Date*",
+//           deliveryDateController,
+//         ),
+//         TextFormField(
+//           controller:deliveryNoteController,
+//           maxLines: 4,
+//           decoration: InputDecoration(
+//             hintText: "Delivery Note",
+//             border: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(5.r),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   /// SUMMARY STEP
+//   Widget _summaryStep(List<AddToCartModel> cartList) {
+//     return Column(
+//       children: [
+//         Container(
+//           padding: EdgeInsets.all(15.r),
+//           decoration: BoxDecoration(
+//             color: Colors.grey.shade100,
+//             borderRadius: BorderRadius.circular(10.r),
+//           ),
+//           child: Column(
+//             children: [
+//               _summaryRow(
+//                 "Subtotal",
+//                 "৳ ${widget.total}",
+//               ),
+//               Divider(),
+//               _summaryRow(
+//                 "Delivery Charge",
+//                 "(will be added)",
+//               ),
+//               Divider(),
+//               _summaryRow(
+//                 "Total Discount",
+//                 "৳ 0",
+//               ),
+//               Divider(),
+//               _summaryRow(
+//                 "Total Amount",
+//                 "৳ ${widget.total}",
+//                 isBold: true,
+//               ),
+//             ],
+//           ),
+//         ),
+//         SizedBox(height: 20.h),
+//         ListView.builder(
+//           shrinkWrap: true,
+//           physics: const NeverScrollableScrollPhysics(),
+//           itemCount: cartList.length,
+//           itemBuilder: (context, index) {
+//             final item =  cartList[index];
+//             return Card(
+//               elevation: 2,
+//               child: ListTile(
+//                 leading: SizedBox(
+//                   height: 50,
+//                   width: 50,
+//                   child: CustomImage(
+//                     path: item.image,
+//                     fit: BoxFit.cover,
+//                   ),
+//                 ),
+//                 title: Text(
+//                   item.productName ?? "",
+//                   maxLines: 2,
+//                 ),
+//                 subtitle: Text(
+//                   "Qty: ${item.quantity}",
+//                 ),
+//                 trailing: Text(
+//                   "৳${item.discountPrice}",
+//                 ),
+//               ),
+//             );
+//           },
+//         ),
+//       ],
+//     );
+//   }
+//   /// INPUT FIELD
+//   Widget _inputField(String hint,String label,
+//     TextEditingController controller,
+//   ) {
+//     return Padding(
+//       padding:EdgeInsets.only(left: 15.w,right: 15.w, bottom: 10.h),
+//       child: SizedBox(
+//         height: 30.h,
+//         child: TextFormField(
+//           controller: controller,
+//           style: TextStyle(fontSize: 11.sp),
+//           decoration: InputDecoration(
+//             hintText: hint,
+//             hintStyle: TextStyle(fontSize: 11.sp),
+//             border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.r)),
+//             labelText: label,
+//             labelStyle: TextStyle(fontSize: 12.sp),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//   /// SUMMARY ROW
+//   Widget _summaryRow(String title,String value, {
+//     bool isBold = false,
+//   }) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(title,style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.w500)),
+//         Text(value,style: TextStyle(fontWeight:isBold ? FontWeight.bold : FontWeight.w500,color: Colors.green.shade900)),
+//       ],
+//     );
+//   }
+// }
 
 
 

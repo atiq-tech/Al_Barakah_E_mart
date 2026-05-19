@@ -53,7 +53,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
     return SafeArea(
       child: Drawer(
-        backgroundColor: const Color.fromARGB(255, 20, 24, 29),
+        backgroundColor: appBarColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(50.r),

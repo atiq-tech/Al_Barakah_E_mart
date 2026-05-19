@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:al_barakah_e_mart/all_api_model/factory_model.dart';
+import 'package:al_barakah_e_mart/all_api_provider/factory_provider.dart';
 import 'package:al_barakah_e_mart/screens/auth/pages/forgot_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:al_barakah_e_mart/screens/main/main_screen.dart';
 import 'package:al_barakah_e_mart/utils/all_textstyle.dart';
@@ -14,6 +17,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
@@ -40,6 +44,7 @@ class _SignInPageState extends State<SignInPage> {
   final nameRegCtrl = TextEditingController();
   final buildingRegCtrl = TextEditingController();
   final phoneRegCtrl = TextEditingController();
+  final referenceRegCtrl = TextEditingController();
   final districtRegCtrl = TextEditingController();
   final thanaRegCtrl = TextEditingController();
   final areaRegCtrl = TextEditingController();
@@ -52,6 +57,15 @@ class _SignInPageState extends State<SignInPage> {
   final nidRegCtrl = TextEditingController();
   final logInFormKey = GlobalKey<FormState>();
   final signUpFormKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+      Future.microtask(() {
+        Provider.of<FactoryProvider>(context, listen: false).getFactory();
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -428,19 +442,58 @@ class _SignInPageState extends State<SignInPage> {
                                 child: SizedBox(
                                   height: 30.h,
                                   width: MediaQuery.of(context).size.width / 2,
-                                  child: TextField(
-                                    style: AllTextStyle.dropDownlistStyle,
-                                    controller: factoryRegCtrl,
-                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
-                                      hintText: "Select factory",
-                                      hintStyle: AllTextStyle.dropDownlistStyle,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: InputBorder.none,
-                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
-                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
-                                    ),
-                                  ),
+                                  child: Consumer<FactoryProvider>(
+                                  builder: (context, provider, child) {
+                                    final factoryList = provider.factoryList;
+
+                                    return TypeAheadField<FactoryModel>(
+                                      suggestionsCallback: (pattern) {
+                                        return factoryList.where((item) {
+                                          final name = item.branchName.toString().toLowerCase();
+                                          return name.contains(pattern.toLowerCase());
+                                        }).toList();
+                                      },
+
+                                      itemBuilder: (context, FactoryModel suggestion) {
+                                        return ListTile(
+                                          title: Text("${suggestion.branchName}"),
+                                          subtitle: Text("${suggestion.branchId}"),
+                                        );
+                                      },
+
+                                      onSelected: (FactoryModel suggestion) {
+                                        factoryRegCtrl.text = suggestion.branchName ?? "";
+                                        FocusScope.of(context).unfocus();
+                                      },
+
+                                      builder: (context, controller, focusNode) {
+                                        return TextField(
+                                          controller: factoryRegCtrl,
+                                          focusNode: focusNode,
+                                          style: AllTextStyle.dropDownlistStyle,
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 5.w),
+                                            hintText: "Select factory",
+                                            hintStyle: AllTextStyle.dropDownlistStyle,
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            border: InputBorder.none,
+                                            focusedBorder: TextFieldInputBorder.focusEnabledBorder,
+                                            enabledBorder: TextFieldInputBorder.focusEnabledBorder,
+                                            suffixIcon: factoryRegCtrl.text.isEmpty
+                                                ? null
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      factoryRegCtrl.clear();
+                                                    },
+                                                    child: const Icon(Icons.close, size: 16),
+                                                  ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                )
                                 ),
                               ),
                             ],
@@ -526,6 +579,33 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 3.h),
+                          customerType =="regular" ? Row(
+                            children: [
+                              Expanded(flex: 6,child: Text("Reference",style:AllTextStyle.LoginHeadTitle)),
+                              const Expanded(flex: 1, child: Text(":")),
+                              Expanded(
+                                flex: 13,
+                                child: SizedBox(
+                                  height: 30.h,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    style: AllTextStyle.dropDownlistStyle,
+                                    controller: referenceRegCtrl,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
+                                      hintText: "Enter Reference Name",
+                                      hintStyle: AllTextStyle.dropDownlistStyle,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ):SizedBox(height: 0.h),
                           ///phone
                           SizedBox(height: 3.h),
                           Row(

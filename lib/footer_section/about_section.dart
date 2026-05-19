@@ -238,7 +238,7 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
                           ),
                         ),
                         Text(
-                          'Phone: 017#########',
+                          'Phone: 01717202623',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
                               fontSize: screenWidthh,
@@ -341,10 +341,10 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
       throw 'Could not launch $url';
     }
   }
- void _launchPhone(String phoneNumber) async {
-    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
-    await launchUrl(uri);
-  }
+//  void _launchPhone(String phoneNumber) async {
+//     final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+//     await launchUrl(uri);
+//   }
 
   Widget socialCircleIcon({
   required String imagePath,

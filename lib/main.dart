@@ -1,3 +1,7 @@
+import 'package:al_barakah_e_mart/all_api_provider/department_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/district_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/factory_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/thana_provider.dart';
 import 'package:al_barakah_e_mart/hive_with_cart/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,15 +11,11 @@ import 'package:al_barakah_e_mart/all_api_provider/all_orders_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/all_products_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/all_searching_products_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/area_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/best_dealer_f_product_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/best_seller_f_product_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/brand_wise_products_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/categories_feature_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/child_categories_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/customer_orders_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/device_offer_product_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/feature_products_provider.dart';
-import 'package:al_barakah_e_mart/all_api_provider/gadget_offer_product_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/get_brands_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/get_category_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/get_slide_provider.dart';
@@ -89,6 +89,12 @@ class AlBarakahEmartApp extends StatelessWidget {
           ChangeNotifierProvider<RemoveCartProvider>(create: (context) => RemoveCartProvider()),
           ChangeNotifierProvider<WishListProvider>(create: (context) => WishListProvider()),
 
+          ChangeNotifierProvider<ThanaProvider>(create: (context) => ThanaProvider()),
+          ChangeNotifierProvider<DepartmentProvider>(create: (context) => DepartmentProvider()),
+          ChangeNotifierProvider<FactoryProvider>(create: (context) => FactoryProvider()),
+          ChangeNotifierProvider<DistrictProvider>(create: (context) => DistrictProvider()),
+          
+
           ChangeNotifierProvider<SliderProvider>(create: (context) => SliderProvider()),
           ChangeNotifierProvider<GetCategoriesProvider>(create: (context) => GetCategoriesProvider()),
           ChangeNotifierProvider<ParentCategoriesProvider>(create: (context) => ParentCategoriesProvider()),
@@ -112,13 +118,9 @@ class AlBarakahEmartApp extends StatelessWidget {
           ChangeNotifierProvider<MenuCategoryProvider>(create: (context) => MenuCategoryProvider()),
           ChangeNotifierProvider<CategoriesFeatureProvider>(create: (context) => CategoriesFeatureProvider()),
           ChangeNotifierProvider<CustomerOrdersProvider>(create: (context) => CustomerOrdersProvider()),
-          ChangeNotifierProvider<DeviceOfferProductProvider>(create: (context) => DeviceOfferProductProvider()),
-          ChangeNotifierProvider<GadgetOfferProductProvider>(create: (context) => GadgetOfferProductProvider()),
           ChangeNotifierProvider<AllSearchingProductsProvider>(create: (context) => AllSearchingProductsProvider()),
           ChangeNotifierProvider<SearchingWiseProductsProvider>(create: (context) => SearchingWiseProductsProvider()),
           ChangeNotifierProvider<AllTopBrandProductProvider>(create: (context) => AllTopBrandProductProvider()),
-          ChangeNotifierProvider<BestDealerFeatureProductsProvider>(create: (context) => BestDealerFeatureProductsProvider()),
-          ChangeNotifierProvider<BestSellerFeatureProductsProvider>(create: (context) => BestSellerFeatureProductsProvider()),
       
         ],
         child: const MaterialApp(

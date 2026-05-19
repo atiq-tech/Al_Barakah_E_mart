@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-class AreaModel {
+class ThanaModel {
     final dynamic id;
     final dynamic name;
-    final dynamic thanaId;
-    final dynamic amount;
+    final dynamic districtId;
     final dynamic status;
     final dynamic addBy;
     final dynamic createdAt;
@@ -12,11 +11,10 @@ class AreaModel {
     final dynamic updatedAt;
     final dynamic ipAddress;
 
-    AreaModel({
+    ThanaModel({
         required this.id,
         required this.name,
-        required this.thanaId,
-        required this.amount,
+        required this.districtId,
         required this.status,
         required this.addBy,
         required this.createdAt,
@@ -25,15 +23,14 @@ class AreaModel {
         required this.ipAddress,
     });
 
-    factory AreaModel.fromJson(String str) => AreaModel.fromMap(json.decode(str));
+    factory ThanaModel.fromJson(String str) => ThanaModel.fromMap(json.decode(str));
 
     String toJson() => json.encode(toMap());
 
-    factory AreaModel.fromMap(Map<String, dynamic> json) => AreaModel(
+    factory ThanaModel.fromMap(Map<String, dynamic> json) => ThanaModel(
         id: json["id"],
         name: json["name"],
-        thanaId: json["thana_id"],
-        amount: json["amount"],
+        districtId: json["district_id"],
         status: json["status"],
         addBy: json["add_by"],
         createdAt: json["created_at"],
@@ -45,8 +42,7 @@ class AreaModel {
     Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
-        "thana_id": thanaId,
-        "amount": amount,
+        "district_id": districtId,
         "status": status,
         "add_by": addBy,
         "created_at": createdAt,
