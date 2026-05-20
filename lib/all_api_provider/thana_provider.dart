@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class ThanaProvider with ChangeNotifier{
 List<ThanaModel> thanaList = [];
- getThana()async{
-  thanaList = await AllApiService.fetchThana();
+ getThana(String? districtId)async{
+  thanaList = await AllApiService.fetchThana(districtId);
   notifyListeners();
  }
 }

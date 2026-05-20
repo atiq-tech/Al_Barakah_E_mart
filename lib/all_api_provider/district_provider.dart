@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class DistrictProvider with ChangeNotifier{
 List<DistrictModel> districtList = [];
- getThana()async{
+ getDistrict()async{
   districtList = await AllApiService.fetchDistrict();
   notifyListeners();
  }

@@ -1,1018 +1,383 @@
 import 'dart:convert';
 
 class ProductDetailsModel {
-    final Product? product;
-    final List<Product> relatedProducts;
+  final Product? product;
+  final List<Product> relatedProducts;
 
-    ProductDetailsModel({
-        required this.product,
-        required this.relatedProducts,
-    });
+  ProductDetailsModel({required this.product, required this.relatedProducts});
 
-    factory ProductDetailsModel.fromJson(String str) => ProductDetailsModel.fromMap(json.decode(str));
+  factory ProductDetailsModel.fromJson(String str) =>
+      ProductDetailsModel.fromMap(json.decode(str));
 
-    String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-    factory ProductDetailsModel.fromMap(Map<String, dynamic> json) => ProductDetailsModel(
-        product: json["product"] == null ? null : Product.fromMap(json["product"]),
-        relatedProducts: json["related_products"] == null || json["related_products"] == [] ? [] : List<Product>.from(json["related_products"].map((x) => Product.fromMap(x))),
-        
+  factory ProductDetailsModel.fromMap(Map<String, dynamic> json) {
+    final productsData = json["products"] ?? json["product"];
+    final relatedData = json["relatedProducts"] ?? json["related_products"];
+
+    return ProductDetailsModel(
+      product: _parseProduct(productsData),
+      relatedProducts: _parseProductList(relatedData),
     );
+  }
 
-    Map<String, dynamic> toMap() => {
-        "product": product?.toMap(),
-        "related_products": List<dynamic>.from(relatedProducts.map((x) => x.toMap())),
-    };
+  Map<String, dynamic> toMap() => {
+    "products": product == null ? [] : [product!.toMap()],
+    "relatedProducts": relatedProducts.map((x) => x.toMap()).toList(),
+  };
+
+  static Product? _parseProduct(dynamic data) {
+    if (data == null) return null;
+    if (data is List) {
+      if (data.isEmpty) return null;
+      final first = data.first;
+      return first is Map<String, dynamic> ? Product.fromMap(first) : null;
+    }
+    if (data is Map<String, dynamic>) return Product.fromMap(data);
+    return null;
+  }
+
+  static List<Product> _parseProductList(dynamic data) {
+    if (data == null || data is! List) return [];
+    return data
+        .whereType<Map<String, dynamic>>()
+        .map((x) => Product.fromMap(x))
+        .toList();
+  }
 }
 
 class Product {
   final dynamic productSlNo;
+  final dynamic supplierId;
+  final dynamic productType;
   final dynamic productCode;
   final dynamic productName;
+  final dynamic slug;
   final dynamic productCategoryId;
-  final dynamic reference;
-  final dynamic barcode;
+  final dynamic subCategoryId;
+  final dynamic companyId;
   final dynamic color;
   final dynamic brand;
-  final dynamic modelId;
   final dynamic size;
+  final dynamic shortDescription;
+  final dynamic productDescription;
   final dynamic vat;
   final dynamic productReOrederLevel;
   final dynamic productPurchaseRate;
   final dynamic productSellingPrice;
   final dynamic productMinimumSellingPrice;
   final dynamic productWholesaleRate;
-  final dynamic productCorporateRate;
-  final dynamic productOnlineRate;
-  final dynamic onlineDiscount;
-  final dynamic onlineDiscountPrice;
-  final dynamic onlineAfterDiscountAmount;
-  final dynamic startDate;
-  final dynamic oneCartunEqual;
+  final dynamic oneCartonToPcs;
+  final dynamic quantity;
+  final dynamic discount;
+  final dynamic sd;
+  final dynamic productImage;
+  final dynamic thumImage;
   final dynamic isService;
-  final dynamic isSerial;
+  final dynamic isFeatured;
+  final dynamic isOffer;
+  final dynamic isArrival;
+  final dynamic isPopular;
+  final dynamic isWebsite;
   final dynamic unitId;
-  final dynamic warranty;
   final dynamic status;
   final dynamic addBy;
-  final dynamic addTime;
-  final dynamic updateBy;
-  final dynamic updateTime;
-  final dynamic lastUpdateIp;
-  final dynamic productBranchid;
-  final dynamic model;
-  final dynamic slug;
-  final dynamic shortDescription;
-  final dynamic longDescription;
-  final dynamic specification;
-  final dynamic video;
-  final dynamic warrantyLongText;
-  final dynamic emiAvilable;
-  final dynamic isExchange;
-  final dynamic isFeature;
-  final dynamic isBestDeal;
-  final dynamic isBestSallers;
-  final dynamic newArrival;
-  final dynamic isOffer;
-  final dynamic type;
-  final dynamic mainImage;
-  final dynamic alterImage;
-  final dynamic mainImageAlt;
-  final dynamic alterImageAlt;
-  final dynamic weight;
-  final dynamic dimensions;
-  final dynamic note;
-  final dynamic compatibility;
-  final dynamic connectivity;
-  final dynamic noiseCancellation;
-  final dynamic microphone;
-  final dynamic waterResistance;
-  final dynamic powerOutput;
-  final dynamic frequencyResponse;
-  final dynamic material;
-  final dynamic batteryCapacity;
-  final dynamic camera;
-  final dynamic network;
-  final dynamic processor;
-  final dynamic ram;
-  final dynamic storage;
-  final dynamic display;
-  final dynamic batteryLife;
-  final dynamic operatingSystem;
-  final dynamic ports;
-  final dynamic cableType;
-  final dynamic length;
-  final dynamic isDraft;
-  final dynamic seoTitle;
-  final dynamic seoKeywords;
-  final dynamic seoDescription;
-  final dynamic storageId;
-  final dynamic regionId;
-  final dynamic simId;
-  final dynamic strapId;
-  final dynamic networkId;
-  final dynamic plugId;
-  final dynamic sizeId;
-  final dynamic specificationTypeId;
-  final dynamic endDate;
-  final dynamic preOrder;
-  final dynamic isTba;
-  final dynamic isCallForAvailablity;
-  final dynamic isOnlineOrder;
-  final dynamic showOnWebsite;
-  final dynamic deletedBy;
-  final dynamic deletedAt;
   final dynamic createdAt;
-
-  final Inventory? inventory;
-  final List<MultipleImg> multipleImg;
-  final Relationcolor? relationcolor;
-  final Relationbrand? relationbrand;
+  final dynamic updateBy;
+  final dynamic updatedAt;
+  final dynamic deletedBy;
+  final dynamic deletedTime;
+  final dynamic lastUpdateIp;
+  final dynamic branchId;
+  final dynamic discountPriceValue;
+  final dynamic stock;
   final Category? category;
+  final List<MultipleImg> productImages;
 
   Product({
     this.productSlNo,
+    this.supplierId,
+    this.productType,
     this.productCode,
     this.productName,
+    this.slug,
     this.productCategoryId,
-    this.reference,
-    this.barcode,
+    this.subCategoryId,
+    this.companyId,
     this.color,
     this.brand,
-    this.modelId,
     this.size,
+    this.shortDescription,
+    this.productDescription,
     this.vat,
     this.productReOrederLevel,
     this.productPurchaseRate,
     this.productSellingPrice,
     this.productMinimumSellingPrice,
     this.productWholesaleRate,
-    this.productCorporateRate,
-    this.productOnlineRate,
-    this.onlineDiscount,
-    this.onlineDiscountPrice,
-    this.onlineAfterDiscountAmount,
-    this.startDate,
-    this.oneCartunEqual,
+    this.oneCartonToPcs,
+    this.quantity,
+    this.discount,
+    this.sd,
+    this.productImage,
+    this.thumImage,
     this.isService,
-    this.isSerial,
+    this.isFeatured,
+    this.isOffer,
+    this.isArrival,
+    this.isPopular,
+    this.isWebsite,
     this.unitId,
-    this.warranty,
     this.status,
     this.addBy,
-    this.addTime,
-    this.updateBy,
-    this.updateTime,
-    this.lastUpdateIp,
-    this.productBranchid,
-    this.model,
-    this.slug,
-    this.shortDescription,
-    this.longDescription,
-    this.specification,
-    this.video,
-    this.warrantyLongText,
-    this.emiAvilable,
-    this.isExchange,
-    this.isFeature,
-    this.isBestDeal,
-    this.isBestSallers,
-    this.newArrival,
-    this.isOffer,
-    this.type,
-    this.mainImage,
-    this.alterImage,
-    this.mainImageAlt,
-    this.alterImageAlt,
-    this.weight,
-    this.dimensions,
-    this.note,
-    this.compatibility,
-    this.connectivity,
-    this.noiseCancellation,
-    this.microphone,
-    this.waterResistance,
-    this.powerOutput,
-    this.frequencyResponse,
-    this.material,
-    this.batteryCapacity,
-    this.camera,
-    this.network,
-    this.processor,
-    this.ram,
-    this.storage,
-    this.display,
-    this.batteryLife,
-    this.operatingSystem,
-    this.ports,
-    this.cableType,
-    this.length,
-    this.isDraft,
-    this.seoTitle,
-    this.seoKeywords,
-    this.seoDescription,
-    this.storageId,
-    this.regionId,
-    this.simId,
-    this.strapId,
-    this.networkId,
-    this.plugId,
-    this.sizeId,
-    this.specificationTypeId,
-    this.endDate,
-    this.preOrder,
-    this.isTba,
-    this.isCallForAvailablity,
-    this.isOnlineOrder,
-    this.showOnWebsite,
-    this.deletedBy,
-    this.deletedAt,
     this.createdAt,
-    this.inventory,
-    required this.multipleImg,
-    this.relationcolor,
-    required this.relationbrand,
+    this.updateBy,
+    this.updatedAt,
+    this.deletedBy,
+    this.deletedTime,
+    this.lastUpdateIp,
+    this.branchId,
+    this.discountPriceValue,
+    this.stock,
     this.category,
+    required this.productImages,
   });
 
-  /// STOCK
-  int getCurrentStock() {
-    if (inventory == null) return 0;
-
-    final purchase = inventory!.purchaseQuantity ?? 0;
-    final salesReturn = inventory!.salesReturnQuantity ?? 0;
-    final transferTo = inventory!.transferToQuantity ?? 0;
-
-    final sales = inventory!.salesQuantity ?? 0;
-    final purchaseReturn = inventory!.purchaseReturnQuantity ?? 0;
-    final damage = inventory!.damageQuantity ?? 0;
-    final transferFrom = inventory!.transferFromQuantity ?? 0;
-
-    final stock =
-        (purchase + salesReturn + transferTo) -
-        (sales + purchaseReturn + damage + transferFrom);
-
-    return stock < 0 ? 0 : stock;
-  }
-
-  String get stockStatus => getCurrentStock() == 0 ? "Out of Stock" : "In Stock";
-
-    /// ================= DISCOUNT LOGIC =================
-
-  bool checkHasDiscount(dynamic startDateStr, dynamic endDateStr) {
-    if (startDateStr == null || endDateStr == null) return false;
-
-    try {
-      DateTime now = DateTime.now();
-      DateTime currentDate = DateTime(now.year, now.month, now.day);
-
-      DateTime start = DateTime.parse(startDateStr.toString());
-      DateTime end = DateTime.parse(endDateStr.toString());
-
-      DateTime startDate = DateTime(start.year, start.month, start.day);
-      DateTime endDate = DateTime(end.year, end.month, end.day);
-
-      return (currentDate.isAtSameMomentAs(startDate) || currentDate.isAfter(startDate)) &&
-          (currentDate.isAtSameMomentAs(endDate) || currentDate.isBefore(endDate));
-    } catch (e) {
-      return false;
-    }
-  }
-
-  bool get hasDiscount => checkHasDiscount(startDate, endDate);
-
+  String? get mainImage => productImage?.toString();
+  String? get alterImage => thumImage?.toString();
+  String get longDescription => productDescription?.toString() ?? "";
   String get discountPrice =>
-      hasDiscount ? (onlineAfterDiscountAmount?.toString() ?? "") : (productOnlineRate?.toString() ?? "");
+      discountPriceValue?.toString() ?? productSellingPrice?.toString() ?? "0";
+  String get sellingPrice => productSellingPrice?.toString() ?? "";
+  List<MultipleImg> get multipleImg => productImages;
 
-  String get sellingPrice =>
-      hasDiscount ? (productOnlineRate?.toString() ?? "") : "";
-
-  double get finalPrice {
-    if (hasDiscount) {
-      return (onlineAfterDiscountAmount ?? productOnlineRate ?? 0).toDouble();
-    } else {
-      return (productOnlineRate ?? productSellingPrice ?? 0).toDouble();
-    }
+  int getCurrentStock() {
+    final value = stock;
+    if (value is int) return value < 0 ? 0 : value;
+    return int.tryParse(value?.toString() ?? "0") ?? 0;
   }
+
+  String get stockStatus =>
+      getCurrentStock() == 0 ? "Out of Stock" : "In Stock";
+
+  bool checkHasDiscount(dynamic startDateStr, dynamic endDateStr) => false;
+  bool get hasDiscount => false;
+  double get finalPrice => double.tryParse(discountPrice) ?? 0;
+
+  dynamic get onlineAfterDiscountAmount => discountPriceValue;
+  dynamic get productOnlineRate => productSellingPrice;
+  dynamic get onlineDiscount => discount;
+  dynamic get startDate => null;
+  dynamic get endDate => null;
 
   factory Product.fromMap(Map<String, dynamic> json) => Product(
-        productSlNo: json["Product_SlNo"],
-        productCode: json["Product_Code"]?.toString(),
-        productName: json["Product_Name"]?.toString(),
-        productCategoryId: json["ProductCategory_ID"],
-        reference: json["reference"],
-        barcode: json["barcode"],
-        color: json["color"],
-        brand: json["brand"],
-        modelId: json["model_id"],
-        size: json["size"],
-        vat: json["vat"],
-        productReOrederLevel: json["Product_ReOrederLevel"],
-        productPurchaseRate: json["Product_Purchase_Rate"],
-        productSellingPrice: json["Product_SellingPrice"],
-        productMinimumSellingPrice: json["Product_MinimumSellingPrice"],
-        productWholesaleRate: json["Product_WholesaleRate"],
-        productCorporateRate: json["Product_CorporateRate"],
-        productOnlineRate: json["Product_OnlineRate"],
-        onlineDiscount: json["online_discount"],
-        onlineDiscountPrice: json["online_discount_price"],
-        onlineAfterDiscountAmount: json["online_after_discount_amount"],
-        startDate: json["start_date"],
-        oneCartunEqual: json["one_cartun_equal"],
-        isService: json["is_service"],
-        isSerial: json["is_serial"],
-        unitId: json["Unit_ID"],
-        warranty: json["warranty"],
-        status: json["status"],
-        addBy: json["AddBy"],
-        addTime: json["AddTime"],
-        updateBy: json["UpdateBy"],
-        updateTime: json["UpdateTime"],
-        lastUpdateIp: json["last_update_ip"],
-        productBranchid: json["Product_branchid"],
-        model: json["model"],
-        slug: json["slug"],
-        shortDescription: json["short_description"],
-        longDescription: json["long_description"],
-        specification: json["specification"],
-        video: json["video"],
-        warrantyLongText: json["warranty_long_text"],
-        emiAvilable: json["emi_avilable"],
-        isExchange: json["is_exchange"],
-        isFeature: json["is_feature"],
-        isBestDeal: json["is_best_deal"],
-        isBestSallers: json["is_best_sallers"],
-        newArrival: json["new_arrival"],
-        isOffer: json["is_offer"],
-        type: json["type"],
-        mainImage: json["main_image"],
-        alterImage: json["alter_image"],
-        mainImageAlt: json["main_image_alt"],
-        alterImageAlt: json["alter_image_alt"],
-        weight: json["weight"],
-        dimensions: json["dimensions"],
-        note: json["note"],
-        compatibility: json["compatibility"],
-        connectivity: json["connectivity"],
-        noiseCancellation: json["noise_cancellation"],
-        microphone: json["microphone"],
-        waterResistance: json["water_resistance"],
-        powerOutput: json["power_output"],
-        frequencyResponse: json["frequency_response"],
-        material: json["material"],
-        batteryCapacity: json["battery_capacity"],
-        camera: json["camera"],
-        network: json["network"],
-        processor: json["processor"],
-        ram: json["ram"],
-        storage: json["storage"],
-        display: json["display"],
-        batteryLife: json["battery_life"],
-        operatingSystem: json["operating_system"],
-        ports: json["ports"],
-        cableType: json["cable_type"],
-        length: json["length"],
-        isDraft: json["is_draft"],
-        seoTitle: json["seoTitle"],
-        seoKeywords: json["seoKeywords"],
-        seoDescription: json["seoDescription"],
-        storageId: json["storage_id"],
-        regionId: json["region_id"],
-        simId: json["sim_id"],
-        strapId: json["strap_id"],
-        networkId: json["network_id"],
-        plugId: json["plug_id"],
-        sizeId: json["size_id"],
-        specificationTypeId: json["specification_type_id"],
-        endDate: json["end_date"],
-        preOrder: json["pre_order"],
-        isTba: json["is_tba"],
-        isCallForAvailablity: json["is_call_for_availablity"],
-        isOnlineOrder: json["is_online_order"],
-        showOnWebsite: json["show_on_website"],
-        deletedBy: json["deleted_by"],
-        deletedAt: json["deleted_at"],
-        createdAt: json["created_at"],
-        inventory: json["inventory"] == null ? null : Inventory.fromMap(json["inventory"]),
-        multipleImg: json["multiple_img"] == null ? [] : List<MultipleImg>.from((json["multiple_img"] as List).map((x) => MultipleImg.fromMap(x))),
-        relationcolor: json["relationcolor"] == null ? null : Relationcolor.fromMap(json["relationcolor"]),
-        relationbrand: json["relationbrand"] == null ? null : Relationbrand.fromMap(json["relationbrand"]),
-        category: json["category"] == null ? null : Category.fromMap(json["category"]),
-      );
+    productSlNo: json["Product_SlNo"],
+    supplierId: json["supplier_id"],
+    productType: json["Product_Type"],
+    productCode: json["Product_Code"]?.toString(),
+    productName: json["Product_Name"]?.toString() ?? "",
+    slug: json["slug"]?.toString() ?? "",
+    productCategoryId: json["ProductCategory_ID"],
+    subCategoryId: json["sub_category_id"],
+    companyId: json["company_id"],
+    color: json["color"],
+    brand: json["brand"],
+    size: json["size"],
+    shortDescription: json["short_description"]?.toString() ?? "",
+    productDescription:
+        json["Product_description"]?.toString() ??
+        json["long_description"]?.toString() ??
+        "",
+    vat: json["vat"],
+    productReOrederLevel: json["Product_ReOrederLevel"],
+    productPurchaseRate: json["Product_Purchase_Rate"],
+    productSellingPrice: json["Product_SellingPrice"],
+    productMinimumSellingPrice: json["Product_MinimumSellingPrice"],
+    productWholesaleRate: json["Product_WholesaleRate"],
+    oneCartonToPcs: json["one_carton_to_pcs"],
+    quantity: json["quantity"],
+    discount: json["discount"],
+    sd: json["sd"],
+    productImage: json["Product_Image"] ?? json["main_image"],
+    thumImage: json["thum_image"] ?? json["alter_image"],
+    isService: json["is_service"],
+    isFeatured: json["is_featured"],
+    isOffer: json["is_offer"],
+    isArrival: json["is_arrival"],
+    isPopular: json["is_popular"],
+    isWebsite: json["is_website"],
+    unitId: json["Unit_ID"],
+    status: json["status"],
+    addBy: json["AddBy"],
+    createdAt: json["created_at"],
+    updateBy: json["UpdateBy"],
+    updatedAt: json["updated_at"],
+    deletedBy: json["DeletedBy"],
+    deletedTime: json["DeletedTime"],
+    lastUpdateIp: json["last_update_ip"],
+    branchId: json["branch_id"],
+    discountPriceValue: json["discount_price"],
+    stock: json["stock"],
+    category: json["category"] == null
+        ? null
+        : Category.fromMap(json["category"]),
+    productImages: json["product_images"] == null
+        ? []
+        : List<MultipleImg>.from(
+            (json["product_images"] as List).map((x) => MultipleImg.fromMap(x)),
+          ),
+  );
 
   Map<String, dynamic> toMap() => {
-        "Product_SlNo": productSlNo,
-        "Product_Code": productCode,
-        "Product_Name": productName,
-        "ProductCategory_ID": productCategoryId,
-        "reference": reference,
-        "barcode": barcode,
-        "color": color,
-        "brand": brand,
-        "model_id": modelId,
-        "size": size,
-        "vat": vat,
-        "Product_ReOrederLevel": productReOrederLevel,
-        "Product_Purchase_Rate": productPurchaseRate,
-        "Product_SellingPrice": productSellingPrice,
-        "Product_MinimumSellingPrice": productMinimumSellingPrice,
-        "Product_WholesaleRate": productWholesaleRate,
-        "Product_CorporateRate": productCorporateRate,
-        "Product_OnlineRate": productOnlineRate,
-        "online_discount": onlineDiscount,
-        "online_discount_price": onlineDiscountPrice,
-        "online_after_discount_amount": onlineAfterDiscountAmount,
-        "start_date": startDate,
-        "one_cartun_equal": oneCartunEqual,
-        "is_service": isService,
-        "is_serial": isSerial,
-        "Unit_ID": unitId,
-        "warranty": warranty,
-        "status": status,
-        "AddBy": addBy,
-        "AddTime": addTime,
-        "UpdateBy": updateBy,
-        "UpdateTime": updateTime,
-        "last_update_ip": lastUpdateIp,
-        "Product_branchid": productBranchid,
-        "model": model,
-        "slug": slug,
-        "short_description": shortDescription,
-        "long_description": longDescription,
-        "specification": specification,
-        "video": video,
-        "warranty_long_text": warrantyLongText,
-        "emi_avilable": emiAvilable,
-        "is_exchange": isExchange,
-        "is_feature": isFeature,
-        "is_best_deal": isBestDeal,
-        "is_best_sallers": isBestSallers,
-        "new_arrival": newArrival,
-        "is_offer": isOffer,
-        "type": type,
-        "main_image": mainImage,
-        "alter_image": alterImage,
-        "main_image_alt": mainImageAlt,
-        "alter_image_alt": alterImageAlt,
-        "weight": weight,
-        "dimensions": dimensions,
-        "note": note,
-        "compatibility": compatibility,
-        "connectivity": connectivity,
-        "noise_cancellation": noiseCancellation,
-        "microphone": microphone,
-        "water_resistance": waterResistance,
-        "power_output": powerOutput,
-        "frequency_response": frequencyResponse,
-        "material": material,
-        "battery_capacity": batteryCapacity,
-        "camera": camera,
-        "network": network,
-        "processor": processor,
-        "ram": ram,
-        "storage": storage,
-        "display": display,
-        "battery_life": batteryLife,
-        "operating_system": operatingSystem,
-        "ports": ports,
-        "cable_type": cableType,
-        "length": length,
-        "is_draft": isDraft,
-        "seoTitle": seoTitle,
-        "seoKeywords": seoKeywords,
-        "seoDescription": seoDescription,
-        "storage_id": storageId,
-        "region_id": regionId,
-        "sim_id": simId,
-        "strap_id": strapId,
-        "network_id": networkId,
-        "plug_id": plugId,
-        "size_id": sizeId,
-        "specification_type_id": specificationTypeId,
-        "end_date": endDate,
-        "pre_order": preOrder,
-        "is_tba": isTba,
-        "is_call_for_availablity": isCallForAvailablity,
-        "is_online_order": isOnlineOrder,
-        "show_on_website": showOnWebsite,
-        "deleted_by": deletedBy,
-        "deleted_at": deletedAt,
-        "created_at": createdAt,
-        "inventory": inventory?.toMap(),
-        "multiple_img": multipleImg.map((x) => x.toMap()).toList(),
-        "relationcolor": relationcolor?.toMap(),
-        "relationbrand": relationbrand?.toMap(),
-        "category": category?.toMap(),
-      };
+    "Product_SlNo": productSlNo,
+    "supplier_id": supplierId,
+    "Product_Type": productType,
+    "Product_Code": productCode,
+    "Product_Name": productName,
+    "slug": slug,
+    "ProductCategory_ID": productCategoryId,
+    "sub_category_id": subCategoryId,
+    "company_id": companyId,
+    "color": color,
+    "brand": brand,
+    "size": size,
+    "short_description": shortDescription,
+    "Product_description": productDescription,
+    "vat": vat,
+    "Product_ReOrederLevel": productReOrederLevel,
+    "Product_Purchase_Rate": productPurchaseRate,
+    "Product_SellingPrice": productSellingPrice,
+    "Product_MinimumSellingPrice": productMinimumSellingPrice,
+    "Product_WholesaleRate": productWholesaleRate,
+    "one_carton_to_pcs": oneCartonToPcs,
+    "quantity": quantity,
+    "discount": discount,
+    "sd": sd,
+    "Product_Image": productImage,
+    "thum_image": thumImage,
+    "is_service": isService,
+    "is_featured": isFeatured,
+    "is_offer": isOffer,
+    "is_arrival": isArrival,
+    "is_popular": isPopular,
+    "is_website": isWebsite,
+    "Unit_ID": unitId,
+    "status": status,
+    "AddBy": addBy,
+    "created_at": createdAt,
+    "UpdateBy": updateBy,
+    "updated_at": updatedAt,
+    "DeletedBy": deletedBy,
+    "DeletedTime": deletedTime,
+    "last_update_ip": lastUpdateIp,
+    "branch_id": branchId,
+    "discount_price": discountPriceValue,
+    "stock": stock,
+    "category": category?.toMap(),
+    "product_images": productImages.map((x) => x.toMap()).toList(),
+  };
 }
 
 class Category {
   final dynamic productCategorySlNo;
-  final dynamic parentId;
-  final String? productCategoryName;
-  final String? slug;
-  final String? image;
-  final dynamic isFeature;
-  final dynamic isMenubar;
-  final String? imgAlt;
-  final String? productCategoryDescription;
-  final dynamic rank;
+  final dynamic productCategoryName;
+  final dynamic slug;
+  final dynamic productCategoryDescription;
+  final dynamic image;
+  final dynamic rankId;
   final dynamic status;
   final dynamic addBy;
-  final dynamic addTime;
-  final dynamic updateBy;
-  final dynamic updateTime;
-  final dynamic deletedAt;
   final dynamic createdAt;
+  final dynamic updateBy;
   final dynamic updatedAt;
-  final String? seoTitle;
-  final String? seoDesp;
-  final String? seoKey;
-  final String? coverImage;
-  final String? coverImgAlt;
-  final dynamic categoryBranchid;
-  final Category? parents;
+  final dynamic deletedBy;
+  final dynamic deletedTime;
+  final dynamic lastUpdateIp;
+  final dynamic branchId;
 
   Category({
     this.productCategorySlNo,
-    this.parentId,
     this.productCategoryName,
     this.slug,
-    this.image,
-    this.isFeature,
-    this.isMenubar,
-    this.imgAlt,
     this.productCategoryDescription,
-    this.rank,
+    this.image,
+    this.rankId,
     this.status,
     this.addBy,
-    this.addTime,
-    this.updateBy,
-    this.updateTime,
-    this.deletedAt,
     this.createdAt,
+    this.updateBy,
     this.updatedAt,
-    this.seoTitle,
-    this.seoDesp,
-    this.seoKey,
-    this.coverImage,
-    this.coverImgAlt,
-    this.categoryBranchid,
-    this.parents,
-  });
-
-  factory Category.fromMap(Map<String, dynamic> json) => Category(
-        productCategorySlNo: json["ProductCategory_SlNo"],
-        parentId: json["parent_id"],
-        productCategoryName: json["ProductCategory_Name"]?.toString(),
-        slug: json["slug"]?.toString(),
-        image: json["image"]?.toString(),
-        isFeature: json["is_feature"],
-        isMenubar: json["is_menubar"],
-        imgAlt: json["imgAlt"]?.toString(),
-        productCategoryDescription:
-            json["ProductCategory_Description"]?.toString(),
-        rank: json["rank"],
-        status: json["status"],
-        addBy: json["AddBy"],
-        addTime: json["AddTime"],
-        updateBy: json["UpdateBy"],
-        updateTime: json["UpdateTime"],
-        deletedAt: json["deleted_at"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-        seoTitle: json["seoTitle"]?.toString(),
-        seoDesp: json["seoDesp"]?.toString(),
-        seoKey: json["seoKey"]?.toString(),
-        coverImage: json["coverImage"]?.toString(),
-        coverImgAlt: json["coverImgAlt"]?.toString(),
-        categoryBranchid: json["category_branchid"],
-        parents: json["parents"] == null ? null : Category.fromMap(json["parents"]),
-      );
-
-  Map<String, dynamic> toMap() => {
-        "ProductCategory_SlNo": productCategorySlNo,
-        "parent_id": parentId,
-        "ProductCategory_Name": productCategoryName,
-        "slug": slug,
-        "image": image,
-        "is_feature": isFeature,
-        "is_menubar": isMenubar,
-        "imgAlt": imgAlt,
-        "ProductCategory_Description": productCategoryDescription,
-        "rank": rank,
-        "status": status,
-        "AddBy": addBy,
-        "AddTime": addTime,
-        "UpdateBy": updateBy,
-        "UpdateTime": updateTime,
-        "deleted_at": deletedAt,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "seoTitle": seoTitle,
-        "seoDesp": seoDesp,
-        "seoKey": seoKey,
-        "coverImage": coverImage,
-        "coverImgAlt": coverImgAlt,
-        "category_branchid": categoryBranchid,
-        "parents": parents?.toMap(),
-      };
-}
-class Inventory {
-  final dynamic inventoryId;
-  final dynamic productId;
-  final dynamic purchaseQuantity;
-  final dynamic purchaseReturnQuantity;
-  final dynamic salesQuantity;
-  final dynamic salesReturnQuantity;
-  final dynamic wexchangeQuantity;
-  final dynamic damageQuantity;
-  final dynamic transferFromQuantity;
-  final dynamic transferToQuantity;
-  final dynamic branchId;
-
-  Inventory({
-    this.inventoryId,
-    this.productId,
-    this.purchaseQuantity,
-    this.purchaseReturnQuantity,
-    this.salesQuantity,
-    this.salesReturnQuantity,
-    this.wexchangeQuantity,
-    this.damageQuantity,
-    this.transferFromQuantity,
-    this.transferToQuantity,
+    this.deletedBy,
+    this.deletedTime,
+    this.lastUpdateIp,
     this.branchId,
   });
 
-  factory Inventory.fromMap(Map<String, dynamic> json) => Inventory(
-        inventoryId: json["inventory_id"],
-        productId: json["product_id"],
-        purchaseQuantity: json["purchase_quantity"],
-        purchaseReturnQuantity: json["purchase_return_quantity"],
-        salesQuantity: json["sales_quantity"],
-        salesReturnQuantity: json["sales_return_quantity"],
-        wexchangeQuantity: json["wexchange_quantity"],
-        damageQuantity: json["damage_quantity"],
-        transferFromQuantity: json["transfer_from_quantity"],
-        transferToQuantity: json["transfer_to_quantity"],
-        branchId: json["branch_id"],
-      );
+  factory Category.fromMap(Map<String, dynamic> json) => Category(
+    productCategorySlNo: json["ProductCategory_SlNo"],
+    productCategoryName: json["ProductCategory_Name"]?.toString(),
+    slug: json["slug"]?.toString(),
+    productCategoryDescription: json["ProductCategory_Description"]?.toString(),
+    image: json["image"]?.toString(),
+    rankId: json["rank_id"],
+    status: json["status"],
+    addBy: json["AddBy"],
+    createdAt: json["created_at"],
+    updateBy: json["UpdateBy"],
+    updatedAt: json["updated_at"],
+    deletedBy: json["DeletedBy"],
+    deletedTime: json["DeletedTime"],
+    lastUpdateIp: json["last_update_ip"],
+    branchId: json["branch_id"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "inventory_id": inventoryId,
-        "product_id": productId,
-        "purchase_quantity": purchaseQuantity,
-        "purchase_return_quantity": purchaseReturnQuantity,
-        "sales_quantity": salesQuantity,
-        "sales_return_quantity": salesReturnQuantity,
-        "wexchange_quantity": wexchangeQuantity,
-        "damage_quantity": damageQuantity,
-        "transfer_from_quantity": transferFromQuantity,
-        "transfer_to_quantity": transferToQuantity,
-        "branch_id": branchId,
-      };
+    "ProductCategory_SlNo": productCategorySlNo,
+    "ProductCategory_Name": productCategoryName,
+    "slug": slug,
+    "ProductCategory_Description": productCategoryDescription,
+    "image": image,
+    "rank_id": rankId,
+    "status": status,
+    "AddBy": addBy,
+    "created_at": createdAt,
+    "UpdateBy": updateBy,
+    "updated_at": updatedAt,
+    "DeletedBy": deletedBy,
+    "DeletedTime": deletedTime,
+    "last_update_ip": lastUpdateIp,
+    "branch_id": branchId,
+  };
 }
-
 
 class MultipleImg {
   final dynamic id;
-  final dynamic rank;
-  final String? image;
   final dynamic productId;
-  final dynamic productCode;
-  final dynamic ipAddress;
-  final dynamic userId;
+  final String? image;
   final dynamic createdAt;
   final dynamic updatedAt;
 
   MultipleImg({
     this.id,
-    this.rank,
-    this.image,
     this.productId,
-    this.productCode,
-    this.ipAddress,
-    this.userId,
+    this.image,
     this.createdAt,
     this.updatedAt,
   });
 
   factory MultipleImg.fromMap(Map<String, dynamic> json) => MultipleImg(
-        id: json["id"],
-        rank: json["rank"],
-        image: json["image"]?.toString(),
-        productId: json["product_id"],
-        productCode: json["product_code"],
-        ipAddress: json["ip_address"],
-        userId: json["user_id"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-      );
+    id: json["id"],
+    productId: json["product_id"],
+    image: json["image"]?.toString(),
+    createdAt: json["created_at"],
+    updatedAt: json["updated_at"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "rank": rank,
-        "image": image,
-        "product_id": productId,
-        "product_code": productCode,
-        "ip_address": ipAddress,
-        "user_id": userId,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-      };
+    "id": id,
+    "product_id": productId,
+    "image": image,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+  };
 }
-
-class Relationbrand {
-    final dynamic brandSiNo;
-    final dynamic productCategorySlNo;
-    final dynamic brandName;
-    final dynamic status;
-    final dynamic brandBranchid;
-    final dynamic slug;
-    final dynamic image;
-    final dynamic topBrand;
-    final dynamic shopBrand;
-    final dynamic imgAlt;
-    final dynamic sort;
-    final dynamic createdAt;
-    final dynamic updatedAt;
-    final dynamic seoTitle;
-    final dynamic seoDesp;
-    final dynamic seoKey;
-    final dynamic coverimage;
-    final dynamic coverimgAlt;
-    final dynamic description;
-
-    Relationbrand({
-        required this.brandSiNo,
-        required this.productCategorySlNo,
-        required this.brandName,
-        required this.status,
-        required this.brandBranchid,
-        required this.slug,
-        required this.image,
-        required this.topBrand,
-        required this.shopBrand,
-        required this.imgAlt,
-        required this.sort,
-        required this.createdAt,
-        required this.updatedAt,
-        required this.seoTitle,
-        required this.seoDesp,
-        required this.seoKey,
-        required this.coverimage,
-        required this.coverimgAlt,
-        required this.description,
-    });
-
-    factory Relationbrand.fromMap(Map<String, dynamic> json) => Relationbrand(
-        brandSiNo: json["brand_SiNo"],
-        productCategorySlNo: json["ProductCategory_SlNo"],
-        brandName: json["brand_name"],
-        status: json["status"],
-        brandBranchid: json["brand_branchid"],
-        slug: json["slug"],
-        image: json["image"],
-        topBrand: json["top_brand"],
-        shopBrand: json["shop_brand"],
-        imgAlt: json["imgAlt"],
-        sort: json["sort"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-        seoTitle: json["seoTitle"],
-        seoDesp: json["seoDesp"],
-        seoKey: json["seoKey"],
-        coverimage: json["coverimage"],
-        coverimgAlt: json["coverimgAlt"],
-        description: json["description"],
-    );
-
-    Map<String, dynamic> toMap() => {
-        "brand_SiNo": brandSiNo,
-        "ProductCategory_SlNo": productCategorySlNo,
-        "brand_name": brandName,
-        "status": status,
-        "brand_branchid": brandBranchid,
-        "slug": slug,
-        "image": image,
-        "top_brand": topBrand,
-        "shop_brand": shopBrand,
-        "imgAlt": imgAlt,
-        "sort": sort,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "seoTitle": seoTitle,
-        "seoDesp": seoDesp,
-        "seoKey": seoKey,
-        "coverimage": coverimage,
-        "coverimgAlt": coverimgAlt,
-        "description": description,
-    };
-}
-
-class Relationcolor {
-  final dynamic colorSiNo;
-  final String? colorName;
-  final dynamic status;
-  final dynamic code;
-  final dynamic deletedAt;
-  final dynamic createdAt;
-  final dynamic updatedAt;
-
-  Relationcolor({
-    this.colorSiNo,
-    this.colorName,
-    this.status,
-    this.code,
-    this.deletedAt,
-    this.createdAt,
-    this.updatedAt,
-  });
-
-  factory Relationcolor.fromMap(Map<String, dynamic> json) => Relationcolor(
-        colorSiNo: json["color_SiNo"],
-        colorName: json["color_name"]?.toString(),
-        status: json["status"],
-        code: json["code"],
-        deletedAt: json["deleted_at"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "color_SiNo": colorSiNo,
-        "color_name": colorName,
-        "status": status,
-        "code": code,
-        "deleted_at": deletedAt,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-      };
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import 'dart:convert';
-
-// class ProductsDetailsModel {
-//   final int id;
-//   final int categoryId;
-//   final int brandId;
-//   final String name;
-//   final String slug;
-//   final dynamic model;
-//   final String productCode;
-//   final String keyFeature;
-//   final String description;
-//   final String sellingPrice;
-//   final String discount;
-//   final int quantity;
-//   final String image;
-//   final String ipAddress;
-//   final int popular;
-//   final dynamic featured;
-//   final dynamic specialOffer;
-//   final int status;
-//   final dynamic deletedAt;
-//   final String createdAt;
-//   final String updatedAt;
-//   final String discountPrice;
-//   final List<Image>? images;
-
-//   ProductsDetailsModel({
-//     required this.id,
-//     required this.categoryId,
-//     required this.brandId,
-//     required this.name,
-//     required this.slug,
-//     required this.model,
-//     required this.productCode,
-//     required this.keyFeature,
-//     required this.description,
-//     required this.sellingPrice,
-//     required this.discount,
-//     required this.quantity,
-//     required this.image,
-//     required this.ipAddress,
-//     required this.popular,
-//     required this.featured,
-//     required this.specialOffer,
-//     required this.status,
-//     required this.deletedAt,
-//     required this.createdAt,
-//     required this.updatedAt,
-//     required this.discountPrice,
-//     required this.images,
-//   });
-
-//   factory ProductsDetailsModel.fromJson(String str) => ProductsDetailsModel.fromMap(json.decode(str));
-
-//   String toJson() => json.encode(toMap());
-
-//   factory ProductsDetailsModel.fromMap(Map<String, dynamic> json) => ProductsDetailsModel(
-//     id: json["id"]??0,
-//     categoryId: json["category_id"]??0,
-//     brandId: json["brand_id"]??0,
-//     name: json["name"]??"",
-//     slug: json["slug"]??"",
-//     model: json["model"],
-//     productCode: json["product_code"]??"",
-//     keyFeature: json["key_feature"]??"",
-//     description: json["description"]??"",
-//     sellingPrice: json["selling_price"]??"",
-//     discount: json["discount"]??"",
-//     quantity: json["quantity"]??0,
-//     image: json["image"]??"",
-//     ipAddress: json["ip_address"]??"",
-//     popular: json["popular"]??0,
-//     featured: json["featured"],
-//     specialOffer: json["special_offer"],
-//     status: json["status"]??0,
-//     deletedAt: json["deleted_at"],
-//     createdAt: json["created_at"]??"",
-//     updatedAt: json["updated_at"]??"",
-//     discountPrice: json["discount_price"]??"",
-//     images: json["images"] == null || json["images"] == [] ? [] : List<Image>.from(json["images"].map((x) => Image.fromMap(x))),
-//   );
-
-//   Map<String, dynamic> toMap() => {
-//     "id": id,
-//     "category_id": categoryId,
-//     "brand_id": brandId,
-//     "name": name,
-//     "slug": slug,
-//     "model": model,
-//     "product_code": productCode,
-//     "key_feature": keyFeature,
-//     "description": description,
-//     "selling_price": sellingPrice,
-//     "discount": discount,
-//     "quantity": quantity,
-//     "image": image,
-//     "ip_address": ipAddress,
-//     "popular": popular,
-//     "featured": featured,
-//     "special_offer": specialOffer,
-//     "status": status,
-//     "deleted_at": deletedAt,
-//     "created_at": createdAt,
-//     "updated_at": updatedAt,
-//     "discount_price": discountPrice,
-//     "images": List<dynamic>.from(images!.map((x) => x.toJson())),
-//   };
-// }
-
-// class Image {
-//   final int id;
-//   final int productId;
-//   final String otherImg;
-//   final dynamic deletedAt;
-//   final String createdAt;
-//   final String updatedAt;
-
-//   Image({
-//     required this.id,
-//     required this.productId,
-//     required this.otherImg,
-//     required this.deletedAt,
-//     required this.createdAt,
-//     required this.updatedAt,
-//   });
-
-//   factory Image.fromJson(String str) => Image.fromMap(json.decode(str));
-
-//   String toJson() => json.encode(toMap());
-
-//   factory Image.fromMap(Map<String, dynamic> json) => Image(
-//     id: json["id"]??0,
-//     productId: json["product_id"]??0,
-//     otherImg: json["other_img"]??"",
-//     deletedAt: json["deleted_at"],
-//     createdAt: json["created_at"]??"",
-//     updatedAt: json["updated_at"]??"",
-//   );
-
-//   Map<String, dynamic> toMap() => {
-//     "id": id,
-//     "product_id": productId,
-//     "other_img": otherImg,
-//     "deleted_at": deletedAt,
-//     "created_at": createdAt,
-//     "updated_at": updatedAt,
-//   };
-// }

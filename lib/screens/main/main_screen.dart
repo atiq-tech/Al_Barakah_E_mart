@@ -126,7 +126,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Center(
                     child: Padding(
-                      padding: EdgeInsets.only(right: 10.w),
+                      padding: EdgeInsets.only(right: 20.w),
                       child: GestureDetector(
                         onTap: () {
                           MainController().naveListener.sink.add(2);
@@ -138,12 +138,21 @@ class _MainScreenState extends State<MainScreen> {
                   Positioned(
                     right: 10.w,
                     top: 3.h,
-                    child: SizedBox(
-                      child: Text('${addToCart.length}',style: const TextStyle(
-                        color: Colors.white
+                    child: Container(
+                      decoration: BoxDecoration(
+                       color: Colors.red,
+                       borderRadius: BorderRadius.circular(100.r)
                       ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: Text('${addToCart.length}',style: const TextStyle(
+                            color: Colors.white
+                          ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
                     ),
                   )

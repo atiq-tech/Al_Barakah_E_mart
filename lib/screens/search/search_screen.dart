@@ -58,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50.r),
-                            border: Border.all(color: Colors.orange.shade700),
+                            border: Border.all(color: appBarColor),
                             color: Colors.white,
                           ),
                           child: TypeAheadField<AllProductModel>(
@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     SizedBox(
                                       height: 35.h,
                                       width: 35.w,
-                                      child: CustomImage(path: "$imageUrl${suggestion.productImage}"),
+                                      child: CustomImage(path: "$imageUrl${suggestion.thumImage}"),
                                     ),
                                     SizedBox(width: 10.w),
                                     Expanded(
@@ -163,7 +163,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const NewAllProductPage()),
                             );
                           },
-                          child: Center(child: Text("Search",style: TextStyle(color: Colors.orange.shade800))),
+                          child: Center(child: Text("Search",style: TextStyle(color: appBarColor))),
                         ),
                       ),
                     ],

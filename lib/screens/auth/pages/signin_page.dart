@@ -1,6 +1,14 @@
 import 'dart:convert';
+import 'package:al_barakah_e_mart/all_api_model/area_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/department_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/district_model.dart';
 import 'package:al_barakah_e_mart/all_api_model/factory_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/thana_model.dart';
+import 'package:al_barakah_e_mart/all_api_provider/area_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/department_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/district_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/factory_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/thana_provider.dart';
 import 'package:al_barakah_e_mart/screens/auth/pages/forgot_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,6 +65,11 @@ class _SignInPageState extends State<SignInPage> {
   final nidRegCtrl = TextEditingController();
   final logInFormKey = GlobalKey<FormState>();
   final signUpFormKey = GlobalKey<FormState>();
+  String? factoryId;
+  String? departmentId;
+  String? districtId;
+  String? thanaId;
+  String? areaId;
 
   @override
   void initState() {
@@ -64,6 +77,10 @@ class _SignInPageState extends State<SignInPage> {
     super.initState();
       Future.microtask(() {
         Provider.of<FactoryProvider>(context, listen: false).getFactory();
+        Provider.of<DepartmentProvider>(context, listen: false).getDepartment();
+        Provider.of<DistrictProvider>(context, listen: false).getDistrict();
+        Provider.of<ThanaProvider>(context, listen: false).getThana("");
+        Provider.of<AreaProvider>(context, listen: false).getArea("");
       });
   }
 
@@ -438,16 +455,16 @@ class _SignInPageState extends State<SignInPage> {
                               Expanded(flex: 6,child: Text("Factory",style:AllTextStyle.LoginHeadTitle)),
                               const Expanded(flex: 1, child: Text(":")),
                               Expanded(
-                                flex: 13,
-                                child: SizedBox(
-                                  height: 30.h,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: Consumer<FactoryProvider>(
+                              flex: 13,
+                              child: SizedBox(
+                                height: 30.h,
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Consumer<FactoryProvider>(
                                   builder: (context, provider, child) {
                                     final factoryList = provider.factoryList;
-
                                     return TypeAheadField<FactoryModel>(
                                       suggestionsCallback: (pattern) {
+                                        if(pattern.isEmpty) {return factoryList;}
                                         return factoryList.where((item) {
                                           final name = item.branchName.toString().toLowerCase();
                                           return name.contains(pattern.toLowerCase());
@@ -455,47 +472,52 @@ class _SignInPageState extends State<SignInPage> {
                                       },
 
                                       itemBuilder: (context, FactoryModel suggestion) {
-                                        return ListTile(
-                                          title: Text("${suggestion.branchName}"),
-                                          subtitle: Text("${suggestion.branchId}"),
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 3.h),
+                                          child: Text("${suggestion.branchName}"),
                                         );
                                       },
 
                                       onSelected: (FactoryModel suggestion) {
                                         factoryRegCtrl.text = suggestion.branchName ?? "";
+                                        factoryId = suggestion.branchId?.toString() ?? "";
                                         FocusScope.of(context).unfocus();
                                       },
 
                                       builder: (context, controller, focusNode) {
+                                        // IMPORTANT
+                                        controller.text = factoryRegCtrl.text;
                                         return TextField(
-                                          controller: factoryRegCtrl,
+                                          controller: controller,
                                           focusNode: focusNode,
                                           style: AllTextStyle.dropDownlistStyle,
+                                          onChanged: (value) {
+                                            factoryRegCtrl.text = value;
+                                          },
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.only(left: 5.w),
                                             hintText: "Select factory",
-                                            hintStyle: AllTextStyle.dropDownlistStyle,
+                                            hintStyle:AllTextStyle.dropDownlistStyle,
                                             filled: true,
                                             fillColor: Colors.white,
                                             border: InputBorder.none,
-                                            focusedBorder: TextFieldInputBorder.focusEnabledBorder,
-                                            enabledBorder: TextFieldInputBorder.focusEnabledBorder,
-                                            suffixIcon: factoryRegCtrl.text.isEmpty
-                                                ? null
-                                                : GestureDetector(
-                                                    onTap: () {
-                                                      factoryRegCtrl.clear();
-                                                    },
-                                                    child: const Icon(Icons.close, size: 16),
-                                                  ),
+                                            focusedBorder:TextFieldInputBorder.focusEnabledBorder,
+                                            enabledBorder:TextFieldInputBorder.focusEnabledBorder,
+                                            suffixIcon: controller.text.isEmpty ? null : GestureDetector(
+                                              onTap: () {
+                                                controller.clear();
+                                                factoryRegCtrl.clear();
+                                              },
+                                              child: const Icon(Icons.close,size: 16),
+                                            ),
                                           ),
                                         );
                                       },
                                     );
                                   },
-                                )
                                 ),
                               ),
+                            )
                             ],
                           ):SizedBox(height: 0.h),
                           customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
@@ -504,25 +526,72 @@ class _SignInPageState extends State<SignInPage> {
                               Expanded(flex: 6,child: Text("Department",style:AllTextStyle.LoginHeadTitle)),
                               const Expanded(flex: 1, child: Text(":")),
                               Expanded(
-                                flex: 13,
-                                child: SizedBox(
-                                  height: 30.h,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: TextField(
-                                    style: AllTextStyle.dropDownlistStyle,
-                                    controller: departmentRegCtrl,
-                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
-                                      hintText: "Select department",
-                                      hintStyle: AllTextStyle.dropDownlistStyle,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: InputBorder.none,
-                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
-                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
-                                    ),
-                                  ),
+                              flex: 13,
+                              child: SizedBox(
+                                height: 30.h,
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Consumer<DepartmentProvider>(
+                                  builder: (context, provider, child) {
+                                    final departmentList = provider.departmentList;
+                                    return TypeAheadField<DepartmentModel>(
+                                      suggestionsCallback: (pattern) {
+                                        if (pattern.isEmpty) {
+                                          return departmentList;
+                                        }
+                                        return departmentList.where((item) {
+                                          final name = item.departmentName.toString().toLowerCase();
+                                          return name.contains(pattern.toLowerCase());
+                                        }).toList();
+                                      },
+
+                                      itemBuilder: (context, DepartmentModel suggestion) {
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 3.h),
+                                          child: Text("${suggestion.departmentName}",
+                                          ),
+                                        );
+                                      },
+
+                                      onSelected: (DepartmentModel suggestion) {
+                                        departmentRegCtrl.text = suggestion.departmentName ?? "";
+                                        departmentId = suggestion.departmentSlNo?.toString() ?? "";
+                                        FocusScope.of(context).unfocus();
+                                      },
+
+                                      builder: (context, controller, focusNode) {
+                                        controller.text = departmentRegCtrl.text;
+                                        return TextField(
+                                          controller: controller,
+                                          focusNode: focusNode,
+                                          style: AllTextStyle.dropDownlistStyle,
+                                          onChanged: (value) {
+                                            departmentRegCtrl.text = value;
+                                          },
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 5.w),
+                                            hintText: "Select Department",
+                                            hintStyle: AllTextStyle.dropDownlistStyle,
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            border: InputBorder.none,
+                                            focusedBorder: TextFieldInputBorder.focusEnabledBorder,
+                                            enabledBorder: TextFieldInputBorder.focusEnabledBorder,
+                                            suffixIcon:
+                                            controller.text.isEmpty? null : GestureDetector(
+                                              onTap: () {
+                                                controller.clear();
+                                                departmentRegCtrl.clear();
+                                              },
+                                              child: const Icon(Icons.close,size: 16),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
+                            )
                             ],
                           ):SizedBox(height: 0.h),
                           customerType=="member" ? SizedBox(height: 3.h):SizedBox(height: 0.h),
@@ -698,19 +767,67 @@ class _SignInPageState extends State<SignInPage> {
                                 child: SizedBox(
                                   height: 30.h,
                                   width: MediaQuery.of(context).size.width / 2,
-                                  child: TextField(
-                                    style: AllTextStyle.dropDownlistStyle,
-                                    controller: districtRegCtrl,
-                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
-                                      hintText: "Select district",
-                                      hintStyle: AllTextStyle.dropDownlistStyle,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: InputBorder.none,
-                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
-                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
-                                    ),
-                                  ),
+                                  child:  Consumer<DistrictProvider>(
+                                  builder: (context, provider, child) {
+                                    final districtList = provider.districtList;
+                                    return TypeAheadField<DistrictModel>(
+                                      suggestionsCallback: (pattern) {
+                                        if (pattern.isEmpty) {
+                                          return districtList;
+                                        }
+                                        return districtList.where((item) {
+                                          final name = item.districtName.toString().toLowerCase();
+                                          return name.contains(pattern.toLowerCase());
+                                        }).toList();
+                                      },
+
+                                      itemBuilder: (context, DistrictModel suggestion) {
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 3.h),
+                                          child: Text("${suggestion.districtName}",
+                                          ),
+                                        );
+                                      },
+
+                                      onSelected: (DistrictModel suggestion) {
+                                        districtRegCtrl.text = suggestion.districtName ?? "";
+                                        districtId = suggestion.districtSlNo?.toString() ?? "";
+                                        Provider.of<ThanaProvider>(context, listen: false).getThana("$districtId");
+                                        FocusScope.of(context).unfocus();
+                                      },
+
+                                      builder: (context, controller, focusNode) {
+                                        controller.text = districtRegCtrl.text;
+                                        return TextField(
+                                          controller: controller,
+                                          focusNode: focusNode,
+                                          style: AllTextStyle.dropDownlistStyle,
+                                          onChanged: (value) {
+                                            districtRegCtrl.text = value;
+                                          },
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 5.w),
+                                            hintText: "Select District",
+                                            hintStyle: AllTextStyle.dropDownlistStyle,
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            border: InputBorder.none,
+                                            focusedBorder: TextFieldInputBorder.focusEnabledBorder,
+                                            enabledBorder: TextFieldInputBorder.focusEnabledBorder,
+                                            suffixIcon:
+                                            controller.text.isEmpty? null : GestureDetector(
+                                              onTap: () {
+                                                controller.clear();
+                                                districtRegCtrl.clear();
+                                              },
+                                              child: const Icon(Icons.close,size: 16),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                )
                                 ),
                               ),
                             ],
@@ -722,22 +839,70 @@ class _SignInPageState extends State<SignInPage> {
                               const Expanded(flex: 1, child: Text(":")),
                               Expanded(
                                 flex: 13,
-                                child: SizedBox(
-                                  height: 30.h,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: TextField(
-                                    style: AllTextStyle.dropDownlistStyle,
-                                    controller: thanaRegCtrl,
-                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
-                                      hintText: "Select thana",
-                                      hintStyle: AllTextStyle.dropDownlistStyle,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: InputBorder.none,
-                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
-                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
-                                    ),
-                                  ),
+                                  child: SizedBox(
+                                    height: 30.h,
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    child: Consumer<ThanaProvider>(
+                                    builder: (context, provider, child) {
+                                      final thanaList = provider.thanaList;
+                                      return TypeAheadField<ThanaModel>(
+                                        suggestionsCallback: (pattern) {
+                                          if (pattern.isEmpty) {
+                                            return thanaList;
+                                          }
+                                          return thanaList.where((item) {
+                                            final name = item.name.toString().toLowerCase();
+                                            return name.contains(pattern.toLowerCase());
+                                          }).toList();
+                                        },
+
+                                        itemBuilder: (context, ThanaModel suggestion) {
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 3.h),
+                                            child: Text("${suggestion.name}",
+                                            ),
+                                          );
+                                        },
+
+                                        onSelected: (ThanaModel suggestion) {
+                                          thanaRegCtrl.text = suggestion.name ?? "";
+                                          thanaId = suggestion.id?.toString() ?? "";
+                                          Provider.of<AreaProvider>(context, listen: false).getArea("$thanaId");
+                                          FocusScope.of(context).unfocus();
+                                        },
+
+                                        builder: (context, controller, focusNode) {
+                                          controller.text = thanaRegCtrl.text;
+                                          return TextField(
+                                            controller: controller,
+                                            focusNode: focusNode,
+                                            style: AllTextStyle.dropDownlistStyle,
+                                            onChanged: (value) {
+                                              thanaRegCtrl.text = value;
+                                            },
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.only(left: 5.w),
+                                              hintText: "Select Thana",
+                                              hintStyle: AllTextStyle.dropDownlistStyle,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: InputBorder.none,
+                                              focusedBorder: TextFieldInputBorder.focusEnabledBorder,
+                                              enabledBorder: TextFieldInputBorder.focusEnabledBorder,
+                                              suffixIcon:
+                                              controller.text.isEmpty? null : GestureDetector(
+                                                onTap: () {
+                                                  controller.clear();
+                                                  thanaRegCtrl.clear();
+                                                },
+                                                child: const Icon(Icons.close,size: 16),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  )
                                 ),
                               ),
                             ],
@@ -752,19 +917,66 @@ class _SignInPageState extends State<SignInPage> {
                                 child: SizedBox(
                                   height: 30.h,
                                   width: MediaQuery.of(context).size.width / 2,
-                                  child: TextField(
-                                    style: AllTextStyle.dropDownlistStyle,
-                                    controller: areaRegCtrl,
-                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 5.w),
-                                      hintText: "Select area",
-                                      hintStyle: AllTextStyle.dropDownlistStyle,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: InputBorder.none,
-                                      focusedBorder:TextFieldInputBorder.focusEnabledBorder,
-                                      enabledBorder:TextFieldInputBorder.focusEnabledBorder
-                                    ),
-                                  ),
+                                  child: Consumer<AreaProvider>(
+                                    builder: (context, provider, child) {
+                                      final areaList = provider.areaList;
+                                      return TypeAheadField<AreaModel>(
+                                        suggestionsCallback: (pattern) {
+                                          if (pattern.isEmpty) {
+                                            return areaList;
+                                          }
+                                          return areaList.where((item) {
+                                            final name = item.name.toString().toLowerCase();
+                                            return name.contains(pattern.toLowerCase());
+                                          }).toList();
+                                        },
+
+                                        itemBuilder: (context, AreaModel suggestion) {
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 3.h),
+                                            child: Text("${suggestion.name}",
+                                            ),
+                                          );
+                                        },
+
+                                        onSelected: (AreaModel suggestion) {
+                                          areaRegCtrl.text = suggestion.name ?? "";
+                                          areaId = suggestion.id?.toString() ?? "";
+                                          FocusScope.of(context).unfocus();
+                                        },
+
+                                        builder: (context, controller, focusNode) {
+                                          controller.text = areaRegCtrl.text;
+                                          return TextField(
+                                            controller: controller,
+                                            focusNode: focusNode,
+                                            style: AllTextStyle.dropDownlistStyle,
+                                            onChanged: (value) {
+                                              areaRegCtrl.text = value;
+                                            },
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.only(left: 5.w),
+                                              hintText: "Select Area",
+                                              hintStyle: AllTextStyle.dropDownlistStyle,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: InputBorder.none,
+                                              focusedBorder: TextFieldInputBorder.focusEnabledBorder,
+                                              enabledBorder: TextFieldInputBorder.focusEnabledBorder,
+                                              suffixIcon:
+                                              controller.text.isEmpty? null : GestureDetector(
+                                                onTap: () {
+                                                  controller.clear();
+                                                  areaRegCtrl.clear();
+                                                },
+                                                child: const Icon(Icons.close,size: 16),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  )
                                 ),
                               ),
                             ],
@@ -956,43 +1168,107 @@ class _SignInPageState extends State<SignInPage> {
         isLogInSelected = true;
       });
       Utils.showSnackBar(context, "The password must be at least 4 characters.");
+      return; 
     }
-    String link = "${BaseUrl}customer_registration";
+
+    String link = "${BaseUrl}customer_store";
     print('--- Registration Data ---link: $link');
+
     try {
+      
       final formData = FormData.fromMap({
-        "name": nameRegCtrl.text.trim(),
-        //"last_name": lastNameRegCtrl.text.trim(),
-        //"email": emailRegCtrl.text.trim(),
-        "phone": phoneRegCtrl.text.trim(),
+        "Entry_Type": "$customerType",
+        "Customer_Name": nameRegCtrl.text.trim(),
+        "branch_id": factoryId.toString(),
+        "Department_IDNo": departmentId.toString(),
+        "Building_Name": buildingRegCtrl.text.trim(), 
+        "Customer_Mobile": phoneRegCtrl.text.trim(),
+        "Reference_Name": referenceRegCtrl.text.trim(),
         "password": passRegCtrl.text.trim(),
-        //"password_confirmation": passCRegCtrl.text.trim(),
+        "Employee_Code": employeeIdRegCtrl.text.trim(),
+        "Customer_NID": nidRegCtrl.text.trim(),
+        "district_id": districtId.toString(), 
+        "thana_id": thanaId.toString(),   
+        "area_id": areaId.toString(),   
+        "Customer_Address": streetAddressRegCtrl.text.trim(),
       });
-    print('--- Sending Data to Server ---');
-    for (var element in formData.fields) {
-      print("${element.key}: ${element.value}");
-    }
+
+      print('--- Sending Data to Server ---');
+      for (var element in formData.fields) {
+        print("${element.key}: ${element.value}");
+      }
+
       final response = await Dio().post(link, data: formData);
       var item = response.data;
       print('register data $item');
-    if(item["status"] == true){
+
+      if (item["status"] == true || item["status"] == "success") { 
+        setState(() {
+          isSignUpBtnLoading = false;
+          isLogInSelected = true;
+        });
+        emptyMethod();
+        CustomSnackBar.showTopSnackBar(context, item["message"] ?? "Registration Successful");
+      } else {
+        setState(() {
+          isSignUpBtnLoading = false;
+          isLogInSelected = true;
+        });
+        Utils.showTopSnackBar(context, item["message"] ?? "User Not created successfully");
+      }
+    } catch (e) {
       setState(() {
         isSignUpBtnLoading = false;
-        isLogInSelected = true;
       });
-      emptyMethod();
-      CustomSnackBar.showTopSnackBar(context, item["message"]);
-    } else{
-      setState(() {
-        isSignUpBtnLoading = false;
-        isLogInSelected = true;
-      });
-      Utils.showTopSnackBar(context, "User Not created successfully");
-    }
-    }catch(e){
-      print('$e');
+      print('Registration Error: $e');
+      Utils.showTopSnackBar(context, "Something went wrong. Please try again.");
     }
   }
+
+  // fetchRegistration() async {
+  //   if (passRegCtrl.text.length < 4) {
+  //     setState(() {
+  //       isSignUpBtnLoading = false;
+  //       isLogInSelected = true;
+  //     });
+  //     Utils.showSnackBar(context, "The password must be at least 4 characters.");
+  //   }
+  //   String link = "${BaseUrl}customer_registration";
+  //   print('--- Registration Data ---link: $link');
+  //   try {
+  //     final formData = FormData.fromMap({
+  //       "name": nameRegCtrl.text.trim(),
+  //       //"last_name": lastNameRegCtrl.text.trim(),
+  //       //"email": emailRegCtrl.text.trim(),
+  //       "phone": phoneRegCtrl.text.trim(),
+  //       "password": passRegCtrl.text.trim(),
+  //       //"password_confirmation": passCRegCtrl.text.trim(),
+  //     });
+  //   print('--- Sending Data to Server ---');
+  //   for (var element in formData.fields) {
+  //     print("${element.key}: ${element.value}");
+  //   }
+  //     final response = await Dio().post(link, data: formData);
+  //     var item = response.data;
+  //     print('register data $item');
+  //   if(item["status"] == true){
+  //     setState(() {
+  //       isSignUpBtnLoading = false;
+  //       isLogInSelected = true;
+  //     });
+  //     emptyMethod();
+  //     CustomSnackBar.showTopSnackBar(context, item["message"]);
+  //   } else{
+  //     setState(() {
+  //       isSignUpBtnLoading = false;
+  //       isLogInSelected = true;
+  //     });
+  //     Utils.showTopSnackBar(context, "User Not created successfully");
+  //   }
+  //   }catch(e){
+  //     print('$e');
+  //   }
+  // }
 
   emptyMethod(){
     nameRegCtrl.text = "";

@@ -1,4 +1,5 @@
 
+import 'package:al_barakah_e_mart/custom/custom_card/my_custom_card_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/parent_cate_product_provider.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
@@ -76,7 +77,7 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
           height: double.infinity,
           width: double.infinity,
           child: ParentCateProductProvider.isParentCateProductLoading == true
-              ? const Center(child: CircularProgressIndicator(),)
+              ? const Center(child: CircularProgressIndicator())
               : allParentCateProductData.isNotEmpty
               ? CustomScrollView(
             slivers: [
@@ -90,7 +91,7 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                     mainAxisExtent: 275,
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
-                   // final product = allParentCateProductData[index];
+                   final product = allParentCateProductData[index];
                         //bool hasDiscount = checkHasDiscount(product.startDate, product.endDate);
                     return InkWell(
                       onTap: () {
@@ -101,37 +102,29 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                                 ),
                         ));
                       },
-                        // child: authType == "reseller" ? MyCustomCardScreen(
-                        //     quantity: "1",
-                        //     image: "$imageUrl${product.mainImage}",
-                        //     name: product.productName,
-                        //     brandName: product.relationbrand?.brandName,
-                        //     description: product.longDescription,
-                        //     discountPrice: product.productWholesaleRate.toString(),
-                        //     sellingPrice: product.productWholesaleRate.toString(),
-                        //     productCode: product.productCode,
-                        //     id: int.tryParse(product.productSlNo.toString()),
-                        //     slug: product.slug,
-                        //     stock: product.getCurrentStock(),
-                        //     discount: "",
-                        //   ): MyCustomCardScreen(
-                        //     quantity: "1",
-                        //     image: "$imageUrl${product.mainImage}",
-                        //     name: product.productName,
-                        //     brandName: product.relationbrand?.brandName,
-                        //     description: product.longDescription,
-                        //     discountPrice: hasDiscount
-                        //         ? product.onlineAfterDiscountAmount.toString()
-                        //         : product.productOnlineRate.toString(),
-                        //     sellingPrice: hasDiscount
-                        //         ? product.productOnlineRate.toString()
-                        //         : "",
-                        //     productCode: product.productCode,
-                        //     id: int.tryParse(product.productSlNo.toString()),
-                        //     slug: product.slug,
-                        //     stock: product.getCurrentStock(),
-                        //     discount: hasDiscount ? product.onlineDiscount.toString(): "",
-                        //   ),
+                        child: MyCustomCardScreen(
+                          quantity: "1",
+                          image:
+                          "$imageUrl${product.thumImage}",
+                          name: product.productName,
+                          description:
+                          product.productDescription,
+                          discountPrice: product
+                              .productWholesaleRate
+                              .toString(),
+                          sellingPrice: product
+                              .productWholesaleRate
+                              .toString(),
+                          productCode:
+                          product.productCode,
+                          id: int.tryParse(
+                            product.productSlNo
+                                .toString(),
+                          ),
+                          slug: product.slug,
+                          stock: product.stock,
+                          discount: "",
+                        ),
                     );
                   }, childCount: allParentCateProductData.length),
                 ),

@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/screens/one_product_details/product_details_screen.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,14 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                       Expanded(
                       child: InkWell(
                         onTap: () {
-                          
+                          Navigator.push(context,
+                            MaterialPageRoute(builder: (_) =>
+                              One_Product_Details(
+                                slug: "${widget.slug}",
+                                productId: widget.id.toString(),
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           height: 25.h,

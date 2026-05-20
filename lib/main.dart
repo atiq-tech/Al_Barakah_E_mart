@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/all_api_provider/delivery_times_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/department_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/district_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/factory_provider.dart';
@@ -92,7 +93,8 @@ class AlBarakahEmartApp extends StatelessWidget {
           ChangeNotifierProvider<ThanaProvider>(create: (context) => ThanaProvider()),
           ChangeNotifierProvider<DepartmentProvider>(create: (context) => DepartmentProvider()),
           ChangeNotifierProvider<FactoryProvider>(create: (context) => FactoryProvider()),
-          ChangeNotifierProvider<DistrictProvider>(create: (context) => DistrictProvider()),
+          ChangeNotifierProvider<DistrictProvider>(create: (context) => DistrictProvider()),         
+          ChangeNotifierProvider<DeliveryTimesProvider>(create: (context) => DeliveryTimesProvider()),
           
 
           ChangeNotifierProvider<SliderProvider>(create: (context) => SliderProvider()),

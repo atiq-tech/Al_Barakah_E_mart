@@ -1,13 +1,22 @@
+import 'package:al_barakah_e_mart/all_api_model/area_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/delivery_times_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/district_model.dart';
+import 'package:al_barakah_e_mart/all_api_model/thana_model.dart';
+import 'package:al_barakah_e_mart/all_api_provider/area_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/delivery_times_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/district_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/factory_provider.dart';
+import 'package:al_barakah_e_mart/all_api_provider/thana_provider.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:al_barakah_e_mart/model/add_to_cart_model.dart';
 import 'package:al_barakah_e_mart/provider/add_to_cart_provider.dart';
-import 'package:al_barakah_e_mart/utils/all_textstyle.dart';
-import 'package:al_barakah_e_mart/utils/custom_image.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({
@@ -49,7 +58,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final billingController = TextEditingController();
   final shippingController = TextEditingController();
   final deliveryDateController = TextEditingController();
-  final deliveryNoteController = TextEditingController();
+  final deliveryTimesController = TextEditingController();
+  String? factoryId;
+  String? departmentId;
+  String? districtId;
+  String? thanaId;
+  String? areaId;
+  String? deliveryTimesId;
 
   SharedPreferences? sharedPreferences;
 
@@ -73,6 +88,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void initState() {
     super.initState();
     _initializeData();
+    Future.microtask(() {
+        Provider.of<DeliveryTimesProvider>(context, listen: false).getDeliveryTimes();
+        Provider.of<DistrictProvider>(context, listen: false).getDistrict();
+        Provider.of<ThanaProvider>(context, listen: false).getThana("");
+        Provider.of<AreaProvider>(context, listen: false).getArea("");
+      });
+    deliveryDateController.text = DateFormat('dd-MM-yyyy / EEEE').format(DateTime.now());
   }
 
   @override
@@ -89,8 +111,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         centerTitle: true,
         title: Column(
           children: [
-            Text("Checkout", style: TextStyle(color: Colors.teal.shade900, fontWeight: FontWeight.bold)),
-            Text("Guest Checkout", style: TextStyle(fontSize: 14.sp, color: Colors.teal)),
+            Text("Checkout", style: TextStyle(color: appBarColor, fontWeight: FontWeight.bold)),
+            Text("Guest Checkout", style: TextStyle(fontSize: 14.sp, color: Colors.teal.shade600)),
           ],
         ),
       ),
@@ -117,7 +139,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               if (currentStep == 1) _deliveryStep(),
               if (currentStep == 2) _summaryStep(cartList),
 
-              SizedBox(height: 30.h),
+              SizedBox(height: 20.h),
 
               /// ACTION BUTTONS
               Row(
@@ -167,12 +189,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
-
   Widget _stepDivider(int step) {
     return Expanded(
       child: Container(
         height: 2,
-        color: currentStep > step ? Colors.green : Colors.grey.shade300,
+        color: currentStep > step ? Colors.green.shade700 : Colors.grey.shade300,
       ),
     );
   }
@@ -185,7 +206,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       children: [
         CircleAvatar(
           radius: 15.r,
-          backgroundColor: isCompleted ? Colors.green : (isActive ? Colors.blue.shade800 : Colors.grey.shade300),
+          backgroundColor: isCompleted ? Colors.green.shade700 : (isActive ? Colors.blue.shade800 : Colors.grey.shade300),
           child: isCompleted 
               ? Icon(Icons.check, size: 16.r, color: Colors.white)
               : Text("${step + 1}", style: TextStyle(color: isActive ? Colors.white : Colors.black54)),
@@ -197,25 +218,296 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _accountStep() {
-    return Column(
-      children: [
-        _inputField("Enter Name *", "Name", _shipperNameController),
-        _inputField("Enter Phone Number *", "Phone", _shipperPhoneController),
-        _inputField("Enter Email", "Email", _emailController),
-        _inputField("Select District", "District", districtController),
-        _inputField("Thana *", "Thana", thanaController),
-        _inputField("Area *", "Area", areaController),
-        _inputField("Billing address *", "Billing Address*", billingController),
-        _inputField("Shipping address *", "Shipping Address*", shippingController),
-      ],
-    );
-  }
+  return Column(
+    children: [
+
+      _inputField(
+        "Enter Name *",
+        "Name",
+        _shipperNameController,
+      ),
+
+      _inputField(
+        "Enter Phone Number *",
+        "Phone",
+        _shipperPhoneController,
+      ),
+
+      _inputField(
+        "Enter Email",
+        "Email",
+        _emailController,
+      ),
+      SizedBox(height: 5.h),
+      /// DISTRICT
+      Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 45.h,
+              child: Consumer<DistrictProvider>(
+                builder: (context, provider, child) {
+                  final districtList = provider.districtList;
+                  return TypeAheadField<DistrictModel>(
+                    suggestionsCallback: (pattern) {
+                      if (pattern.isEmpty) {
+                        return districtList;
+                      }
+                      return districtList.where((item) {
+                        final name = item.districtName.toString().toLowerCase();
+                        return name.contains(pattern.toLowerCase());
+                      }).toList();
+                    },
+                    itemBuilder: (context,DistrictModel suggestion) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                        child: Text("${suggestion.districtName}"),
+                      );
+                    },
+                    onSelected: (DistrictModel suggestion) {
+                      districtController.text = suggestion.districtName ?? "";
+                      districtId = suggestion.districtSlNo?.toString() ?? "";
+                      Provider.of<ThanaProvider>(context,listen: false).getThana(districtId);
+                      FocusScope.of(context).unfocus();
+                    },
+                    builder: (context,controller,focusNode) {
+                      controller.text = districtController.text;
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          hintText: "Select District",
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          border: OutlineInputBorder(borderRadius:BorderRadius.circular(8.r)),
+                          suffixIcon: controller.text.isEmpty ? null : GestureDetector(
+                            onTap: () {
+                              controller.clear();
+                              districtController.clear();
+                            },
+                            child: const Icon(Icons.close,size: 18),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 5.h),
+      /// THANA
+      Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 45.h,
+              child: Consumer<ThanaProvider>(
+                builder: (context, provider, child) {
+                  final thanaList = provider.thanaList;
+                  return TypeAheadField<ThanaModel>(
+                    suggestionsCallback: (pattern) {
+                      if (pattern.isEmpty) {
+                        return thanaList;
+                      }
+                      return thanaList.where((item) {
+                        final name = item.name.toString().toLowerCase();
+                        return name.contains(pattern.toLowerCase());
+                      }).toList();
+                    },
+                    itemBuilder: (context,ThanaModel suggestion) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                        child: Text("${suggestion.name}"),
+                      );
+                    },
+                    onSelected: (ThanaModel suggestion) {
+                      thanaController.text = suggestion.name ?? "";
+                      thanaId = suggestion.id?.toString() ?? "";
+                      Provider.of<AreaProvider>(context,listen: false).getArea(thanaId);
+                      FocusScope.of(context).unfocus();
+                    },
+                    builder: (context,controller,focusNode,) {
+                      controller.text = thanaController.text;
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          hintText: "Select Thana",
+                          contentPadding:EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+                          suffixIcon: controller.text.isEmpty ? null : GestureDetector(
+                            onTap: () {
+                              controller.clear();
+                              thanaController.clear();
+                            },
+                            child: const Icon(Icons.close,size: 18),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 5.h),
+      /// AREA
+      Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 45.h,
+              child: Consumer<AreaProvider>(
+                builder: (context, provider, child) {
+                  final areaList = provider.areaList;
+                  return TypeAheadField<AreaModel>(
+                    suggestionsCallback: (pattern) {
+                      if (pattern.isEmpty) {return areaList;}
+                      return areaList.where((item) {
+                        final name = item.name.toString().toLowerCase();
+                        return name.contains( pattern.toLowerCase());
+                      }).toList();
+                    },
+                    itemBuilder: (context,AreaModel suggestion) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                        child: Text("${suggestion.name}"),
+                      );
+                    },
+                    onSelected: ( AreaModel suggestion) {
+                      areaController.text =suggestion.name ?? "";
+                      areaId = suggestion.id?.toString()?? "";
+                      FocusScope.of(context).unfocus();
+                    },
+                    builder: (context,controller,focusNode) {
+                      controller.text = areaController.text;
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          hintText:"Select Area",
+                          contentPadding:EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          border: OutlineInputBorder(borderRadius:BorderRadius.circular(8.r)),
+                          suffixIcon:
+                          controller.text.isEmpty ? null: GestureDetector(
+                            onTap: () {
+                              controller.clear();
+                              areaController.clear();
+                            },
+                            child: const Icon(Icons.close,size: 18),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 15.h),
+      _inputField(
+        "Billing address *",
+        "Billing Address*",
+        billingController,
+      ),
+      _inputField(
+        "Shipping address *",
+        "Shipping Address*",
+        shippingController,
+      ),
+    ],
+  );
+}
 
   Widget _deliveryStep() {
     return Column(
       children: [
-        _inputField("17-05-2026 /Sunday", "Delivery Date*", deliveryDateController),
-        _inputField("9AM-10PM", "Select Time*", deliveryNoteController),
+      Padding(
+        padding: EdgeInsets.only(bottom: 5.h),
+        child: TextFormField(
+          controller: deliveryDateController,
+          readOnly: true,
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(days: 365),
+              ),
+            );
+            if (pickedDate != null) {
+              deliveryDateController.text = DateFormat('dd-MM-yyyy / EEEE').format(pickedDate);
+            }
+          },
+          decoration: InputDecoration(
+            labelText: "Delivery Date*",
+            hintText: "Select Delivery Date",
+            suffixIcon: const Icon(Icons.calendar_month,),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+          ),
+        ),
+      ),
+      Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 45.h,
+              child: Consumer<DeliveryTimesProvider>(
+                builder: (context, provider, child) {
+                  final deliveryTimesList = provider.deliveryTimesList;
+                  return TypeAheadField<DeliveryTimesModel>(
+                    suggestionsCallback: (pattern) {
+                      if (pattern.isEmpty) {return deliveryTimesList;}
+                      return deliveryTimesList.where((item) {
+                        final name = item.time.toString().toLowerCase();
+                        return name.contains( pattern.toLowerCase());
+                      }).toList();
+                    },
+                    itemBuilder: (context,DeliveryTimesModel suggestion) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                        child: Text("${suggestion.time}"),
+                      );
+                    },
+                    onSelected: (DeliveryTimesModel suggestion) {
+                      deliveryTimesController.text =suggestion.time ?? "";
+                      deliveryTimesId = suggestion.groupId?.toString()?? "";
+                      FocusScope.of(context).unfocus();
+                    },
+                    builder: (context,controller,focusNode) {
+                      controller.text = deliveryTimesController.text;
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          hintText:"Select Times",
+                          contentPadding:EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          border: OutlineInputBorder(borderRadius:BorderRadius.circular(8.r)),
+                          suffixIcon:
+                          controller.text.isEmpty ? null: GestureDetector(
+                            onTap: () {
+                              controller.clear();
+                              deliveryTimesController.clear();
+                            },
+                            child: const Icon(Icons.close,size: 18),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+       ),
       ],
     );
   }
@@ -270,7 +562,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _inputField(String hint, String label, TextEditingController controller) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 15.h),
+      padding: EdgeInsets.only(bottom: 5.h),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
@@ -283,6 +575,301 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:provider/provider.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// import 'package:al_barakah_e_mart/model/add_to_cart_model.dart';
+// import 'package:al_barakah_e_mart/provider/add_to_cart_provider.dart';
+
+// class CheckoutScreen extends StatefulWidget {
+//   const CheckoutScreen({
+//     super.key,
+//     required this.quantity,
+//     this.sizeId,
+//     this.colorId,
+//     required this.from,
+//     this.addToCart,
+//     this.total,
+//     required this.token,
+//   });
+
+//   final int quantity;
+//   final String? sizeId;
+//   final String? colorId;
+//   final String from;
+//   final String token;
+//   final String? total;
+//   final List<AddToCartModel>? addToCart;
+
+//   @override
+//   State<CheckoutScreen> createState() => _CheckoutScreenState();
+// }
+
+// class _CheckoutScreenState extends State<CheckoutScreen> {
+//   int currentStep = 0;
+//   String userName = "";
+//   String userEmail = "";
+//   String userPhone = "";
+//   String userAddress = "";
+
+//   final _shipperNameController = TextEditingController();
+//   final _shipperPhoneController = TextEditingController();
+//   final _emailController = TextEditingController();
+//   final districtController = TextEditingController();
+//   final thanaController = TextEditingController();
+//   final areaController = TextEditingController();
+//   final billingController = TextEditingController();
+//   final shippingController = TextEditingController();
+//   final deliveryDateController = TextEditingController();
+//   final deliveryNoteController = TextEditingController();
+
+//   SharedPreferences? sharedPreferences;
+
+//   Future<void> _initializeData() async {
+//     sharedPreferences = await SharedPreferences.getInstance();
+//     setState(() {
+//       userName = sharedPreferences?.getString('name') ?? "";
+//       userEmail = sharedPreferences?.getString('email') ?? "";
+//       userPhone = sharedPreferences?.getString('phone') ?? "";
+//       userAddress = sharedPreferences?.getString('address') ?? "";
+      
+//       _shipperNameController.text = userName;
+//       _shipperPhoneController.text = userPhone;
+//       _emailController.text = userEmail;
+//       billingController.text = userAddress;
+//       shippingController.text = userAddress;
+//     });
+//   }
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _initializeData();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final cartProvider = Provider.of<AddToCartProvider>(context);
+//     final cartList = cartProvider.cart;
+
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         foregroundColor: Colors.black,
+//         elevation: 0,
+//         centerTitle: true,
+//         title: Column(
+//           children: [
+//             Text("Checkout", style: TextStyle(color: Colors.teal.shade900, fontWeight: FontWeight.bold)),
+//             Text("Guest Checkout", style: TextStyle(fontSize: 14.sp, color: Colors.teal)),
+//           ],
+//         ),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: EdgeInsets.all(15.r),
+//           child: Column(
+//             children: [
+//               /// STEP INDICATOR
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   _stepCircle(0, "Account"),
+//                   _stepDivider(0),
+//                   _stepCircle(1, "Delivery Date"),
+//                   _stepDivider(1),
+//                   _stepCircle(2, "Order Summary"),
+//                 ],
+//               ),
+//               SizedBox(height: 30.h),
+
+//               /// STEP BODY
+//               if (currentStep == 0) _accountStep(),
+//               if (currentStep == 1) _deliveryStep(),
+//               if (currentStep == 2) _summaryStep(cartList),
+
+//               SizedBox(height: 30.h),
+
+//               /// ACTION BUTTONS
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   // Previous Button
+//                   if (currentStep > 0)
+//                     Expanded(
+//                       child: Padding(
+//                         padding: EdgeInsets.only(right: 10.w),
+//                         child: ElevatedButton(
+//                           onPressed: () => setState(() => currentStep--),
+//                           style: ElevatedButton.styleFrom(
+//                             backgroundColor: const Color(0xFF063321), // Dark Green
+//                             padding: EdgeInsets.symmetric(vertical: 12.h),
+//                           ),
+//                           child: const Text("Previous", style: TextStyle(color: Colors.white)),
+//                         ),
+//                       ),
+//                     ),
+
+//                   // Next / Place Order Button
+//                   Expanded(
+//                     child: ElevatedButton(
+//                       onPressed: () {
+//                         if (currentStep < 2) {
+//                           setState(() => currentStep++);
+//                         } else {
+//                           // TODO: Implement Place Order Logic
+//                         }
+//                       },
+//                       style: ElevatedButton.styleFrom(
+//                         backgroundColor: const Color(0xFF063321),
+//                         padding: EdgeInsets.symmetric(vertical: 12.h),
+//                       ),
+//                       child: Text(
+//                         currentStep == 2 ? "Place Order" : "Next",
+//                         style: const TextStyle(color: Colors.white),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _stepDivider(int step) {
+//     return Expanded(
+//       child: Container(
+//         height: 2,
+//         color: currentStep > step ? Colors.green : Colors.grey.shade300,
+//       ),
+//     );
+//   }
+
+//   Widget _stepCircle(int step, String title) {
+//     bool isCompleted = currentStep > step;
+//     bool isActive = currentStep == step;
+
+//     return Column(
+//       children: [
+//         CircleAvatar(
+//           radius: 15.r,
+//           backgroundColor: isCompleted ? Colors.green : (isActive ? Colors.blue.shade800 : Colors.grey.shade300),
+//           child: isCompleted 
+//               ? Icon(Icons.check, size: 16.r, color: Colors.white)
+//               : Text("${step + 1}", style: TextStyle(color: isActive ? Colors.white : Colors.black54)),
+//         ),
+//         SizedBox(height: 4.h),
+//         Text(title, style: TextStyle(fontSize: 10.sp, color: Colors.black87)),
+//       ],
+//     );
+//   }
+
+//   Widget _accountStep() {
+//     return Column(
+//       children: [
+//         _inputField("Enter Name *", "Name", _shipperNameController),
+//         _inputField("Enter Phone Number *", "Phone", _shipperPhoneController),
+//         _inputField("Enter Email", "Email", _emailController),
+//         _inputField("Select District", "District", districtController),
+//         _inputField("Thana *", "Thana", thanaController),
+//         _inputField("Area *", "Area", areaController),
+//         _inputField("Billing address *", "Billing Address*", billingController),
+//         _inputField("Shipping address *", "Shipping Address*", shippingController),
+//       ],
+//     );
+//   }
+
+//   Widget _deliveryStep() {
+//     return Column(
+//       children: [
+//         _inputField("17-05-2026 /Sunday", "Delivery Date*", deliveryDateController),
+//         _inputField("9AM-10PM", "Select Time*", deliveryNoteController),
+//       ],
+//     );
+//   }
+
+//   Widget _summaryStep(List<AddToCartModel> cartList) {
+//     return Column(
+//       children: [
+//         Text("Order Summery", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+//         SizedBox(height: 10.h),
+//         Table(
+//           border: TableBorder.all(color: Colors.grey.shade300),
+//           columnWidths: const {
+//             0: FlexColumnWidth(3),
+//             1: FlexColumnWidth(1),
+//             2: FlexColumnWidth(1),
+//           },
+//           children: [
+//             const TableRow(
+//               decoration: BoxDecoration(color: Colors.white),
+//               children: [
+//                 Padding(padding: EdgeInsets.all(8), child: Text("Products", style: TextStyle(fontWeight: FontWeight.bold))),
+//                 Padding(padding: EdgeInsets.all(8), child: Text("Quantity", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+//                 Padding(padding: EdgeInsets.all(8), child: Text("Total", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+//               ],
+//             ),
+//             ...cartList.map((item) => TableRow(
+//               children: [
+//                 Padding(padding: EdgeInsets.all(8), child: Text(item.productName ?? "")),
+//                 Padding(padding: EdgeInsets.all(8), child: Text("${item.quantity}", textAlign: TextAlign.center)),
+//                 Padding(padding: EdgeInsets.all(8), child: Text("${item.discountPrice}", textAlign: TextAlign.center)),
+//               ],
+//             )).toList(),
+//             TableRow(
+//               children: [
+//                 const Padding(padding: EdgeInsets.all(8), child: Text("Shipping Charge", style: TextStyle(fontWeight: FontWeight.bold))),
+//                 const SizedBox(),
+//                 Padding(padding: EdgeInsets.all(8), child: Text("0", textAlign: TextAlign.center)),
+//               ],
+//             ),
+//             TableRow(
+//               children: [
+//                 const Padding(padding: EdgeInsets.all(8), child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold))),
+//                 const SizedBox(),
+//                 Padding(padding: EdgeInsets.all(8), child: Text("${widget.total} +", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget _inputField(String hint, String label, TextEditingController controller) {
+//     return Padding(
+//       padding: EdgeInsets.only(bottom: 15.h),
+//       child: TextFormField(
+//         controller: controller,
+//         decoration: InputDecoration(
+//           labelText: label,
+//           hintText: hint,
+//           contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+//           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 
 

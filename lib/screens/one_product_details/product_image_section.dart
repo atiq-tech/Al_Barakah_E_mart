@@ -25,7 +25,7 @@ class _ProductImageSectionState extends State<ProductImageSection> {
   @override
   void initState() {
     super.initState();
-    selectedImage = widget.product.mainImage ?? "";
+    selectedImage = widget.product.thumImage ?? "";
   }
 
   void openZoomImage(String imagePath) {
@@ -101,17 +101,17 @@ class _ProductImageSectionState extends State<ProductImageSection> {
                   height: 60.h,
                   width: 60.w,
                   child: CustomImage(
-                    path: "${widget.imageUrl}${product.mainImage}",
+                    path: "${widget.imageUrl}${product.thumImage}",
                     fit: BoxFit.fill,
                   ),
                 )
               : SizedBox(
                   height: 60.h,
                   child: ListView.builder(
-                    itemCount: product.multipleImg.length,
+                    itemCount: product.productImages.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      final img = product.multipleImg[index].image;
+                      final img = product.productImages[index].image;
 
                       return GestureDetector(
                         onTap: () {

@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/custom/custom_card/my_custom_card_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/searching_wise_products_provider.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
@@ -122,24 +123,29 @@ class _NewAllProductPageState extends State<NewAllProductPage> {
                               )),
                             );
                           },
-                          // child: MyCustomCardScreen(
-                          //   quantity: "1",
-                          //   image: "$imageUrl${product.mainImage}",
-                          //   name: product.productName,
-                          //   brandName: product.relationbrand?.brandName,
-                          //   description: product.longDescription,
-                          //   discountPrice: hasDiscount
-                          //       ? product.onlineAfterDiscountAmount.toString()
-                          //       : product.productOnlineRate.toString(),
-                          //   sellingPrice: hasDiscount
-                          //       ? product.productOnlineRate.toString()
-                          //       : "",
-                          //   productCode: product.productCode,
-                          //   id: int.tryParse(product.productSlNo.toString()),
-                          //   slug: product.slug,
-                          //   stock: product.getCurrentStock(),
-                          //   discount: hasDiscount ? product.onlineDiscount.toString(): "",
-                          // ),
+                          child: MyCustomCardScreen(
+                          quantity: "1",
+                          image:
+                          "$imageUrl${product.thumImage}",
+                          name: product.productName,
+                          description:
+                          product.productDescription,
+                          discountPrice: product
+                              .productWholesaleRate
+                              .toString(),
+                          sellingPrice: product
+                              .productWholesaleRate
+                              .toString(),
+                          productCode:
+                          product.productCode,
+                          id: int.tryParse(
+                            product.productSlNo
+                                .toString(),
+                          ),
+                          slug: product.slug,
+                          stock: product.stock,
+                          discount: "",
+                        ),
                         );
                       },
                     ),
