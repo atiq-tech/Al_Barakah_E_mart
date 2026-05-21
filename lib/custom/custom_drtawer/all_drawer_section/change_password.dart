@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/screens/auth/pages/signin_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/api_integration/me/change_password_api.dart';
 import 'package:al_barakah_e_mart/utils/all_textstyle.dart';
@@ -30,7 +31,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool _obscureText2 = true;
   bool _obscureText3 = true;
 
-  final oldPassController = TextEditingController();
+  final currentPassController = TextEditingController();
   final newPassController = TextEditingController();
   final confirmPassController = TextEditingController();
 
@@ -90,17 +91,17 @@ class _ChangePasswordState extends State<ChangePassword> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Old Password", style: AllTextStyle.textFieldtitleStyle),
+                  Text("Current Password *", style: AllTextStyle.textFieldtitleStyle),
                   SizedBox(height: 6.h),
                   SizedBox(
                     child: Align(
                       alignment: Alignment.center,
                       child: TextFormField(
-                        controller: oldPassController,
+                        controller: currentPassController,
                         obscureText: _obscureText1,
                         decoration: InputDecoration(
                             filled: true,
-                            hintText: "Enter old password",
+                            hintText: "Enter current password",
                             hintStyle: AllTextStyle.textValueStyle,
                             contentPadding: EdgeInsets.only(left: 10.0, top: 0.0, bottom: 0.0, right: 0.0),
                             fillColor: Colors.white,
@@ -115,7 +116,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             )),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'The old password field is required.';
+                            return 'The current password field is required.';
                           }
                           return null;
                         },
@@ -123,7 +124,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Text("New Password", style: AllTextStyle.textFieldtitleStyle),
+                  Text("New Password *", style: AllTextStyle.textFieldtitleStyle),
                   const SizedBox(height: 6,),
                   SizedBox(
                     child: TextFormField(
@@ -153,7 +154,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Text("Confirm Password", style: AllTextStyle.textFieldtitleStyle),
+                  Text("Confirm Password *", style: AllTextStyle.textFieldtitleStyle),
                   const SizedBox(height: 6),
                   SizedBox(
                     child: Align(
@@ -190,44 +191,48 @@ class _ChangePasswordState extends State<ChangePassword> {
                   SizedBox(height: 20.h),
                   Align(
                   alignment: Alignment.centerRight,
-                  child:
-                      ElevatedButton(
-                        onPressed: () {
-                        if(formKey.currentState!.validate()){
-                          setState(() {
-                            isLoading = true;
-                          });
-                          PasswordChangeApi.fetchPasswordChange(
-                            oldPassController.text,
-                            newPassController.text,
-                            context).then((value){
-                            if(value!='Old password does not match.'){
-                              setState(() {
-                                isLoading = false;
-                              });
-                              CustomSnackBar.showTopSnackBar(context, value);
-                              Navigator.pop(context);
-                            }else{
-                              setState(() {
-                                isLoading = false;
-                              });
-                              Utils.showTopSnackBar(context, value);
-                            }
-                          });
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        final result = await PasswordChangeApi.fetchPasswordChange(
+                          currentPassController.text,
+                          newPassController.text,
+                          confirmPassController.text,
+                          context,
+                        );
+                        setState(() {
+                          isLoading = false;
+                        });
+                        /// SUCCESS
+                        if (result["success"] == true) {
+                          CustomSnackBar.showTopSnackBar(context,result["message"]);
+                          /// OPTIONAL CLEAR TOKEN
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.clear();
+                          Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => const SignInPage()),(route) => false);
+                        } else {
+                          Utils.showTopSnackBar( context,result["message"]);
                         }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: Size(double.infinity, 32.h),
-                        padding: EdgeInsets.all(5.r),
-                        backgroundColor: const Color(0xff84BA40)
-                      ),
-                      child: isLoading ? const CircularProgressIndicator(color: Colors.white,)
-                      : Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                        child: Text("UPDATE CHANGE",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
-                      ),
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: Size(double.infinity, 32.h),
+                      padding: EdgeInsets.all(5.r),
+                      backgroundColor: appBarColor,
                     ),
+                    child: isLoading ? const CircularProgressIndicator(color: Colors.white)
+                      : Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                          child: Text(
+                            "UPDATE CHANGE",
+                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
+                          ),
+                        ),
                   ),
+                ),
                 ],
               ),
             ),

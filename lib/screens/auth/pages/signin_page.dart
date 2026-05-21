@@ -1109,11 +1109,11 @@ class _SignInPageState extends State<SignInPage> {
   
   fetchLogin() async {
   SharedPreferences? sharedPreferences;
-  String link = "${BaseUrl}customer/login";
+  String link = "${BaseUrl}customer_login";
   
   try {
     final formData = FormData.fromMap({
-      "login": phoneLogInCtrl.text.trim(),
+      "Customer_Mobile": phoneLogInCtrl.text.trim(),
       "password": passLogInCtrl.text.trim()
     });
     
@@ -1121,16 +1121,16 @@ class _SignInPageState extends State<SignInPage> {
     var item = response.data;
     
     // Success Case (Status 200)
-    if (item["status"] == true) {
+    if (item["success"] == true) {
       setState(() { isSignInBtnLoading = false; });
 
-      var customer = item["data"]["customer"];
+      var customer = item["customer"];
       String userName = "${customer["Customer_Name"] ?? ""}";
 
       GetStorage().write("name", userName);
 
       sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString('token', "${item["data"]["access_token"]}");
+      sharedPreferences.setString('token', "${item["token"]}");
       sharedPreferences.setString('name', "${customer["Customer_Name"] ?? ""}");
       sharedPreferences.setString('email', "${customer["Customer_Email"] ?? ""}");
       sharedPreferences.setString('phone', "${customer["Customer_Phone"] ?? ""}");
@@ -1138,8 +1138,17 @@ class _SignInPageState extends State<SignInPage> {
       sharedPreferences.setString('image', "${customer["image_name"] ?? ""}");
       sharedPreferences.setString('id', "${customer["Customer_SlNo"]}");
       sharedPreferences.setString('auth_type', "${customer["auth_type"]}");
+
+      sharedPreferences.setString('districtName', "${customer["district"]["District_Name"] ?? ""}");
+      sharedPreferences.setString('thanaName', "${customer["thana"]["name"] ?? ""}");
+      sharedPreferences.setString('areaName', "${customer["area"]["name"]}");
+
+      sharedPreferences.setString('districtId', "${customer["district_id"] ?? ""}");
+      sharedPreferences.setString('thanaId', "${customer["thana_id"] ?? ""}");
+      sharedPreferences.setString('areaId', "${customer["area_id"]}");
       
-      CustomSnackBar.showTopSnackBar(context, "Reseller Login successfully!");
+      
+      CustomSnackBar.showTopSnackBar(context, "${item["message"]}");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainScreen()));
     } 
   } on DioError catch (e) {
@@ -1202,7 +1211,7 @@ class _SignInPageState extends State<SignInPage> {
       var item = response.data;
       print('register data $item');
 
-      if (item["status"] == true || item["status"] == "success") { 
+      if (item["success"] == true ) { 
         setState(() {
           isSignUpBtnLoading = false;
           isLogInSelected = true;
@@ -1224,51 +1233,6 @@ class _SignInPageState extends State<SignInPage> {
       Utils.showTopSnackBar(context, "Something went wrong. Please try again.");
     }
   }
-
-  // fetchRegistration() async {
-  //   if (passRegCtrl.text.length < 4) {
-  //     setState(() {
-  //       isSignUpBtnLoading = false;
-  //       isLogInSelected = true;
-  //     });
-  //     Utils.showSnackBar(context, "The password must be at least 4 characters.");
-  //   }
-  //   String link = "${BaseUrl}customer_registration";
-  //   print('--- Registration Data ---link: $link');
-  //   try {
-  //     final formData = FormData.fromMap({
-  //       "name": nameRegCtrl.text.trim(),
-  //       //"last_name": lastNameRegCtrl.text.trim(),
-  //       //"email": emailRegCtrl.text.trim(),
-  //       "phone": phoneRegCtrl.text.trim(),
-  //       "password": passRegCtrl.text.trim(),
-  //       //"password_confirmation": passCRegCtrl.text.trim(),
-  //     });
-  //   print('--- Sending Data to Server ---');
-  //   for (var element in formData.fields) {
-  //     print("${element.key}: ${element.value}");
-  //   }
-  //     final response = await Dio().post(link, data: formData);
-  //     var item = response.data;
-  //     print('register data $item');
-  //   if(item["status"] == true){
-  //     setState(() {
-  //       isSignUpBtnLoading = false;
-  //       isLogInSelected = true;
-  //     });
-  //     emptyMethod();
-  //     CustomSnackBar.showTopSnackBar(context, item["message"]);
-  //   } else{
-  //     setState(() {
-  //       isSignUpBtnLoading = false;
-  //       isLogInSelected = true;
-  //     });
-  //     Utils.showTopSnackBar(context, "User Not created successfully");
-  //   }
-  //   }catch(e){
-  //     print('$e');
-  //   }
-  // }
 
   emptyMethod(){
     nameRegCtrl.text = "";

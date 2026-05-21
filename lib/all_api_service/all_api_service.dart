@@ -144,17 +144,15 @@ class AllApiService {
   }
 
   ///==================get_customer_orders Api=======================
-  static fetchCustomerOrders(String? orderStatus) async {
+  static fetchCustomerOrders() async {
     SharedPreferences? sharedPreferences;
     sharedPreferences = await SharedPreferences.getInstance();
     try {
       String url = "${BaseUrl}get_customer_orders";
-      Response response = await Dio().post(
-        url,
-        data: {
-          "customerId": "${sharedPreferences.getString("id")}",
-          "orderStatus": orderStatus,
-        },
+      Response response = await Dio().get(url,
+        // data: {
+        //   "customerId": "${sharedPreferences.getString("id")}",
+        // },
         options: Options(
           headers: {
             "Content-Type": "application/json",
@@ -166,9 +164,7 @@ class AllApiService {
       print("get_orders Data===> $data");
       print("user id ${sharedPreferences.getString("id")}");
       print("Token is  >>>><<<<< ${sharedPreferences.getString("token")}");
-      return List.from(
-        data,
-      ).map((e) => CustomerOrdersModel.fromMap(e)).toList();
+      return List.from(data["data"]).map((e) => CustomerOrdersModel.fromMap(e)).toList();
     } catch (e) {
       print(e);
     }

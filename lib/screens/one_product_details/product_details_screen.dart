@@ -1,8 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:html/parser.dart' as htmlParser;
-import 'package:share_plus/share_plus.dart';
 import 'package:al_barakah_e_mart/all_api_provider/products_details_provider.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
 import 'package:al_barakah_e_mart/model/add_to_cart_model.dart';
@@ -19,7 +15,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import '../../custom/custom_card/my_custom_card_screen.dart';
 
 

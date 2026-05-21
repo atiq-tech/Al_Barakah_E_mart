@@ -10,7 +10,6 @@ import 'package:al_barakah_e_mart/utils/custom_snackbar.dart';
 
 import '../../model/add_to_cart_model.dart';
 import '../../provider/add_to_cart_provider.dart';
-import '../../provider/company_profile_provider.dart';
 import '../../provider/token_provider/token_provider.dart';
 import '../../provider/user_profile_provider.dart';
 import '../../utils/custom_image.dart';
@@ -85,7 +84,6 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
     ///====new====
     Provider.of<TokenProvider>(context, listen: false).getToken();
     Provider.of<UserProfileProvider>(context, listen: false).getUserProfile();
-    Provider.of<CompanyProfileProvider>(context, listen: false).getCompanyProfile();
   }
 
   @override

@@ -16,7 +16,7 @@ class DeliveryTermsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
              Text(
-              "Delivery Terms & Conditions – TL Telecom",
+              "Delivery Terms & Conditions – AL Barakah E-mart",
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
              SizedBox(height: 10.h),
@@ -25,7 +25,7 @@ class DeliveryTermsScreen extends StatelessWidget {
              SizedBox(height: 16.h),
 
             const Text(
-              "Welcome to TL Telecom. By placing an order through our app, you agree to the following delivery terms and conditions:",
+              "Welcome to AL Barakah E-mart. By placing an order through our app, you agree to the following delivery terms and conditions:",
             ),
              SizedBox(height: 16.h),
 
@@ -65,8 +65,8 @@ class DeliveryTermsScreen extends StatelessWidget {
                 "If you receive damaged or missing items, contact us within 24 hours."),
 
             _sectionTitle("9. Contact Us"),
-            const Text("Email: tltelecom@gmail.com"),
-            const Text("Phone: 01711514200"),
+            const Text("Email: @gmail.com"),
+            const Text("Phone: 01717202623"),
 
             SizedBox(height: 15.h),
 

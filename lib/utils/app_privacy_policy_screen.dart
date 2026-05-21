@@ -18,7 +18,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Privacy Policy for TL Telecom",
+                "Privacy Policy for AL Barakah E-mart",
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
@@ -74,9 +74,9 @@ We may share data with:
 
               _sectionTitle("8. Contact Us"),
               _sectionText("""
-Email: tltelecom@gmail.com
-Phone: 01711514200
-"""),
+                Email: @gmail.com
+                Phone: 01717202623
+                """),
 
               _sectionTitle("9. Consent"),
               _sectionText(

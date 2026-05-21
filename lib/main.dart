@@ -34,7 +34,6 @@ import 'package:al_barakah_e_mart/all_api_provider/top_brands_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/top_rated_products_provider.dart';
 import 'package:al_barakah_e_mart/provider/add_to_cart_provider.dart';
 import 'package:al_barakah_e_mart/provider/cart_remove_provider.dart';
-import 'package:al_barakah_e_mart/provider/company_profile_provider.dart';
 import 'package:al_barakah_e_mart/provider/my_order_provider.dart';
 import 'package:al_barakah_e_mart/provider/order_details_provider.dart';
 import 'package:al_barakah_e_mart/provider/product_details_product.dart';
@@ -85,7 +84,6 @@ class AlBarakahEmartApp extends StatelessWidget {
           ChangeNotifierProvider<MyOrderProvider>(create: (context) => MyOrderProvider()),
           ChangeNotifierProvider<OrderDetailsProvider>(create: (context) => OrderDetailsProvider()),
           ChangeNotifierProvider<ProductDetailsProvider>(create: (context) => ProductDetailsProvider()),
-          ChangeNotifierProvider<CompanyProfileProvider>(create: (context) => CompanyProfileProvider()),
           ChangeNotifierProvider<AddToCartProvider>(create: (context) => AddToCartProvider()),
           ChangeNotifierProvider<RemoveCartProvider>(create: (context) => RemoveCartProvider()),
           ChangeNotifierProvider<WishListProvider>(create: (context) => WishListProvider()),
