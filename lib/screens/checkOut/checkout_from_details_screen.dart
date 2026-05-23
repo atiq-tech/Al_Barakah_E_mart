@@ -6,7 +6,14 @@ import 'package:al_barakah_e_mart/all_api_provider/area_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/delivery_times_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/district_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/thana_provider.dart';
+import 'package:al_barakah_e_mart/api_integration/me/order_api_service.dart';
+import 'package:al_barakah_e_mart/screens/auth/pages/dashboard_page.dart';
+import 'package:al_barakah_e_mart/screens/main/main_screen.dart';
+import 'package:al_barakah_e_mart/screens/order/order_history_screen.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
+import 'package:al_barakah_e_mart/utils/custom_snackbar.dart';
+import 'package:al_barakah_e_mart/utils/utils.dart';
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -74,50 +81,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String? thanaId;
   String? areaId;
   String? deliveryTimesId;
+  String? entryType;
 
   SharedPreferences? sharedPreferences;
 
-  Future<void> _initializeData() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      customerName = sharedPreferences?.getString('name') ?? "";
-      customerEmail = sharedPreferences?.getString('email') ?? "";
-      customerPhone = sharedPreferences?.getString('phone') ?? "";
-      customerAddress = sharedPreferences?.getString('address') ?? "";
-
-      customerDistrictName = sharedPreferences?.getString('districtName') ?? "";
-      customerThanaName = sharedPreferences?.getString('thanaName') ?? "";
-      customerAreaName = sharedPreferences?.getString('areaName') ?? "";
-
-      customerDistrictId = sharedPreferences?.getString('districtId') ?? "";
-      customerThanaId = sharedPreferences?.getString('thanaId') ?? "";
-      customerAreaId = sharedPreferences?.getString('areaId') ?? "";
-
-      districtController.text = customerDistrictName;
-      thanaController.text = customerThanaName;
-      areaController.text = customerAreaName;
-
-      _shipperNameController.text = customerName;
-      _shipperPhoneController.text = customerPhone;
-      _emailController.text = customerEmail;
-      billingController.text = customerAddress;
-      shippingController.text = customerAddress;
-
-      /// SHIPPING COST CONDITION FOR LOGIN USER
-      if (customerAreaName.toLowerCase() == "dhaka") {
-        shippingCost = insideDaka;
-      } else {
-        shippingCost = outsideDaka;
-      }
-    });
-  }
-
   String insideDaka = "";
   String outsideDaka = "";
-   void getCompanyProfile() async {
+  String shippingCost = "0";
+
+  // ১. getCompanyProfile ke Future banay felun jeno eitake await kora jay
+  Future<void> getCompanyProfile() async {
     try {
-      final response = await Dio().get("${BaseUrl}get_company_profile",
-      );
+      final response = await Dio().get("${BaseUrl}get_company_profile");
       if (response.statusCode == 200) {
         var data = response.data is List ? response.data[0] : response.data;
         setState(() {
@@ -132,12 +107,63 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     print("outsideDaka-------Company_Name======$outsideDaka");
   }
 
-  String shippingCost = "0";
+  Future<void> _initializeData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    
+    // ২. API call shesh na howa porjonto code eikhane opekkha korbe
+    await getCompanyProfile(); 
 
+    setState(() {
+      customerName = sharedPreferences?.getString('name') ?? "";
+      customerEmail = sharedPreferences?.getString('email') ?? "";
+      customerPhone = sharedPreferences?.getString('phone') ?? "";
+      customerAddress = sharedPreferences?.getString('address') ?? "";
+
+      customerDistrictName = sharedPreferences?.getString('districtName') ?? "";
+      customerThanaName = sharedPreferences?.getString('thanaName') ?? "";
+      customerAreaName = sharedPreferences?.getString('areaName') ?? "";
+
+      customerDistrictId = sharedPreferences?.getString('districtId') ?? "";
+      customerThanaId = sharedPreferences?.getString('thanaId') ?? "";
+      customerAreaId = sharedPreferences?.getString('areaId') ?? "";
+
+      entryType = sharedPreferences?.getString('EntryType') ?? "";
+
+      districtController.text = customerDistrictName;
+      thanaController.text = customerThanaName;
+      areaController.text = customerAreaName;
+
+      districtId = customerDistrictId;
+      thanaId = customerThanaId;
+      areaId = customerAreaId;
+
+      _shipperNameController.text = customerName;
+      _shipperPhoneController.text = customerPhone;
+      _emailController.text = customerEmail;
+      billingController.text = customerAddress;
+      shippingController.text = customerAddress;
+
+      if (customerAreaName.toLowerCase() == "dhaka") {
+        shippingCost = insideDaka;
+      } else {
+        shippingCost = outsideDaka;
+      }
+    });
+
+    print("shippingCost======$shippingCost"); 
+    print("areaController======${areaController.text}");
+    print("customerAreaName======$customerAreaName");
+    
+    print("districtId======$districtId"); 
+    print("thanaId======$thanaId");
+    print("areaId======$areaId");
+    print("entryType======$entryType");
+    
+  }
+  bool isOrderLoading = false;
   @override
   void initState() {
     super.initState();
-    getCompanyProfile();
     _initializeData();
     Future.microtask(() {
         Provider.of<DeliveryTimesProvider>(context, listen: false).getDeliveryTimes();
@@ -162,10 +188,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         title: Column(
           children: [
             Text("Checkout", style: TextStyle(color: appBarColor, fontWeight: FontWeight.bold)),
-            Text("Guest Checkout", style: TextStyle(fontSize: 14.sp, color: Colors.teal.shade600)),
+            Text(customerName == "" || customerName == "null" ? "Guest Checkout" : "Customer Checkout", style: TextStyle(fontSize: 14.sp, color: Colors.teal.shade600)),
           ],
         ),
       ),
+      floatingActionButton: const CustomContactFAB(),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(15.r),
@@ -210,24 +237,92 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                   // Next / Place Order Button
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (currentStep < 2) {
-                          setState(() => currentStep++);
+                  child: ElevatedButton(
+                    onPressed: isOrderLoading ? null : () async {
+                      if (currentStep < 2) {
+                        setState(() => currentStep++);
+                      } else {
+                        setState(() {
+                          isOrderLoading = true;
+                        });
+                        final cartProvider = Provider.of<AddToCartProvider>(context,listen: false);
+                        bool success = await OrderApiService.storeOrder(
+                          customerName:
+                          _shipperNameController.text,
+                          customerMobile:
+                          _shipperPhoneController.text,
+                          customerEmail:
+                          _emailController.text,
+                          districtId:
+                          districtId.toString(),
+                          thanaId:
+                          thanaId.toString(),
+                          areaId:
+                          areaId.toString(),
+                          billingAddress:
+                          billingController.text.trim(),
+                          shippingAddress:
+                          shippingController.text.trim(),
+                          deliveryDate:
+                          deliveryDateController.text.trim(),
+                          timeId:
+                          deliveryTimesId.toString(),
+                          shippingCost:
+                          entryType == "member" ? "0" : shippingCost,
+                          totalAmount: widget.total ?? "0",
+                          cart: cartProvider.cart.map((e) {
+                            return {
+                              "id":
+                              e.id.toString(),
+                              "price":
+                              e.discountPrice.toString(),
+                              "quantity":
+                              e.quantity.toString(),
+                            };
+
+                          }).toList(),
+                        );
+                        setState(() {
+                          isOrderLoading = false;
+                        });
+
+                        if (success) {
+                          cartProvider.clearCart();
+                          CustomSnackBar.showTopSnackBar(context,"Order Placed Successfully");
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                              const DashBoardPage(),
+                            ),
+                          );
                         } else {
-                          // TODO: Implement Place Order Logic
+                          Utils.showTopSnackBar(
+                            context,
+                            "Order Failed",
+                          );
                         }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF063321),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                      ),
-                      child: Text(
-                        currentStep == 2 ? "Place Order" : "Next",
-                        style: const TextStyle(color: Colors.white),
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                      const Color(0xFF063321),
+                      padding:
+                      EdgeInsets.symmetric(
+                        vertical: 12.h,
                       ),
                     ),
+                    child: isOrderLoading ? SizedBox(height: 20.h,width: 20.w,
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    ) : Text(currentStep == 2 ? "Place Order": "Next",
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
+                )
                 ],
               ),
             ],
@@ -557,29 +652,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             2: FlexColumnWidth(1),
           },
           children: [
-            const TableRow(
+             TableRow(
               decoration: BoxDecoration(color: Colors.white),
               children: [
-                Padding(padding: EdgeInsets.all(8), child: Text("Products", style: TextStyle(fontWeight: FontWeight.bold))),
-                Padding(padding: EdgeInsets.all(8), child: Text("Quantity", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
-                Padding(padding: EdgeInsets.all(8), child: Text("Total", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("Products", style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("Quantity", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("Total", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold))),
               ],
             ),
             ...cartList.map((item) => TableRow(
               children: [
-                Padding(padding: EdgeInsets.all(8), child: Text(item.productName ?? "")),
-                Padding(padding: EdgeInsets.all(8), child: Text("${item.quantity}", textAlign: TextAlign.center)),
-                Padding(padding: EdgeInsets.all(8), child: Text("${item.discountPrice}", textAlign: TextAlign.center)),
+                Padding(padding: EdgeInsets.all(5.r), child: Text(item.productName ?? "")),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("${item.quantity}", textAlign: TextAlign.center)),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("${item.discountPrice}", textAlign: TextAlign.center)),
               ],
             )).toList(),
             TableRow(
               children: [
-                const Padding(padding: EdgeInsets.all(8), child: Text("Shipping Charge", style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("Shipping Charge", style: TextStyle(fontWeight: FontWeight.bold))),
                 const SizedBox(),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(5.r),
                   child: Text(
-                    shippingCost,
+                   entryType == "member" ? "0" : shippingCost,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -587,12 +682,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             TableRow(
               children: [
-                const Padding(padding: EdgeInsets.all(8), child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.all(5.r), child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold))),
                 const SizedBox(),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(5.r),
                   child: Text(
-                    "${(double.tryParse(widget.total ?? "0") ?? 0) + (double.tryParse(shippingCost) ?? 0)}",
+                   entryType == "member" ? "${(double.tryParse(widget.total ?? "0") ?? 0) + (0)}" : "${(double.tryParse(widget.total ?? "0") ?? 0) + (double.tryParse(shippingCost) ?? 0)}",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),

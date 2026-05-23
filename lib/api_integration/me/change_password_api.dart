@@ -40,8 +40,7 @@ class PasswordChangeApi {
         options: Options(
           headers: {
             "Content-Type": "application/json",
-            "Authorization":
-                "Bearer ${sharedPreferences.getString("token")}",
+            "Authorization": "Bearer ${sharedPreferences.getString("token")}",
           },
         ),
       );

@@ -34,100 +34,45 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? userName = "";
   String? customerId = "";
-  String? authType = "";
-
   Future<void> _initializeData() async {
     userName = "${sharedPreferences.getString('name')}";
     customerId = "${sharedPreferences.getString('id')}";
-    authType = "${sharedPreferences.getString('auth_type')}";
-
-    print("auth_type=========$authType");
     print("User all Information   userName:$userName");
   }
 
   @override
   void initState() {
     _initializeData();
-
     SearchingWiseProductsProvider.isSearchingWiseProductsloading = true;
-
-    Provider.of<SearchingWiseProductsProvider>(
-      context,
-      listen: false,
-    ).getSearchingWiseProducts("");
-
-    Provider.of<SliderProvider>(
-      context,
-      listen: false,
-    ).getSlider();
-
-    Provider.of<ResentProductProvider>(
-      context,
-      listen: false,
-    ).getResentProduct();
-
-    Provider.of<PopularProductsProvider>(
-      context,
-      listen: false,
-    ).getPopularProducts();
-
-    Provider.of<NewArrivalProductsProvider>(
-      context,
-      listen: false,
-    ).getNewArrivalProducts();
-
+    Provider.of<SearchingWiseProductsProvider>(context,listen: false).getSearchingWiseProducts("");
+    Provider.of<SliderProvider>(context,listen: false).getSlider();
+    Provider.of<ResentProductProvider>(context,listen: false).getResentProduct();
+    Provider.of<PopularProductsProvider>(context,listen: false).getPopularProducts();
+    Provider.of<NewArrivalProductsProvider>(context,listen: false).getNewArrivalProducts();
     super.initState();
-
     Future.microtask(() {
-      Provider.of<GetCategoriesProvider>(
-        context,
-        listen: false,
-      ).getGetCategories();
+      Provider.of<GetCategoriesProvider>(context,listen: false).getGetCategories();
     });
   }
-
-  void callbackFunction(
-      int index,
-      CarouselPageChangedReason reason,
-      ) {
+  int currentIndex = 0;
+  void callbackFunction(int index,CarouselPageChangedReason reason) {
     setState(() {
       currentIndex = index;
     });
   }
-
-  int currentIndex = 0;
-
+  
   @override
   Widget build(BuildContext context) {
-    final sliderImages =
-        Provider.of<SliderProvider>(context).sliderlist;
-
-    final allCategorieslist =
-        Provider.of<GetCategoriesProvider>(context)
-            .getCategorieslist;
-
-    final allResentProductlist =
-        Provider.of<ResentProductProvider>(context)
-            .resentProductlist;
-
-    final allPopularProductlist =
-        Provider.of<PopularProductsProvider>(context)
-            .popularProductslist;
-
-    final allNewArrivalProductlist =
-        Provider.of<NewArrivalProductsProvider>(context)
-            .newArrivalProductslist;
+    final sliderImages = Provider.of<SliderProvider>(context).sliderlist;
+    final allCategorieslist = Provider.of<GetCategoriesProvider>(context).getCategorieslist;
+    final allResentProductlist = Provider.of<ResentProductProvider>(context).resentProductlist;
+    final allPopularProductlist = Provider.of<PopularProductsProvider>(context).popularProductslist;
+    final allNewArrivalProductlist = Provider.of<NewArrivalProductsProvider>(context).newArrivalProductslist;
 
     return RefreshIndicator(
-      onRefresh: () => Provider.of<
-          AllSearchingProductsProvider>(
-        context,
-        listen: false,
-      ).getAllSearchingProducts(),
-
+      onRefresh: () => Provider.of<AllSearchingProductsProvider>(context,listen: false).getAllSearchingProducts(),
       child: CustomScrollView(
         slivers: [
-
           ///================ SLIDER =================
           SliverToBoxAdapter(
             child: SizedBox(
@@ -231,18 +176,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  SubCategoryProduct(
-                                    categoryName:
-                                    allCategorieslist[index]
-                                        .productCategoryName,
-                                    categoryId:
-                                    "${allCategorieslist[index].productCategorySlNo}",
-                                    subCategoryList:
-                                    allCategorieslist[index]
-                                        .subCategory ??
-                                        [],
-                                  ),
+                              builder: (_) => SubCategoryProduct(
+                                categoryName: allCategorieslist[index].productCategoryName,
+                                categoryId: "${allCategorieslist[index].productCategorySlNo}",
+                                subCategoryList: allCategorieslist[index].subCategory ?? [],
+                              ),
                             ),
                           );
                         },
@@ -448,10 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           description:
                           product.productDescription,
                           discountPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           sellingPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           productCode:
                           product.productCode,
@@ -621,10 +559,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           description:
                           product.productDescription,
                           discountPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           sellingPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           productCode:
                           product.productCode,
@@ -729,10 +667,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           description:
                           product.productDescription,
                           discountPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           sellingPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           productCode:
                           product.productCode,
@@ -751,11 +689,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-
           ///================ FOOTER =================
-          const SliverToBoxAdapter(
-            child: BigBuyFooter(),
-          ),
+          const SliverToBoxAdapter(child: BigBuyFooter()),
         ],
       ),
     );

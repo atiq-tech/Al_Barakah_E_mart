@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/custom/custom_drtawer/all_drawer_section/update_profile_page.dart';
 import 'package:al_barakah_e_mart/custom/custom_card/cart_screen.dart';
@@ -161,6 +162,7 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ),
           drawer: const CustomDrawer(),
+          floatingActionButton: const CustomContactFAB(),
           body: WillPopScope(
             onWillPop: () {
               key.currentState!.closeDrawer();

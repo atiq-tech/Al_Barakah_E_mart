@@ -110,10 +110,10 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                           description:
                           product.productDescription,
                           discountPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           sellingPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           productCode:
                           product.productCode,

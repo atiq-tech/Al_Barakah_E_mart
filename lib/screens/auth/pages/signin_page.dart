@@ -1137,7 +1137,7 @@ class _SignInPageState extends State<SignInPage> {
       sharedPreferences.setString('address', "${customer["Customer_Address"] ?? ""}");
       sharedPreferences.setString('image', "${customer["image_name"] ?? ""}");
       sharedPreferences.setString('id', "${customer["Customer_SlNo"]}");
-      sharedPreferences.setString('auth_type', "${customer["auth_type"]}");
+      sharedPreferences.setString('EntryType', "${customer["Entry_Type"]}");
 
       sharedPreferences.setString('districtName', "${customer["district"]["District_Name"] ?? ""}");
       sharedPreferences.setString('thanaName', "${customer["thana"]["name"] ?? ""}");

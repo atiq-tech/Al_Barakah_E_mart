@@ -291,7 +291,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                       image: "$imageUrl${product.mainImage}",
                                       quantity: count,
                                       slug: product.slug,
-                                      discountPrice: double.parse(product.discountPrice),
+                                      discountPrice: double.parse(product.sellingPrice),
                                     ),
                                   );
                                   CustomSnackBar.showTopSnackBar(context, "Successfully Added to Cart");
@@ -342,7 +342,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                     image: "$imageUrl${product.mainImage}",
                                     quantity: count,
                                     slug: product.slug ?? "",
-                                    discountPrice: double.parse(product.discountPrice),
+                                    discountPrice: double.parse(product.sellingPrice),
                                   ),
                                 );
                                 CustomSnackBar.showTopSnackBar(context, "Successfully Added to Cart");
@@ -429,8 +429,8 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                   image:"$imageUrl${product.thumImage}",
                                   name: product.productName,
                                   description:product.longDescription,
-                                  discountPrice: product.productWholesaleRate.toString(),
-                                  sellingPrice: product.productWholesaleRate.toString(),
+                                  discountPrice: product.productSellingPrice.toString(),
+                                  sellingPrice: product.productSellingPrice.toString(),
                                   productCode:product.productCode,
                                   id: int.tryParse(product.productSlNo.toString()),
                                   slug: product.slug,

@@ -135,7 +135,7 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                 ),
                 Center(
                  child: Text(
-                    "${widget.discountPrice}",
+                    "${widget.sellingPrice}",
                     style: GoogleFonts.roboto(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.bold,
@@ -186,7 +186,7 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                                 image: widget.image,
                                 quantity: int.parse("${widget.quantity}"),
                                 slug: widget.slug,
-                                discountPrice: double.parse("${widget.discountPrice}"),
+                                discountPrice: double.parse("${widget.sellingPrice}"),
                               )
                             );
                             CustomSnackBar.showTopSnackBar(context, "Successfully Added to Cart");

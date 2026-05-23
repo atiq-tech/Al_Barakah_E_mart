@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/screens/all_category/subCategoryProduct/sub_category_product.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/get_category_provider.dart';
 import 'package:al_barakah_e_mart/main.dart';
@@ -262,11 +263,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               ),
                               onTap: () {
                                 Navigator.pop(context);
-                                Navigator.push( context,
+                                Navigator.push(
+                                  context,
                                   MaterialPageRoute(
-                                    builder: (context) => MenuCategoryProducts(
-                                      slug: category.slug,
-                                      categoryName:category.productCategoryName,
+                                    builder: (_) => SubCategoryProduct(
+                                      categoryName: category.productCategoryName,
+                                      categoryId: "${category.productCategorySlNo}",
+                                      subCategoryList: category.subCategory ?? [],
                                     ),
                                   ),
                                 );
