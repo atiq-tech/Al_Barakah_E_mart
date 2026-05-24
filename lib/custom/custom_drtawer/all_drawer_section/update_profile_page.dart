@@ -35,12 +35,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
   bool isLoading = false;
   File? file; // গ্যালারি থেকে সিলেক্ট করা ইমেজ ফাইল রাখার জন্য
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeData();
-  }
-
   Future<void> _initializeData() async {
     setState(() {
       customerId = "${sharedPreferences.getString('id')}";
@@ -67,6 +61,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
         file = File(imageFile.path);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
   }
 
   @override
@@ -140,8 +140,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               backgroundImage: file != null
                                   ? FileImage(file!) as ImageProvider
                                   : (userImage != null && userImage!.isNotEmpty
-                                      ? NetworkImage("${imageUrl}$userImage")
-                                      : const AssetImage("images/placeholder.png")),
+                                      ? NetworkImage("https://website.albarakahemart.com/$userImage")
+                                      : const AssetImage("images/default-placeholder.png")),
                             ),
                             Positioned(
                               bottom: 0,

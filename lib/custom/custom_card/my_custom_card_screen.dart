@@ -130,14 +130,14 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                   style: GoogleFonts.roboto(
                     color: Colors.black87,
                     fontWeight: FontWeight.w500,
-                    fontSize: 10.sp,
+                    fontSize: 14.sp,
                   ),
                 ),
                 Center(
                  child: Text(
                     "${widget.sellingPrice}",
                     style: GoogleFonts.roboto(
-                      fontSize: 11.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey.shade800
                     ),
@@ -169,14 +169,28 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                           height: 25.h,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: appBarColor),
                           alignment: Alignment.center,
-                          child: Text("Details", style: GoogleFonts.roboto(color: Colors.white,fontSize: 10.sp,fontWeight: FontWeight.bold),
+                          child: Text("Details", style: GoogleFonts.roboto(color: Colors.white,fontSize: 12.sp,fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(width: 5.w),
                     Expanded(
-                      child: InkWell(
+                      child: widget.stock != null && widget.stock! <= 0 ? InkWell(
+                        onTap: () {                        
+                        },
+                        child: Container(
+                          height: 25.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            border: Border.all(color: Colors.red,width: 1.w)
+                          ),
+                          child: Text("Stock Out",
+                            style: GoogleFonts.roboto(color: Colors.red,fontSize: 12.sp,fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ) : InkWell(
                         onTap: () {
                           setState(() {
                             addToCart.addProduct(
@@ -201,7 +215,7 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
                             border: Border.all(color: appBarColor,width: 1.w)
                           ),
                           child: Text("Add to Cart",
-                            style: GoogleFonts.roboto(color: appBarColor,fontSize: 10.sp,fontWeight: FontWeight.bold),
+                            style: GoogleFonts.roboto(color: appBarColor,fontSize: 12.sp,fontWeight: FontWeight.w900),
                           ),
                         ),
                       ),

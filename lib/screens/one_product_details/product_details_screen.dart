@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/products_details_provider.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
@@ -81,7 +82,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
           ),
         ),
       ),
-
+      floatingActionButton: const CustomContactFAB(),
       /// ✅ Provider Consumer
       body: Consumer<ProductsDetailsProvider>(
         builder: (context, provider, child) {
@@ -144,22 +145,31 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                      ),
                      Row(
                       children: [
-                         Text("Availability : ",style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1,
-                        )),
-                       product.stock == 0 ? Text("Out of Stock",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black87,
-                        )):Text("In Stock",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black87,
-                        )),
+                        Text(
+                          "Availability : ",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        product.stock <= 0
+                        ? Text(
+                            "Out of Stock",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red, // 🔴 Out of stock color
+                            ),
+                          )
+                        : Text(
+                            "In Stock",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.green, // 🟢 In stock color
+                            ),
+                          ),
                       ],
                     ),
                     Row(
@@ -279,7 +289,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                             child: InkWell(
                               onTap: () {
                                 // ✅ STOCK CHECK
-                                if (product.stock == 0) {
+                                if (product.stock <= 0) {
                                    Utils.showTopSnackBar(context, "Stock Out");
                                   return;
                                 }
@@ -331,7 +341,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                             alignment: Alignment.center,
                             child: InkWell(
                               onTap: () {
-                                if (product.stock == 0) {
+                                if (product.stock <= 0) {
                                    Utils.showTopSnackBar(context, "Stock Out");
                                   return;
                                 }
@@ -407,11 +417,10 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                     // //////////////////////// Related Product Section ////////////////
                    if (relatedProducts.isNotEmpty) 
                    Container(
-                     margin: EdgeInsets.only(top: 10.h),
                      height: MediaQuery.of(context).size.height/2.5,
                      width: double.infinity,
                       child: Padding(
-                        padding: EdgeInsets.only(left: 10.w,right: 10.w),
+                        padding: EdgeInsets.only(left: 5.w,right: 5.w),
                         child: CarouselSlider(
                           items: List.generate(relatedProducts.length, (index) {
                              final product = relatedProducts[index];
@@ -426,7 +435,7 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                                 },
                                 child: MyCustomCardScreen(
                                   quantity: "1",
-                                  image:"$imageUrl${product.thumImage}",
+                                  image:"$imageUrl${product.productImage}",
                                   name: product.productName,
                                   description:product.longDescription,
                                   discountPrice: product.productSellingPrice.toString(),
@@ -458,7 +467,6 @@ class _One_Product_DetailsState extends State<One_Product_Details> {
                   ],
                 ),
               ),
-              SizedBox(height: 20.h),
               const BigBuyFooter(),
             ],
           ),

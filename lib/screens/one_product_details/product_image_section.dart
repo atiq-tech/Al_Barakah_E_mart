@@ -25,7 +25,7 @@ class _ProductImageSectionState extends State<ProductImageSection> {
   @override
   void initState() {
     super.initState();
-    selectedImage = widget.product.thumImage ?? "";
+    selectedImage = widget.product.productImage ?? "";
   }
 
   void openZoomImage(String imagePath) {
@@ -101,7 +101,7 @@ class _ProductImageSectionState extends State<ProductImageSection> {
                   height: 60.h,
                   width: 60.w,
                   child: CustomImage(
-                    path: "${widget.imageUrl}${product.thumImage}",
+                    path: "${widget.imageUrl}${product.productImage}",
                     fit: BoxFit.fill,
                   ),
                 )

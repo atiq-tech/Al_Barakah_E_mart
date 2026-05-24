@@ -279,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .ellipsis,
                                         style:
                                         GoogleFonts.poppins(
-                                          fontSize: 10.sp,
+                                          fontSize: 13.sp,
                                           color:
                                           Colors.white,
                                           fontWeight:
@@ -381,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: MyCustomCardScreen(
                           quantity: "1",
                           image:
-                          "$imageUrl${product.thumImage}",
+                          "$imageUrl${product.productImage}",
                           name: product.productName,
                           description:
                           product.productDescription,
@@ -554,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: MyCustomCardScreen(
                           quantity: "1",
                           image:
-                          "$imageUrl${product.thumImage}",
+                          "$imageUrl${product.productImage}",
                           name: product.productName,
                           description:
                           product.productDescription,
@@ -662,7 +662,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: MyCustomCardScreen(
                           quantity: "1",
                           image:
-                          "$imageUrl${product.thumImage}",
+                          "$imageUrl${product.productImage}",
                           name: product.productName,
                           description:
                           product.productDescription,
@@ -691,6 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ///================ FOOTER =================
           const SliverToBoxAdapter(child: BigBuyFooter()),
+          SliverToBoxAdapter(child: SizedBox(height: 50.h)),
         ],
       ),
     );

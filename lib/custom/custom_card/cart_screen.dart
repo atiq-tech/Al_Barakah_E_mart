@@ -42,7 +42,7 @@ class _CartScreenState extends State<CartScreen> {
                     Text(
                       "Must add items on the cart before you proceed to check out",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.robotoSlab(fontSize: 11.sp),
+                      style: GoogleFonts.robotoSlab(fontSize: 13.sp),
                     ),
                     SizedBox(height: 6.h),
                     GestureDetector(
@@ -81,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                                   Text(
                                     "Do you want to remove all of the cart items? Once you remove all, you can add again from product list.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 11.sp),
+                                    style: TextStyle(fontSize: 12.sp),
                                   ),
                                   SizedBox(height: 10.h),
                                   Row(
@@ -278,7 +278,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       /// BOTTOM TOTAL
                       Container(
-                        padding: EdgeInsets.all(15.r),
+                        padding: EdgeInsets.only(left: 15.w,right: 60.w,bottom: 15.h),
                         color: Colors.white,
                         child: Column(
                           children: [
@@ -292,7 +292,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "৳$total",
+                                  "= ৳ $total",
                                   style: GoogleFonts.poppins(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.bold,
@@ -300,10 +300,10 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 15.h),
+                            SizedBox(height: 5.h),
                             SizedBox(
                               width: double.infinity,
-                              height: 40.h,
+                              height: 35.h,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: appBarColor,

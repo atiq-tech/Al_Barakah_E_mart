@@ -4,7 +4,6 @@ import 'package:al_barakah_e_mart/all_api_provider/get_category_provider.dart';
 import 'package:al_barakah_e_mart/main.dart';
 import 'package:al_barakah_e_mart/provider/token_provider/token_provider.dart';
 import 'package:al_barakah_e_mart/provider/user_profile_provider.dart';
-import 'package:al_barakah_e_mart/screens/all_category/subCategoryProduct/menu_category_product.dart';
 import 'package:al_barakah_e_mart/screens/all_category/subCategoryProduct/sub_category_individual_products.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:al_barakah_e_mart/utils/custom_image.dart';
@@ -109,12 +108,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             title: GestureDetector(
                               onTap: () {
                                 Navigator.pop(context);
-                                Navigator.push(
+                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MenuCategoryProducts(
-                                      slug: category.slug,
-                                      categoryName:category.productCategoryName,
+                                    builder: (_) => SubCategoryProduct(
+                                      categoryName: category.productCategoryName,
+                                      categoryId: "${category.productCategorySlNo}",
+                                      subCategoryList: category.subCategory ?? [],
                                     ),
                                   ),
                                 );
@@ -140,8 +140,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                         );
                                       },
                                       errorBuilder: (context, error, stackTrace) {
-                                        return const Center(
-                                          child: Icon(Icons.broken_image, size: 20, color: Colors.grey),
+                                        return Center(
+                                          child: Icon(Icons.broken_image, size: 20.sp, color: Colors.grey),
                                         );
                                       },
                                     ),
@@ -149,8 +149,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   SizedBox(width: 10.w),
                                   Text(
                                     category.productCategoryName ?? "",
-                                    style: GoogleFonts.adamina(
-                                      fontSize: 11.sp,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.black,
                                     ),
@@ -189,8 +189,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                               );
                                             },
                                             errorBuilder: (context, error, stackTrace) {
-                                              return const Center(
-                                                child: Icon(Icons.broken_image, size: 20, color: Colors.grey),
+                                              return Center(
+                                                child: Icon(Icons.broken_image, size: 20.sp, color: Colors.grey),
                                               );
                                             },
                                           ),
@@ -198,9 +198,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                         SizedBox(width: 10.w),
                                         Text(
                                           subCategory.name ??"",
-                                          style: TextStyle(
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
                                             color: Colors.black,
-                                            fontSize: 11.sp,
                                           ),
                                         ),
                                       ],
@@ -244,8 +245,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                         );
                                       },
                                       errorBuilder: (context, error, stackTrace) {
-                                        return const Center(
-                                          child: Icon(Icons.broken_image, size: 20, color: Colors.grey),
+                                        return Center(
+                                          child: Icon(Icons.broken_image, size: 20.sp, color: Colors.grey),
                                         );
                                       },
                                     ),
@@ -253,8 +254,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   SizedBox(width: 10.w),
                                   Text(
                                     category.productCategoryName ?? "",
-                                    style: GoogleFonts.adamina(
-                                      fontSize: 11.sp,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.black,
                                     ),

@@ -8,8 +8,6 @@ import 'package:al_barakah_e_mart/all_api_provider/district_provider.dart';
 import 'package:al_barakah_e_mart/all_api_provider/thana_provider.dart';
 import 'package:al_barakah_e_mart/api_integration/me/order_api_service.dart';
 import 'package:al_barakah_e_mart/screens/auth/pages/dashboard_page.dart';
-import 'package:al_barakah_e_mart/screens/main/main_screen.dart';
-import 'package:al_barakah_e_mart/screens/order/order_history_screen.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:al_barakah_e_mart/utils/custom_snackbar.dart';
 import 'package:al_barakah_e_mart/utils/utils.dart';
@@ -239,90 +237,180 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   Expanded(
                   child: ElevatedButton(
                     onPressed: isOrderLoading ? null : () async {
+                      // Step validation
+                      if (currentStep == 0) {
+                        if (_shipperNameController.text.trim().isEmpty) {
+                          Utils.showTopSnackBar(context, "Please enter customer name");
+                          return;
+                        }
+                        if (_shipperPhoneController.text.trim().isEmpty) {
+                          Utils.showTopSnackBar(context, "Please enter phone number");
+                          return;
+                        }
+                         if (districtId == null || districtId == "null" || districtId == "") {
+                          Utils.showTopSnackBar(context, "Please select district");
+                          return;
+                        }
+                        if (thanaId == null || thanaId == "null" || thanaId == "") {
+                          Utils.showTopSnackBar(context, "Please select thana");
+                          return;
+                        }
+                        if (areaId == null || areaId == "null" || areaId == "") {
+                          Utils.showTopSnackBar(context, "Please select area");
+                          return;
+                        }
+                        if (billingController.text.trim().isEmpty) {
+                          Utils.showTopSnackBar(context, "Please enter billing address");
+                          return;
+                        }
+                        if (shippingController.text.trim().isEmpty) {
+                          Utils.showTopSnackBar(context, "Please enter shipping address");
+                          return;
+                        }
+                      }
+
+                      if (currentStep == 1) {                      
+                        if (deliveryDateController.text.trim().isEmpty) {
+                          Utils.showTopSnackBar(context, "Please select delivery date");
+                          return;
+                        }
+                        if (deliveryTimesId == null) {
+                          Utils.showTopSnackBar(context, "Please select delivery time");
+                          return;
+                        }
+                      }
+
+                      // Next Step
                       if (currentStep < 2) {
                         setState(() => currentStep++);
                       } else {
                         setState(() {
                           isOrderLoading = true;
                         });
+
                         final cartProvider = Provider.of<AddToCartProvider>(context,listen: false);
                         bool success = await OrderApiService.storeOrder(
-                          customerName:
-                          _shipperNameController.text,
-                          customerMobile:
-                          _shipperPhoneController.text,
-                          customerEmail:
-                          _emailController.text,
-                          districtId:
-                          districtId.toString(),
-                          thanaId:
-                          thanaId.toString(),
-                          areaId:
-                          areaId.toString(),
-                          billingAddress:
-                          billingController.text.trim(),
-                          shippingAddress:
-                          shippingController.text.trim(),
-                          deliveryDate:
-                          deliveryDateController.text.trim(),
-                          timeId:
-                          deliveryTimesId.toString(),
-                          shippingCost:
-                          entryType == "member" ? "0" : shippingCost,
+                          customerName: _shipperNameController.text.trim(),
+                          customerMobile: _shipperPhoneController.text.trim(),
+                          customerEmail: _emailController.text.trim(), // Optional
+                          districtId: districtId.toString(),
+                          thanaId: thanaId.toString(),
+                          areaId: areaId.toString(),
+                          billingAddress: billingController.text.trim(),
+                          shippingAddress: shippingController.text.trim(),
+                          deliveryDate: deliveryDateController.text.trim(),
+                          timeId: deliveryTimesId.toString(),
+                          shippingCost: entryType == "member" ? "0" : shippingCost,
                           totalAmount: widget.total ?? "0",
                           cart: cartProvider.cart.map((e) {
                             return {
-                              "id":
-                              e.id.toString(),
-                              "price":
-                              e.discountPrice.toString(),
-                              "quantity":
-                              e.quantity.toString(),
+                              "id": e.id.toString(),
+                              "price": e.discountPrice.toString(),
+                              "quantity": e.quantity.toString(),
                             };
-
                           }).toList(),
                         );
+
                         setState(() {
                           isOrderLoading = false;
                         });
 
                         if (success) {
                           cartProvider.clearCart();
-                          CustomSnackBar.showTopSnackBar(context,"Order Placed Successfully");
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                              const DashBoardPage(),
-                            ),
-                          );
+                          CustomSnackBar.showTopSnackBar(context, "Order Placed Successfully");
+                          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>const DashBoardPage()));
                         } else {
-                          Utils.showTopSnackBar(
-                            context,
-                            "Order Failed",
-                          );
+                          Utils.showTopSnackBar(context, "Order Failed");
                         }
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                      const Color(0xFF063321),
-                      padding:
-                      EdgeInsets.symmetric(
-                        vertical: 12.h,
-                      ),
+                      backgroundColor: const Color(0xFF063321),
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
                     ),
                     child: isOrderLoading ? SizedBox(height: 20.h,width: 20.w,
-                      child: const CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    ) : Text(currentStep == 2 ? "Place Order": "Next",
-                      style: const TextStyle(color: Colors.white),
-                    ),
+                        child:const CircularProgressIndicator(color: Colors.white,strokeWidth: 2),
+                      )
+                    : Text(currentStep == 2 ? "Place Order" : "Next", style: const TextStyle(color: Colors.white)),
                   ),
                 )
+                //   Expanded(
+                //   child: ElevatedButton(
+                //     onPressed: isOrderLoading ? null : () async {
+                //       if (currentStep < 2) {
+                //         setState(() => currentStep++);
+                //       } else {
+                //         setState(() {
+                //           isOrderLoading = true;
+                //         });
+                //         final cartProvider = Provider.of<AddToCartProvider>(context,listen: false);
+                //         bool success = await OrderApiService.storeOrder(
+                //           customerName:
+                //           _shipperNameController.text,
+                //           customerMobile:
+                //           _shipperPhoneController.text,
+                //           customerEmail:
+                //           _emailController.text,
+                //           districtId:
+                //           districtId.toString(),
+                //           thanaId:
+                //           thanaId.toString(),
+                //           areaId:
+                //           areaId.toString(),
+                //           billingAddress:
+                //           billingController.text.trim(),
+                //           shippingAddress:
+                //           shippingController.text.trim(),
+                //           deliveryDate:
+                //           deliveryDateController.text.trim(),
+                //           timeId:
+                //           deliveryTimesId.toString(),
+                //           shippingCost:
+                //           entryType == "member" ? "0" : shippingCost,
+                //           totalAmount: widget.total ?? "0",
+                //           cart: cartProvider.cart.map((e) {
+                //             return {
+                //               "id":
+                //               e.id.toString(),
+                //               "price":
+                //               e.discountPrice.toString(),
+                //               "quantity":
+                //               e.quantity.toString(),
+                //             };
+
+                //           }).toList(),
+                //         );
+                //         setState(() {
+                //           isOrderLoading = false;
+                //         });
+
+                //         if (success) {
+                //           cartProvider.clearCart();
+                //           CustomSnackBar.showTopSnackBar(context,"Order Placed Successfully");
+                //           Navigator.pushReplacement( context,MaterialPageRoute(builder: (context) =>const DashBoardPage()));
+                //         } else {
+                //           Utils.showTopSnackBar(context,"Order Failed");
+                //         }
+                //       }
+                //     },
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor:
+                //       const Color(0xFF063321),
+                //       padding:
+                //       EdgeInsets.symmetric(
+                //         vertical: 12.h,
+                //       ),
+                //     ),
+                //     child: isOrderLoading ? SizedBox(height: 20.h,width: 20.w,
+                //       child: const CircularProgressIndicator(
+                //         color: Colors.white,
+                //         strokeWidth: 2,
+                //       ),
+                //     ) : Text(currentStep == 2 ? "Place Order": "Next",
+                //       style: const TextStyle(color: Colors.white),
+                //     ),
+                //   ),
+                // )
                 ],
               ),
             ],
@@ -345,8 +433,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         CircleAvatar(
           radius: 15.r,
           backgroundColor: isCompleted ? Colors.green.shade700 : (isActive ? Colors.blue.shade800 : Colors.grey.shade300),
-          child: isCompleted 
-              ? Icon(Icons.check, size: 16.r, color: Colors.white)
+          child: isCompleted ? Icon(Icons.check, size: 16.r, color: Colors.white)
               : Text("${step + 1}", style: TextStyle(color: isActive ? Colors.white : Colors.black54)),
         ),
         SizedBox(height: 4.h),
@@ -358,16 +445,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _accountStep() {
   return Column(
     children: [
-      _inputField("Enter Name *","Name", _shipperNameController),
-      _inputField("Enter Phone Number *","Phone",_shipperPhoneController),
-      _inputField("Enter Email","Email",_emailController),
+      _inputField("Enter Customer Name", _shipperNameController),
+      SizedBox(height: 5.h),
+      _inputField("Enter Phone Number",_shipperPhoneController),
+      SizedBox(height: 5.h),
+      _inputField("Enter Email",_emailController),
       SizedBox(height: 5.h),
       /// DISTRICT
       Row(
         children: [
           Expanded(
             child: SizedBox(
-              height: 45.h,
+              height: 30.h,
               child: Consumer<DistrictProvider>(
                 builder: (context, provider, child) {
                   final districtList = provider.districtList;
@@ -398,9 +487,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       return TextField(
                         controller: controller,
                         focusNode: focusNode,
+                        style: TextStyle(fontSize: 13.sp),
                         decoration: InputDecoration(
                           hintText: "Select District",
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          hintStyle: TextStyle(fontSize: 13.sp),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 6.w,vertical: 8.h),
                           border: OutlineInputBorder(borderRadius:BorderRadius.circular(8.r)),
                           suffixIcon: controller.text.isEmpty ? null : GestureDetector(
                             onTap: () {
@@ -419,13 +510,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ],
       ),
-      SizedBox(height: 5.h),
+      SizedBox(height: 10.h),
       /// THANA
       Row(
         children: [
           Expanded(
             child: SizedBox(
-              height: 45.h,
+              height: 30.h,
               child: Consumer<ThanaProvider>(
                 builder: (context, provider, child) {
                   final thanaList = provider.thanaList;
@@ -456,9 +547,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       return TextField(
                         controller: controller,
                         focusNode: focusNode,
+                        style: TextStyle(fontSize: 13.sp),
                         decoration: InputDecoration(
                           hintText: "Select Thana",
-                          contentPadding:EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          hintStyle: TextStyle(fontSize: 13.sp),
+                          contentPadding:EdgeInsets.symmetric(horizontal: 6.w,vertical: 8.h),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
                           suffixIcon: controller.text.isEmpty ? null : GestureDetector(
                             onTap: () {
@@ -477,13 +570,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ],
       ),
-      SizedBox(height: 5.h),
+      SizedBox(height: 10.h),
       /// AREA
       Row(
         children: [
           Expanded(
             child: SizedBox(
-              height: 45.h,
+              height: 30.h,
               child: Consumer<AreaProvider>(
                 builder: (context, provider, child) {
                   final areaList = provider.areaList;
@@ -523,9 +616,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       return TextField(
                         controller: controller,
                         focusNode: focusNode,
+                        style: TextStyle(fontSize: 13.sp),
                         decoration: InputDecoration(
                           hintText:"Select Area",
-                          contentPadding:EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                          hintStyle: TextStyle(fontSize: 13.sp),
+                          contentPadding:EdgeInsets.symmetric(horizontal: 6.w,vertical: 8.h),
                           border: OutlineInputBorder(borderRadius:BorderRadius.circular(8.r)),
                           suffixIcon:
                           controller.text.isEmpty ? null: GestureDetector(
@@ -545,9 +640,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ],
       ),
-      SizedBox(height: 15.h),
-      _inputField("Billing address *","Billing Address*",billingController),
-      _inputField("Shipping address *","Shipping Address*",shippingController),
+      SizedBox(height: 10.h),
+      _inputField("Billing Address",billingController),
+      SizedBox(height: 5.h),
+      _inputField("Shipping Address",shippingController),
     ],
   );
 }
@@ -559,6 +655,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         padding: EdgeInsets.only(bottom: 5.h),
         child: TextFormField(
           controller: deliveryDateController,
+          style: TextStyle(fontSize: 13.sp),
           readOnly: true,
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
@@ -575,8 +672,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           decoration: InputDecoration(
             labelText: "Delivery Date*",
             hintText: "Select Delivery Date",
+            hintStyle: TextStyle(fontSize: 13.sp),
             suffixIcon: const Icon(Icons.calendar_month,),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 6.h),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
           ),
         ),
@@ -613,6 +711,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       return TextField(
                         controller: controller,
                         focusNode: focusNode,
+                        style: TextStyle(fontSize: 13.sp),
                         decoration: InputDecoration(
                           hintText:"Select Times",
                           contentPadding:EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
@@ -700,16 +799,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget _inputField(String hint, String label, TextEditingController controller) {
+  Widget _inputField(String hint, TextEditingController controller) {
     return Padding(
       padding: EdgeInsets.only(bottom: 5.h),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
-          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+      child: SizedBox(
+        height: 30.h,
+        child: TextFormField(
+          style: TextStyle(fontSize: 13.sp),
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(fontSize: 13.sp),
+            contentPadding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+          ),
         ),
       ),
     );

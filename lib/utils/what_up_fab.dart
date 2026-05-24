@@ -38,21 +38,21 @@ class CustomContactFAB extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        FloatingActionButton.small(
+        FloatingActionButton(
           heroTag: "whatsapp_fab",
           backgroundColor: const Color(0xFF25D366),
           shape: const CircleBorder(), 
           onPressed: _launchWhatsApp,
           child: Image.asset('images/wp.png',fit: BoxFit.contain),
         ),
-        FloatingActionButton.small(
+        SizedBox(height: 10.h),
+        FloatingActionButton(
           heroTag: "phone_fab",
           backgroundColor: Colors.blue.shade600,
           shape: const CircleBorder(), 
           onPressed: _makePhoneCall,
-          child: const Icon(Icons.phone, color: Colors.white),
-        ),
-        SizedBox(height: 95.h), 
+          child: Icon(Icons.phone, color: Colors.white,size: 30.r),
+        ), 
       ],
     );
   }

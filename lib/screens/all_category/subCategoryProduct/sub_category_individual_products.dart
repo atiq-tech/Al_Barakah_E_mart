@@ -1,5 +1,6 @@
 
 import 'package:al_barakah_e_mart/custom/custom_card/my_custom_card_screen.dart';
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/parent_cate_product_provider.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
@@ -20,22 +21,6 @@ class SubCategoryIndividualProducts extends StatefulWidget {
 
 class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualProducts> {
 
-   bool checkHasDiscount(dynamic startDateStr, dynamic endDateStr) {
-    if (startDateStr == null || endDateStr == null) return false;
-
-    DateTime now = DateTime.now();
-    DateTime currentDate = DateTime(now.year, now.month, now.day);
-
-    DateTime start = DateTime.parse(startDateStr.toString());
-    DateTime end = DateTime.parse(endDateStr.toString());
-
-    DateTime startDate = DateTime(start.year, start.month, start.day);
-    DateTime endDate = DateTime(end.year, end.month, end.day);
-
-    return (currentDate.isAtSameMomentAs(startDate) || currentDate.isAfter(startDate)) &&
-        (currentDate.isAtSameMomentAs(endDate) || currentDate.isBefore(endDate));
-  }
-  
   String? userName = "";
   String? customerId = "";
   String? authType = "";
@@ -73,6 +58,7 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
         ),
         title: Text("${widget.categoryName}",style: AllTextStyle.getTitleTextStyle()),
       ),
+      floatingActionButton: const CustomContactFAB(),
       body: SizedBox(
           height: double.infinity,
           width: double.infinity,
@@ -104,23 +90,14 @@ class _SubCategoryIndividualProductsState extends State<SubCategoryIndividualPro
                       },
                         child: MyCustomCardScreen(
                           quantity: "1",
-                          image:
-                          "$imageUrl${product.thumImage}",
+                          image: "$imageUrl${product.productImage}",
                           name: product.productName,
-                          description:
-                          product.productDescription,
-                          discountPrice: product
-                              .productSellingPrice
-                              .toString(),
-                          sellingPrice: product
-                              .productSellingPrice
-                              .toString(),
+                          description: product.productDescription,
+                          discountPrice: product.productSellingPrice.toString(),
+                          sellingPrice: product.productSellingPrice.toString(),
                           productCode:
                           product.productCode,
-                          id: int.tryParse(
-                            product.productSlNo
-                                .toString(),
-                          ),
+                          id: int.tryParse(product.productSlNo.toString()),
                           slug: product.slug,
                           stock: product.stock,
                           discount: "",

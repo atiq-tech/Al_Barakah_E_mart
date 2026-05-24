@@ -1,3 +1,4 @@
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_model/all_products_model.dart';
 import 'package:al_barakah_e_mart/all_api_provider/all_searching_products_provider.dart';
@@ -27,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: scaffoldColor,
+      floatingActionButton: const CustomContactFAB(),
       body: FutureBuilder(
         future: Provider.of<AllSearchingProductsProvider>(context).getAllSearchingProducts(),
         builder: (context, snapshot) {
@@ -125,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     SizedBox(
                                       height: 35.h,
                                       width: 35.w,
-                                      child: CustomImage(path: "$imageUrl${suggestion.thumImage}"),
+                                      child: CustomImage(path: "$imageUrl${suggestion.productImage}"),
                                     ),
                                     SizedBox(width: 10.w),
                                     Expanded(

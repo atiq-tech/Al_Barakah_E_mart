@@ -76,7 +76,7 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
         ),
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context); // সাধারণত ব্যাক বাটনে পপ হয়, আপনি চাইলে সার্চেও পাঠাতে পারেন
+            Navigator.pop(context); 
           },
           child: const Icon(Icons.arrow_back_outlined),
         ),
@@ -118,11 +118,11 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
                               },
                               child: MyCustomCardScreen(
                                 quantity: "1",
-                                image: "$imageUrl${product.thumImage}",
+                                image: "$imageUrl${product.productImage}",
                                 name: product.productName,
                                 description: product.productDescription,
-                                discountPrice: product.productWholesaleRate.toString(),
-                                sellingPrice: product.productWholesaleRate.toString(),
+                                discountPrice: product.productSellingPrice.toString(),
+                                sellingPrice: product.productSellingPrice.toString(),
                                 productCode: product.productCode,
                                 id: int.tryParse(product.productSlNo.toString()),
                                 slug: product.slug,

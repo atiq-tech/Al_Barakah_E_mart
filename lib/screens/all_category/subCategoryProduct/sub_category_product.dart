@@ -1,6 +1,7 @@
 
 import 'package:al_barakah_e_mart/all_api_model/get_category_model.dart';
 import 'package:al_barakah_e_mart/screens/all_category/subCategoryProduct/sub_category_individual_products.dart';
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/utils/all_textstyle.dart';
@@ -55,7 +56,7 @@ void initState() {
           style: AllTextStyle.getTitleTextStyle(),
         ),
       ),
-
+      floatingActionButton: const CustomContactFAB(),
       body: isLoading
     ? const Center(
         child: CircularProgressIndicator(),
@@ -78,7 +79,7 @@ void initState() {
                 crossAxisCount: 3,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
-                mainAxisExtent: 120,
+                mainAxisExtent: 130,
               ),
               itemBuilder: (context, index) {
                 final subCategory = widget.subCategoryList[index];
@@ -138,9 +139,9 @@ void initState() {
                               textAlign: TextAlign.center,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

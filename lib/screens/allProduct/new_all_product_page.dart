@@ -1,4 +1,5 @@
 import 'package:al_barakah_e_mart/custom/custom_card/my_custom_card_screen.dart';
+import 'package:al_barakah_e_mart/utils/what_up_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/searching_wise_products_provider.dart';
 import 'package:al_barakah_e_mart/footer_section/about_section.dart';
@@ -87,6 +88,7 @@ class _NewAllProductPageState extends State<NewAllProductPage> {
           child: const Icon(Icons.arrow_back_outlined),
         ),
       ),
+      floatingActionButton: const CustomContactFAB(),
       body: SearchingWiseProductsProvider.isSearchingWiseProductsloading
           ? const Center(child: CircularProgressIndicator())
           : CustomScrollView(
@@ -99,7 +101,7 @@ class _NewAllProductPageState extends State<NewAllProductPage> {
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 185,
-                      mainAxisSpacing: 24,
+                      mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
                       mainAxisExtent: 270,
                     ),
@@ -126,15 +128,15 @@ class _NewAllProductPageState extends State<NewAllProductPage> {
                           child: MyCustomCardScreen(
                           quantity: "1",
                           image:
-                          "$imageUrl${product.thumImage}",
+                          "$imageUrl${product.productImage}",
                           name: product.productName,
                           description:
                           product.productDescription,
                           discountPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           sellingPrice: product
-                              .productWholesaleRate
+                              .productSellingPrice
                               .toString(),
                           productCode:
                           product.productCode,

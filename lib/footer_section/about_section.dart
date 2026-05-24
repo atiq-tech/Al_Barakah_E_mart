@@ -144,19 +144,19 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
                 url: "https://www.facebook.com/tltelecom",
                 radius: 15.r,
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 20.w),
               socialCircleIcon(
                 imagePath: "images/youtube.png",
                 url: "https://www.youtube.com/tltelecom",
                 radius: 15.r,
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 20.w),
               socialCircleIcon(
                 imagePath: "images/linkedin.png",
                 url: "https://www.linkdin.com/tltelecom",
                 radius: 15.r,
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 20.w),
               socialCircleIcon(
                 imagePath: "images/instagram.png",
                 url: "https://www.instagram.com/tltelecom",
@@ -165,128 +165,128 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
             ],
           ),
           Container(
-            padding: EdgeInsets.only(top: 20.h),
+            padding: EdgeInsets.only(top: 20.h,left: 10.w,right: 10.w),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Information Link',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontSize: screenWidth / 30,
+                        fontWeight: FontWeight.w500,
+                         color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  footerTextLink(
+                    title: 'About Us',
+                    url: 'https://www.albarakahemart.com/about-us',
+                    fontSize: screenWidthh,
+                    color: tcolor,
+                    height: height,
+                  ),
+              
+                  footerTextLink(
+                    title: 'Contact Us',
+                    url: 'https://www.albarakahemart.com/contact',
+                    fontSize: screenWidthh,
+                    color: tcolor,
+                    height: height,
+                  ),
+                  footerTextLink(
+                    title: 'Our Management',
+                    url: 'https://www.albarakahemart.com/about-us#management',
+                    fontSize: screenWidthh,
+                    color: tcolor,
+                    height: height,
+                  ),
+              
+                  footerTextLink(
+                    title: 'Our Mission & Vision',
+                    url: 'https://www.albarakahemart.com/about-us#mission',
+                    fontSize: screenWidthh,
+                    color: tcolor,
+                    height: height,
+                  ),
+                ],
+              ),
+              //------------------ My Account ----------------
+              Padding(
+                padding: EdgeInsets.only(right: 65.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20.w,right: 20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Information Link',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              fontSize: screenWidth / 30,
-                              fontWeight: FontWeight.w500,
-                               color: Colors.white,
-                            ),
-                          ),
+                    Text(
+                      'Contact Us',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: screenWidth / 30,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
-                        footerTextLink(
-                          title: 'About Us',
-                          url: 'https://www.albarakahemart.com/about-us',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-
-                        footerTextLink(
-                          title: 'Contact Us',
-                          url: 'https://www.albarakahemart.com/contact',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-                        footerTextLink(
-                          title: 'Our Management',
-                          url: 'https://www.albarakahemart.com/about-us#management',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-
-                        footerTextLink(
-                          title: 'Our Mission & Vision',
-                          url: 'https://www.albarakahemart.com/about-us#mission',
-                          fontSize: screenWidthh,
-                          color: tcolor,
-                          height: height,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  //------------------ My Account ----------------
-                  Container(
-                    margin: EdgeInsets.only(left: 20.w,right: 20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Contact Us',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              fontSize: screenWidth / 30,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
+                    Text(
+                      'Phone 1: 01717202623',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: screenWidthh,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
                         ),
-                        Text(
-                          'Phone: 01717202623',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              fontSize: screenWidthh,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5.h),
-                        Text(
-                          'Email: @gmail.com',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              fontSize: screenWidthh,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5.h),
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //     color: appBarColor,
-                        //     borderRadius: BorderRadius.circular(5.r),
-                        //     border: Border.all(color: Colors.white)
-                        //   ),
-                        //   child: Padding(
-                        //     padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
-                        //     child: Text(
-                        //      "Deliveryman Login",
-                        //       style: GoogleFonts.poppins(
-                        //         textStyle: TextStyle(
-                        //           fontSize: screenWidthh,
-                        //           color: tcolor,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        Text(""),
-                        SizedBox(height: 5.h),
-                        Text("")
-                      ],
+                      ),
                     ),
-                  ),
-                 ],
+                    SizedBox(height: 5.h),
+                     Text(
+                      'Phone 2: 01717202623',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: screenWidthh,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
+                    Text(
+                      'Email: @gmail.com',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: screenWidthh,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     color: appBarColor,
+                    //     borderRadius: BorderRadius.circular(5.r),
+                    //     border: Border.all(color: Colors.white)
+                    //   ),
+                    //   child: Padding(
+                    //     padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+                    //     child: Text(
+                    //      "Deliveryman Login",
+                    //       style: GoogleFonts.poppins(
+                    //         textStyle: TextStyle(
+                    //           fontSize: screenWidthh,
+                    //           color: tcolor,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    Text("")
+                  ],
                 ),
-              ],
+              ),
+             ],
             ),
           ),
           Container(
@@ -321,10 +321,11 @@ class _BigBuyFooterState extends State<BigBuyFooter> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(textStyle: TextStyle(fontSize:screenWidth / 40,color: appBarColor)),
                 ),
-                SizedBox(height: 55.h)
+                SizedBox(height: 5.h)
               ],
             ),
           )
+        
         ],
       ),
     );
