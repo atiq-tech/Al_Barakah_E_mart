@@ -22,12 +22,7 @@ class AllApiService {
   static fetchGetCategories() async {
     try {
       String url = "${BaseUrl}get_categories";
-      Response response = await Dio().get(
-        url,
-        //  data: {
-        //       "menuItem": "1"
-        //   }
-      );
+      Response response = await Dio().get(url);
       var data = response.data;
       print("Get categories Data===> $data");
       return List.from(
@@ -39,7 +34,7 @@ class AllApiService {
     return null;
   }
 
-  // ONEK BORO FA.................................................
+  // ONEK BORO FA.................................................h
 
   //////=====fetchCategoriesFeature
   static fetchCategoriesFeature() async {
@@ -371,20 +366,6 @@ class AllApiService {
   }
 
   ///==================Get ProductsDetails Api=======================
-  // static fetchProductsDetails(String slug) async {
-  //   String link = "${BaseUrl}api/get_products";
-  //   try {
-  //     final formData = FormData.fromMap({
-  //       "slug": slug.trim(),
-  //     });
-  //     final response = await Dio().post(link, data: formData);
-  //     var item = response.data;
-  //     return ProductsDetailsModel.fromMap(item['products']);
-  //   } catch (e) {
-  //     print("hhhhhhhhhhhhhh Error message $e");
-  //     return null;
-  //   }
-  // }
   static Future<ProductDetailsModel?> fetchProductsDetails(String slug) async {
     String link = "${BaseUrl}get_product";
 
@@ -404,25 +385,7 @@ class AllApiService {
     }
   }
 
-  ///==================Get child categories Api=======================
-  // static fetchChildCategories(String? categoryId) async {
-  //   String link = "${BaseUrl}get_category";
-  //   print("Child Categories categoryId===== $categoryId");
-  //   try {
-  //     final formData = FormData.fromMap({
-  //       "categoryId": "$categoryId"
-  //     });
-  //     final response = await Dio().post(link, data: formData);
-  //     var item = response.data;
-  //     print("Child Categories data===== $item");
-  //     print("Child Categories categoryId===>$categoryId");
-  //     return ChildCategoriesModel.fromMap(item);
-  //   } catch (e) {
-  //     print("Child Categories Error message $e");
-  //     return null;
-  //   }
-  // }
-
+  ///==================Get child categories Api=====================
   static Future<ChildCategoriesModel?> fetchChildCategories(
     String? categoryId,
   ) async {

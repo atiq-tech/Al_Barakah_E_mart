@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_barakah_e_mart/all_api_provider/get_category_provider.dart';
 import 'package:al_barakah_e_mart/main.dart';
 import 'package:al_barakah_e_mart/provider/token_provider/token_provider.dart';
-import 'package:al_barakah_e_mart/provider/user_profile_provider.dart';
 import 'package:al_barakah_e_mart/screens/all_category/subCategoryProduct/sub_category_individual_products.dart';
 import 'package:al_barakah_e_mart/utils/constants.dart';
 import 'package:al_barakah_e_mart/utils/custom_image.dart';
@@ -37,12 +36,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     _initializeData();
 
     Provider.of<TokenProvider>(context, listen: false).getToken();
-    Provider.of<UserProfileProvider>(context, listen: false)
-        .getUserProfile();
-
     Future.microtask(() {
-      Provider.of<GetCategoriesProvider>(context, listen: false)
-          .getGetCategories();
+      Provider.of<GetCategoriesProvider>(context, listen: false).getGetCategories();
     });
   }
 

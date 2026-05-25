@@ -11,7 +11,6 @@ import 'package:al_barakah_e_mart/utils/custom_snackbar.dart';
 import '../../model/add_to_cart_model.dart';
 import '../../provider/add_to_cart_provider.dart';
 import '../../provider/token_provider/token_provider.dart';
-import '../../provider/user_profile_provider.dart';
 import '../../utils/custom_image.dart';
 
 class MyCustomCardScreen extends StatefulWidget {
@@ -66,33 +65,24 @@ class _MyCustomCardScreenState extends State<MyCustomCardScreen> {
   String? userName = "";
   String? customerId = "";
   String? authType = "";
+
   Future<void> _initializeData() async {
     customerId = "${sharedPreferences.getString('id')}";
     userName = "${sharedPreferences.getString('name')}";
     authType = "${sharedPreferences.getString('auth_type')}";
-
     print("auth_type=========$authType");
   }
 
-  // late final Box? box;
   @override
   void initState() {
     _initializeData();
     super.initState();
-    // Get reference to an already opened box
-    // box = Hive.box('cart');
-    ///====new====
     Provider.of<TokenProvider>(context, listen: false).getToken();
-    Provider.of<UserProfileProvider>(context, listen: false).getUserProfile();
   }
 
   @override
   Widget build(BuildContext context) {
     final addToCart = Provider.of<AddToCartProvider>(context, listen: true);
-    ///====new====
-    //final userToken =  Provider.of<TokenProvider>(context).tokenData;
-    //final addToCartProviderList = Provider.of<AddToCartProvider>(context, listen: true).cart;
-
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 240, 242, 255),

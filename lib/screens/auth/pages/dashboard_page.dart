@@ -8,7 +8,6 @@ import 'package:al_barakah_e_mart/custom/custom_drtawer/all_drawer_section/updat
 import 'package:al_barakah_e_mart/main.dart';
 import 'package:al_barakah_e_mart/provider/add_to_cart_provider.dart';
 import 'package:al_barakah_e_mart/provider/token_provider/token_provider.dart';
-import 'package:al_barakah_e_mart/provider/user_profile_provider.dart';
 import 'package:al_barakah_e_mart/screens/auth/pages/signin_page.dart';
 import 'package:al_barakah_e_mart/screens/main/main_screen.dart';
 import 'package:al_barakah_e_mart/screens/order/order_history_screen.dart';
@@ -42,7 +41,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
     // TODO: implement initState
     super.initState();
     Provider.of<TokenProvider>(context, listen: false).getToken();
-    Provider.of<UserProfileProvider>(context, listen: false).getUserProfile();
   }
   
   @override
@@ -50,18 +48,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
     final addToCartProviderList = Provider.of<AddToCartProvider>(context, listen: true).cart;
     final customerId = "${sharedPreferences.getString('id')}";
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false, // 🔥 back icon remove
-      //   title: Text(
-      //     "Hello, ${userName ?? 'User'}",
-      //     style: GoogleFonts.adamina(
-      //       fontSize: 12.sp,
-      //       fontWeight: FontWeight.w700,
-      //       color: Colors.black,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      // ),
       body: LayoutBuilder(
         builder: (context, constraints) {
                   if (customerId == "null" || customerId == "" || customerId.isEmpty) {
@@ -114,24 +100,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
             Navigator.push(context, MaterialPageRoute(builder: (_) => UpdateProfile()));
           },
         ),
-        /// All Brand
-        // authType == "reseller" ?  dashboardItem(
-        //   context,
-        //   title: "Product List",
-        //   icon: Icons.card_giftcard,
-        //   color: Colors.indigo,
-        //   onTap: () {
-        //     Navigator.push(context, MaterialPageRoute(builder: (_) => ProductListScreen()));
-        //   },
-        // ): dashboardItem(
-        //   context,
-        //   title: "All Brand",
-        //   icon: Icons.branding_watermark,
-        //   color: Colors.purple,
-        //   onTap: () {
-        //     Navigator.push(context, MaterialPageRoute(builder: (_) => BrandsWiseAllItemsScreen()));
-        //   },
-        // ),
       
         /// Change Password
         dashboardItem(

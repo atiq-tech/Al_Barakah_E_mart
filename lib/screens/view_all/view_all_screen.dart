@@ -56,7 +56,6 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ২. প্রোভাইডারকে লিসেন করা হচ্ছে
     final provider = Provider.of<AllProductsProvider>(context);
     final allProductListData = provider.allProductslist;
     final isLoading = provider.isProductsLoading;
@@ -67,12 +66,8 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
         centerTitle: true,
         backgroundColor: scaffoldColor,
         foregroundColor: Colors.black,
-        title: Text(
-          "All Products",
-          style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic),
+        title: Text("All Products",
+          style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
         ),
         leading: GestureDetector(
           onTap: () {
@@ -81,62 +76,51 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
           child: const Icon(Icons.arrow_back_outlined),
         ),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator()) // ৩. লোডিং দেখাচ্ছে কিনা চেক
-          : allProductListData.isEmpty 
-              ? Center(child: Text("No products found",style: AllTextStyle.nofoundTextStyle)) // ডাটা না থাকলে মেসেজ
-              : CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverPadding(
-                      padding: EdgeInsets.only(bottom: 20.h, left: 10.w, right: 10.w, top: 10.h),
-                      sliver: SliverGrid(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 185,
-                          mainAxisSpacing: 24,
-                          crossAxisSpacing: 16,
-                          mainAxisExtent: 270,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          childCount: _visibleCount > allProductListData.length
-                              ? allProductListData.length
-                              : _visibleCount,
-                          (context, index) {
-                            final product = allProductListData[index];
-
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          One_Product_Details(
-                                            slug: product.slug,
-                                            productId: product.productSlNo.toString(),
-                                  )),
-                                );
-                              },
-                              child: MyCustomCardScreen(
-                                quantity: "1",
-                                image: "$imageUrl${product.productImage}",
-                                name: product.productName,
-                                description: product.productDescription,
-                                discountPrice: product.productSellingPrice.toString(),
-                                sellingPrice: product.productSellingPrice.toString(),
-                                productCode: product.productCode,
-                                id: int.tryParse(product.productSlNo.toString()),
-                                slug: product.slug,
-                                stock: product.stock,
-                                discount: "",
-                              )
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SliverToBoxAdapter(child: BigBuyFooter()),
-                  ],
+      body: isLoading ? const Center(child: CircularProgressIndicator()) 
+      : allProductListData.isEmpty ? Center(child: Text("No products found",style: AllTextStyle.nofoundTextStyle)) 
+      : CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.only(bottom: 20.h, left: 10.w, right: 10.w, top: 10.h),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 185,
+                  mainAxisSpacing: 24,
+                  crossAxisSpacing: 16,
+                  mainAxisExtent: 270,
                 ),
+                delegate: SliverChildBuilderDelegate(
+                  childCount: _visibleCount > allProductListData.length ? allProductListData.length : _visibleCount,
+                  (context, index) {
+                    final product = allProductListData[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>One_Product_Details(slug: product.slug,productId: product.productSlNo.toString())),
+                        );
+                      },
+                      child: MyCustomCardScreen(
+                        quantity: "1",
+                        image: "$imageUrl${product.productImage}",
+                        name: product.productName,
+                        description: product.productDescription,
+                        discountPrice: product.productSellingPrice.toString(),
+                        sellingPrice: product.productSellingPrice.toString(),
+                        productCode: product.productCode,
+                        id: int.tryParse(product.productSlNo.toString()),
+                        slug: product.slug,
+                        stock: product.stock,
+                        discount: "",
+                      )
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: BigBuyFooter()),
+          ],
+        ),
     );
   }
 }

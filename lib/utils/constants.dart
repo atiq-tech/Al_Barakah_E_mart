@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 
 const String kIconPath = 'assets/icons/';
-const String baseUrl="https://bigbuy.com.bd";
-//const String BaseUrl="https://tltelecom.com/api/";//main
 const String BaseUrl="http://website.albarakahemart.com/api/"; //demo
 // const String imageUrl="https://soft.albarakahemart.com/"; // main img url
 const String imageUrl="https://demos.albarakahemart.com/"; // demo img url
